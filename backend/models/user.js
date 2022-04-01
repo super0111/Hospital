@@ -14,6 +14,9 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  isDoctor: {
+    type: Number,
+  },
   gender: {
     type: String,
     required: true,

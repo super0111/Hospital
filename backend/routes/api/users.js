@@ -8,13 +8,13 @@ const { check, validationResult } = require('express-validator');
 const normalize = require('normalize-url');
 const auth = require('../../middleware/auth');
 const User = require('../../models/User');
+const Patient = require('../../models/patient');
 
 // @route    POST api/users
 // @desc     Register user
 // @access   Public
 
-router.post(
-  '/register',
+router.post( '/register',
   check('fullname', 'Fullname is required').notEmpty(),
   check('email', 'Please include a valid email').isEmail(),
   check('password','Please enter a password with 6 or more characters').isLength({ min: 6 }),
@@ -25,7 +25,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { fullname, id, email, gender, degree, expertise, phoneNumber, password, } = req.body;
+    const { fullname, id, email,isDoctor, gender, degree, expertise, phoneNumber, password, } = req.body;
     try {
       let user = await User.findOne({ email });
 
@@ -40,6 +40,7 @@ router.post(
         fullname,
         id,
         email,
+        isDoctor,
         gender,
         degree,
         expertise,
@@ -89,8 +90,7 @@ router.get('/login', auth, async (req, res) => {
   }
 });
 
-router.post(
-  '/login',
+router.post( '/login',
   check('email', 'Please include a valid email').isEmail(),
   check('password', 'Password is required').exists(),
   async (req, res) => {
@@ -103,41 +103,92 @@ router.post(
 
     try {
       let user = await User.findOne({ email });
+      let patient_user = await Patient.findOne({ email });
 
-      if (!user) {
+      if (!user && !patient_user) {
         return res
           .status(400)
           .json({ errors: { msg: 'Invalid Email' } });
       }
 
-      const isMatch = await bcrypt.compare(password, user.password);
+      if(patient_user ? patient_user.isDoctor == 2 : "") {
 
-      if (!isMatch) {
-        return res
-          .status(400)
-          .json({ errors: { msg: 'Invalid Password' } });
+        if(patient_user.id == patient_user.password) {
+          isFirst = 1;
+        } else { isFirst = 2 }
+
+        if (password !== patient_user.password) {
+          return res
+            .status(400)
+            .json({ errors: { msg: 'Invalid Password' } });
+        }
+        const payload = {
+          patient_user: {
+            email: patient_user.email,
+            id: patient_user._id,
+            fullname: patient_user.fullname,
+            avatar: patient_user.picture,
+          }
+        };
+
+        jwt.sign(
+          payload,
+          config.get('jwtSecret'),
+          { expiresIn: '5 days' },
+          (err, token) => {
+            if (err) throw err;
+            const doctor = 1;
+            res.status(200).json({ token, doctor, isFirst });
+          }
+        );
+        return
       }
 
-      const payload = {
-        user: {
-          id: user.id
-        }
-      };
+      if( user ? user.isDoctor == 1 : "") {
+        console.log("1231")
+        const isMatch = await bcrypt.compare(password, user.password);
 
-      jwt.sign(
-        payload,
-        config.get('jwtSecret'),
-        { expiresIn: '5 days' },
-        (err, token) => {
-          if (err) throw err;
-          res.status(200).json({ token });
+        if (!isMatch) {
+          return res
+            .status(400)
+            .json({ errors: { msg: 'Invalid Password' } });
         }
-      );
+        console.log("sdfsdf")
+        const payload = {
+          user: {
+            id: user._id,
+            fullname: user.fullname
+          }
+        };
+  
+        jwt.sign(
+          payload,
+          config.get('jwtSecret'),
+          { expiresIn: '5 days' },
+          (err, token) => {
+            const doctor = 2
+            if (err) throw err;
+            res.status(200).json({ token, doctor });
+          }
+        );
+      }
+     
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
     }
   }
 );
+
+router.put("/changePassword",   
+  async (req, res) => {
+    const { password, id } = req.body;
+    Patient.findByIdAndUpdate(id, { password: password })
+    .then(results => res.json({status: "success"}))
+    .catch(err => {
+      res.status(400).json({ChangePatientPassword: err.message})
+    })
+  }
+)
 
 module.exports = router;

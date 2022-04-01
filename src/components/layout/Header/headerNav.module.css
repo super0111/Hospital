@@ -33,14 +33,20 @@
     margin: 0 7px!important;
     cursor: pointer;
 }
+.toolbar {
+    width: 60%!important;
+    justify-content: flex-end;
+}
 .navToolbarLink:hover {
     text-decoration: none!important;
 }
 .navigation {
-    width: 330px!important;
+    width: 100%!important;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 .navbarLogo {
-    width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -92,6 +98,31 @@
 .navbarSignInResponsive {
     display: none;
 }
+
+.profile {
+    background-color: #32384d;
+    border-radius: 50%;
+}
+.flexRow {
+    display: flex;
+    justify-content: flex-start;
+    align-content: center;
+    margin-bottom: 15px;
+}
+.userName {
+    font-size: 18px;
+    color: #32384d;
+    margin-top: 12px;
+}
+.userAvatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+
+
 
 @media screen and (max-width: 730px) {
     .headerToolResponsiveScroll {

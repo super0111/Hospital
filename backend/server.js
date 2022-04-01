@@ -2,7 +2,8 @@ const express = require('express');
 const connectDB = require('./config/db');
 const path = require('path');
 const cors = require('cors');
-
+const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
 const app = express();
 
 // Connect Database
@@ -10,11 +11,13 @@ connectDB();
 
 // Init Middleware
 app.use(express.json());
-app.use(cors());
-
+app.use(cors({origin: '*'}));
+app.use(fileUpload());
+app.use(express.static('public'));
 app.use('/api/users/', require('./routes/api/users'));
-// app.use('/api/events', require('./routes/api/events'));
-// app.use('/api/rates', require('./routes/api/rates'));
+app.use('/api/posts/', require('./routes/api/posts'));
+app.use('/api/file/', require('./routes/api/file'));
+app.use('/api/patient/', require('./routes/api/patient'));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

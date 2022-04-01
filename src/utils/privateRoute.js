@@ -11,7 +11,6 @@
  const PrivateRoutes = ({ component: Component, ...rest }) => {  
 
    var session_token=localStorage.getItem('token')
-   console.log('taken', session_token)
  
    return (
      <Route {...rest} render={props => (
