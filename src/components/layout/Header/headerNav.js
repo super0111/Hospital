@@ -49,6 +49,7 @@ const HeaderNav= () => {
                 { currentUser && isDoctor == 2 ? (
                 <ul className={classes.navigation}>
                     <Link className={classes.navToolbarLink} href="/" style={{marginBottom: "0px"}}>Home</Link>
+                    <Link className={classes.navToolbarLink} href="/addTest" style={{marginBottom: 0}}>Add Test</Link>
                     <Link className={classes.navToolbarLink} href="/treatmentStatus_therapist" style={{marginBottom: "0px"}}>Patient Treatment Status</Link>
                     <Link className={classes.navToolbarLink} href="/registerPatient" style={{marginBottom: "0px"}}>Register Patient</Link>
                     <Link className={classes.navToolbarLink} onClick={logout} style={{marginBottom: "0px"}}>Logout</Link>
@@ -98,7 +99,7 @@ const ProfileMenu = (props) => {
           const userString = localStorage.getItem('token');
           const current_user = jwt_decode(userString);
           const current_fullname = current_user.patient_user?.fullname;
-          const current_avatar = current_user.patient_user.avatar;
+          const current_avatar = current_user.patient_user?.avatar;
           setCurrentUser(current_fullname);
           setCurrentAvatar(current_avatar);
   }, [currentUser])

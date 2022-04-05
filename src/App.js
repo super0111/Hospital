@@ -7,6 +7,7 @@ import Login from "./components/auth/Login";
 import Layout from "./components/layout/Layout";
 import PrivateRoutes from "./utils/privateRoute";
 import RegisterPatient from "./components/RegisterPatient"
+import AddTest from "./components/Therapist/AddTest"
 import TreatmentStatusTherapist from "./components/Therapist/TreatmentStatusTherapist"
 
 import ResetPassword from "./components/auth/ResetPassword";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/register" component={Registration} />
         <Route path="/login" exact component={Login} />
         <Route path="/registerPatient" exact component={RegisterPatient} />
+        <Route path="/addTest" exact component={AddTest} />
         <PrivateRoutes path="/treatmentStatus_therapist" exact component={TreatmentStatusTherapist} />
       </Switch>
     </Layout>
