@@ -16,8 +16,9 @@ const tests = [
 
 const TreatmentStatusTherapist = () => {
     const [ patientsLists, setPatientLists ] = useState([])
+    const [ dataTestsLists, setTestsLists ] = useState([])
+    const [ testLists, setTestList ] = useState([])
     useEffect( () => {
-        console.log("sdfsdsfd")
         const fetchPosts = async () => {
             const res = await fetch(`${config.server_url}api/posts/getPatients`);
             const patients = await res.json();
@@ -25,13 +26,28 @@ const TreatmentStatusTherapist = () => {
         };
         fetchPosts();
     }, []);
+    useEffect( () => {
+        const fetchPosts = async () => {
+            const res = await fetch(`${config.server_url}api/posts/getTests`);
+            const tests = await res.json();
+            setTestsLists(tests);
+        };
+        fetchPosts();
+    }, []);
+    
+console.log("tests", dataTestsLists)
+
+    const handlePatientClick = (patient) => {
+        const patientTests = dataTestsLists.filter((item) => item.patient_name == patient);
+        setTestList(patientTests)
+    }
     return (
         <div className={classes.treatmentStatusTherapist}>
             <div className={classes.patientList}>
                 <div className={classes.title}>Patients Lists</div>
                 { patientsLists.map((patientsList) => {
                     return (
-                        <div key={patientsList._id} className={classes.patient_item}>
+                        <div key={patientsList._id} className={classes.patient_item} onClick={() => handlePatientClick(patientsList.fullname)}>
                             <img className={classes.avatar} src={patientsList.picture} />
                             <div className={classes.patient_name}>{patientsList.fullname}</div>
                         </div>
@@ -44,10 +60,10 @@ const TreatmentStatusTherapist = () => {
                     <div className={classes.statusItem_title}>Test ID</div>
                     <div className={classes.statusItem_title}>Test Date</div>
                     <div className={classes.statusItem_title}>Food Guidelines</div>
-                    <div className={classes.statusItem_title}>Test Status</div>
+                    <div className={classes.statusItem_title}>Additional Notes </div>
                     <div className={classes.statusItem_title}>Actions</div>
                 </div>
-                { tests.map((test, i) => {
+                { testLists.map((test, i) => {
                     return(
                         <div key={i} className={classes.status_item}>
                             <div className={classes.text}>
@@ -57,11 +73,10 @@ const TreatmentStatusTherapist = () => {
                                 {test.date}
                             </div>
                             <div className={classes.text}>
-                                {test.foodguidelines}
+                                {test.foodValue}
                             </div>
                             <div className={classes.text}>
-                                {test.status}
-                                <span class={classes.tooltiptext}>{test.status_comment}</span>
+                                {test.addTextValue}
                             </div>
                             <div className={classes.action}>
                                 <BiEditAlt className={classes.icon} />

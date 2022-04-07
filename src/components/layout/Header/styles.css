@@ -1,0 +1,103 @@
+.notify_icon {
+    width: 30px;
+}
+.pri_counter {
+    background: #ef5350;
+    color: #ffffff;
+    border-radius: 100%;
+    text-align: center;
+    position: absolute;
+    top: 0px;
+    left: 16px;
+    width: 17px;
+    height: 15px;
+    font-size: 10px;
+    padding-top: 1px;
+}
+.dropdown {
+    width: 300px;
+    position: absolute;
+    left: 50%;
+    top: 50px;
+    transform: translate(-50%);
+    transition: visibility .3s, opacity 0.3s linear;
+    background: #001a80;
+    border-radius: 3px;
+}
+.closed {
+    visibility: hidden;
+    opacity: 0;
+}
+.arrow {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -7px);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #ffffff;
+}
+.header {
+    background: #ffffff;
+    width: 100%;
+    height: 44px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: 1px solid #D5DFE4;
+    font-size: 16px;
+    line-height: 18px;
+}
+.container {
+    width: 40%;
+    margin: 0px auto;
+    padding-top: 12px;
+ }
+ .notif_Head {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 15px;
+    color: #546E7A;
+  }
+  .sec_counter {
+    background: #ef5350;
+    color: #ffffff;
+    border-radius: 100%;
+    text-align: center;
+    width: 19px;
+    font-size: 13px;
+    height: 18px;
+    margin-left: 5px;
+    display: inline-block;
+  }
+ .items {
+    background: #f0f4f6;
+    width: 100%;
+    max-height: 256px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    overflow-y: auto;
+    transition: background-color 0.5s;
+  }
+.items .li {
+    padding: 14px;
+    font-size: 13px;
+    line-height: 18px;
+    border-bottom: 1px solid #cbd9e0;
+    height: 35px;
+    cursor: pointer;
+  }
+  
+.items .li:hover {
+    background: #cbd9e0;
+  }
+  
+  .new {
+    background: #e1e9ed;
+    transition: background-color 0.5s;
+  }
+  
+.items .li .pic {
+    margin-right: 14px;
+    margin-left: 14px;
+    display: inline-block;
+    float: left;
+  }

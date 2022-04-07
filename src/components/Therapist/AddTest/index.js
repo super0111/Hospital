@@ -1,7 +1,7 @@
 import classes from "./addTest.module.css"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import config from "../../../config";
-
+import { io } from "socket.io-client";
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -64,6 +64,11 @@ const AddTest = () => {
         setFoodValue(e.target.value)
     }
 
+    
+    const socketRef = useRef();
+    useEffect(() => {
+        socketRef.current = io("http://10.10.10.249:5000", { transports : ['websocket'] });
+    }, []);
 
     const addTest = (event) => {
         event.preventDefault();
@@ -76,6 +81,7 @@ const AddTest = () => {
         }
         addTests(formData)
         .then((res) => {
+            socketRef.current.emit("stake", res);
             if(res.message == "success") {
                 toast.info("Test Add Successfull!")
             }
@@ -84,9 +90,6 @@ const AddTest = () => {
             }
         })
         .catch((error) => console.log(error));
-        selectValue = "";
-        foodValue = '';
-        addTextValue = ''
     }
 
     return (
@@ -137,14 +140,14 @@ const AddTest = () => {
                         <FcDocument size={30} />
                         <div className={classes.food_name}>Food instructions</div>
                     </div>
-                    <textarea rows={4} cols={8} onChange={handleFoodChange} value={foodValue} className={classes.food_input}>Food Instructions</textarea>
+                    <textarea rows={4} cols={8} onChange={handleFoodChange} value={foodValue} className={classes.food_input} placeholder="Food Instructions"></textarea>
                 </div>
                 <div className={classes.item_field}>
                     <div className={classes.flexRow}>
                         <FcEditImage size={30} />
                         <div className={classes.add_text}>Additional Notes</div>
                     </div>
-                    <textarea rows={4} cols={8} onChange={handleAddTextChange} value={addTextValue} className={classes.addText_value}>Additional Notes</textarea>
+                    <textarea rows={4} cols={8} onChange={handleAddTextChange} value={addTextValue} className={classes.addText_value} placeholder="Additional Notes"></textarea>
                 </div>
             </div>
            <button onClick={addTest} className={classes.btn}>Add Test</button>

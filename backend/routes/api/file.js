@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const server_url= 'http://localhost:5000/'
+const server_url= 'http://10.10.10.249:5000/'
 
 router.post(
     '/',

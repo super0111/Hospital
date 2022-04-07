@@ -1,7 +1,6 @@
 import config from '../config'
 
 const addTests = (formData, history) => {
-    console.log("api fomrdata", formData)
     return fetch(`${config.server_url}api/posts/addTests`, {
         method: "POST",
         headers: {
@@ -15,4 +14,20 @@ const addTests = (formData, history) => {
         return res.json();
       } );
 }
-export { addTests }
+
+const confirmTest = ( formData ) => {
+  console.log(formData)
+  return fetch(`${config.server_url}api/posts/confirmTest`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ...formData, // Use your own property name / key
+    }),
+  })
+  .then((res) =>{
+    return res.json();
+  });
+}
+export { addTests, confirmTest }

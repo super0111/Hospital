@@ -2,9 +2,19 @@ const express = require('express');
 const connectDB = require('./config/db');
 const path = require('path');
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
-const app = express();
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http, {
+  cors: {
+    origin: "*",
+    // methods: ["GET", "POST"],
+    methods: 'GET,PUT,POST,DELETE,OPTIONS'.split(','),
+    transports : ['websocket']
+  }
+});
+
+
 
 // Connect Database
 connectDB();
@@ -18,6 +28,7 @@ app.use('/api/users/', require('./routes/api/users'));
 app.use('/api/posts/', require('./routes/api/posts'));
 app.use('/api/file/', require('./routes/api/file'));
 app.use('/api/patient/', require('./routes/api/patient'));
+app.use('/api/notifications/', require('./routes/api/notifications'));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
@@ -31,4 +42,19 @@ if (process.env.NODE_ENV === 'production') {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+io.on('connection', function(socket){
+  socket.on("stake", (notifis) => {
+    io.emit('allow', notifis);  
+  });
+  socket.on("patientConfirm", (patientConfirm) => {
+    io.emit('patientConfirm', patientConfirm);  
+  });
+  socket.on("therapistConfirm", (therapistConfirm) => {
+    io.emit('therapistConfirm', therapistConfirm);  
+  });
+})
+http.listen(5000, function(){
+  console.log('listening on *:5000');
+});
+
+

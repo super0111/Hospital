@@ -17,6 +17,10 @@ const TestSchema = new mongoose.Schema({
     },
     addTextValue: {
         type: String,
+    },
+    confirmed: {
+        type: Boolean,
+        default: false,
     }
 })
 module.exports = mongoose.model('test', TestSchema)
