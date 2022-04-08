@@ -277,7 +277,7 @@
 }
 .notificationModal {
     position: absolute;
-    top: 20px;
+    top: -101px;
     right: 20px;
     width: 400px;
     background-color: white;

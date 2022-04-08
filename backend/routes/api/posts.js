@@ -95,7 +95,6 @@ router.post('/addTests',
 router.put('/confirmTest',
     async (req, res) => {
         const { id, confirmed } = req.body;
-        console.log("req.body", req.body)
         Test.findByIdAndUpdate(id, { confirmed: confirmed })
         .then(results => res.json({status: "success", results}))
         .catch(err => {
@@ -103,6 +102,19 @@ router.put('/confirmTest',
         })
     }
 )
+
+router.put('/cancelTest',
+    async (req, res) => {
+        const { id, canceled } = req.body;
+        console.log("req.body", req.body)
+        Test.findByIdAndUpdate(id, { canceled: canceled })
+        .then(results => res.json({status: "success", results}))
+        .catch(err => {
+            res.status(400).json({Confirm: err.message})
+        })
+    }
+)
+
 router.put("/changePassword",   
   async (req, res) => {
     const { password, id } = req.body;

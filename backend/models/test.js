@@ -21,6 +21,10 @@ const TestSchema = new mongoose.Schema({
     confirmed: {
         type: Boolean,
         default: false,
+    },
+    canceled: {
+        type: Boolean,
+        default: false,
     }
 })
 module.exports = mongoose.model('test', TestSchema)

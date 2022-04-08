@@ -81,7 +81,8 @@ const AddTest = () => {
         }
         addTests(formData)
         .then((res) => {
-            socketRef.current.emit("stake", res);
+            console.log("add test res", res)
+            socketRef.current.emit("addTest", res);
             if(res.message == "success") {
                 toast.info("Test Add Successfull!")
             }

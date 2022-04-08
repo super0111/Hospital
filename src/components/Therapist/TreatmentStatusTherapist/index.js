@@ -18,22 +18,36 @@ const TreatmentStatusTherapist = () => {
     const [ patientsLists, setPatientLists ] = useState([])
     const [ dataTestsLists, setTestsLists ] = useState([])
     const [ testLists, setTestList ] = useState([])
-    useEffect( () => {
+    useEffect(async () => {
         const fetchPosts = async () => {
             const res = await fetch(`${config.server_url}api/posts/getPatients`);
             const patients = await res.json();
             setPatientLists(patients);
         };
-        fetchPosts();
-    }, []);
-    useEffect( () => {
-        const fetchPosts = async () => {
+        const fetchTestPosts = async () => {
             const res = await fetch(`${config.server_url}api/posts/getTests`);
             const tests = await res.json();
             setTestsLists(tests);
         };
-        fetchPosts();
+        await fetchTestPosts();
+        await fetchPosts();
+        
     }, []);
+    // useEffect( () => {
+    //     const fetchPosts = async () => {
+    //         const res = await fetch(`${config.server_url}api/posts/getTests`);
+    //         const tests = await res.json();
+    //         setTestsLists(tests);
+    //     };
+    //     fetchPosts();
+    // }, []);
+    useEffect(() => {
+        console.log("________________DDDDDDDDDDDD____________");
+        if(patientsLists && patientsLists.length > 0) {
+            console.log('___________handle first item____________');
+            handlePatientClick(patientsLists[0]['fullname']);
+        }
+    }, [patientsLists]);
     
 console.log("tests", dataTestsLists)
 
@@ -61,6 +75,7 @@ console.log("tests", dataTestsLists)
                     <div className={classes.statusItem_title}>Test Date</div>
                     <div className={classes.statusItem_title}>Food Guidelines</div>
                     <div className={classes.statusItem_title}>Additional Notes </div>
+                    <div className={classes.statusItem_title}>Status</div>
                     <div className={classes.statusItem_title}>Actions</div>
                 </div>
                 { testLists.map((test, i) => {
@@ -77,6 +92,13 @@ console.log("tests", dataTestsLists)
                             </div>
                             <div className={classes.text}>
                                 {test.addTextValue}
+                            </div>
+                            <div className={classes.text}>
+                                { test.canceled == true ? 
+                                    <div className={classes.canceledText}>Canceled</div> : 
+                                    test.confirmed == true ? <div className={classes.planedText}>Planed</div> : 
+                                    <div className={classes.newText}>New</div> 
+                                }
                             </div>
                             <div className={classes.action}>
                                 <BiEditAlt className={classes.icon} />

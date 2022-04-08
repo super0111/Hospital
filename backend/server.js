@@ -43,11 +43,14 @@ if (process.env.NODE_ENV === 'production') {
 const PORT = process.env.PORT || 5000;
 
 io.on('connection', function(socket){
-  socket.on("stake", (notifis) => {
-    io.emit('allow', notifis);  
+  socket.on("addTest", (notifis) => {
+    io.emit('addTest', notifis);  
   });
   socket.on("patientConfirm", (patientConfirm) => {
     io.emit('patientConfirm', patientConfirm);  
+  });
+  socket.on("patientCancel", (patientCancel) => {
+    io.emit('patientCancel', patientCancel);  
   });
   socket.on("therapistConfirm", (therapistConfirm) => {
     io.emit('therapistConfirm', therapistConfirm);  

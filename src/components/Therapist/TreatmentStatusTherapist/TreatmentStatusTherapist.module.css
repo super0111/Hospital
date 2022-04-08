@@ -109,3 +109,19 @@
     color: #555;
     cursor: pointer;
 }
+
+.canceledText {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(190, 44, 18);
+}
+.planedText {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(9, 193, 83);
+}
+.newText {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(23, 60, 229);
+}

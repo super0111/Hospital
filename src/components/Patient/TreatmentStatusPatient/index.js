@@ -61,6 +61,7 @@ const TreatmentStatusPatient = () => {
                     <div className={classes.statusItem_title}>Test ID</div>
                     <div className={classes.statusItem_title}>Test Date</div>
                     <div className={classes.statusItem_title}>Food Guidelines</div>
+                    <div className={classes.statusItem_title}>Status</div>
                     <div className={classes.statusItem_title}>Additional Notes </div>
                 </div>
                 { tests.map((test, i) => {
@@ -74,6 +75,13 @@ const TreatmentStatusPatient = () => {
                             </div>
                             <div className={classes.text}>
                                 {test.foodValue}
+                            </div>
+                            <div className={classes.text}>
+                                { test.canceled == true ? 
+                                    <div className={classes.canceledText}>Canceled</div> : 
+                                    test.confirmed == true ? <div className={classes.planedText}>Planed</div> : 
+                                    <div className={classes.newText}>New</div> 
+                                }
                             </div>
                             <div className={classes.text}>
                                 {test.addTextValue}

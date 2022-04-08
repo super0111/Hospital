@@ -8,7 +8,7 @@ import DropdownItem from 'muicss/lib/react/dropdown-item';
 import classes from './headerNav.module.css';
 import { useHistory } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import {confirmTest} from "./../../../apis/addTests";
+import {confirmTest, cancelTest} from "./../../../apis/addTests";
 import config from "../../../config";
 import axios from 'axios';
 import { io } from "socket.io-client";
@@ -75,9 +75,9 @@ const HeaderNav= () => {
 
   const [ notify, setNotify ] = useState({})
   const [ isShow, setIsShow ] = useState(false)
-  const [byUserShow, setByUserShow] = useState(false)
-  const [byTherapistShow, setByTherapistShow] = useState(false)
-  const [notifyTherapist, setNotifyTherapist] = useState('')
+  const [ byUserShow, setByUserShow ] = useState(false)
+  const [ byTherapistShow, setByTherapistShow ] = useState(false)
+  const [ notifyTherapist, setNotifyTherapist ] = useState('')
   const [ patientConfirm, setPatientConfirm ] = useState(false)
 
   const socketRef = useRef();
@@ -85,7 +85,7 @@ const HeaderNav= () => {
       socketRef.current = io("http://10.10.10.249:5000", { transports : ['websocket'] });
   }, [socketRef]);
   useEffect(() => {
-      socketRef.current.on('allow', (notifis) => {
+      socketRef.current.on('addTest', (notifis) => {
         setNotify(notifis.test)
         setIsShow(true)
     });
@@ -96,14 +96,22 @@ const HeaderNav= () => {
     if(notify.patient_name == current_PatientName) {
       setByUserShow(true)
     }
+
   }, [notify]);
   // console.log("current_userName", current_userName)
   
   
   const notifyConfirm = () => {
     setPatientConfirm(true)
-    socketRef.current.emit("patientConfirm", {patientConfirm, currentPatientId, current_PatientName});
+    console.log("test_id id", notify._id)
+    const testId = notify._id;
+    socketRef.current.emit("patientConfirm", {patientConfirm, currentPatientId, current_PatientName, testId});
     setIsShow(!isShow)
+  }
+  const notifyCancel = () => {
+    setIsShow(false)
+    const testId = notify._id;
+    socketRef.current.emit("patientCancel", {currentPatientId, current_PatientName, testId});
   }
 
   // const [ therapistGet, setTherapistGet ] = useState(false)
@@ -112,10 +120,10 @@ const HeaderNav= () => {
       const isConfirm = true;
       const id = patientConfirm.currentPatientId;
       const patient_name = patientConfirm.current_PatientName;
-      console.log("isConfirm, id", isConfirm, id, patient_name)
+      const test_id = patientConfirm.testId
       const formData = {
-        id :  id,
-        confirmed: isConfirm
+        id :  test_id,
+        confirmed: isConfirm,
       }
       confirmTest(formData)
       .then((res) => {
@@ -126,6 +134,23 @@ const HeaderNav= () => {
         else {
             toast.error(res.errors.msg)
         }
+      })
+      .catch((error) => console.log(error));
+    });
+  }, []);
+
+  useEffect(() => {
+    socketRef.current.on('patientCancel', (patientCancel) => {
+      const isCancel = true;
+      const id = patientCancel.testId;
+      const patient_name = patientCancel.current_PatientName;
+      const formData = {
+        id :  id,
+        canceled: isCancel
+      }
+      cancelTest(formData)
+      .then((res) => {
+        toast.info(`Patient ${patient_name} has canceled your test.`);
       })
       .catch((error) => console.log(error));
     });
@@ -210,7 +235,7 @@ const HeaderNav= () => {
             </div>
             <div className={classes.modal_footer}>
               <button className={classes.modal_confirm} onClick={notifyConfirm}>Confirm</button>
-              <button className={classes.modal_cancel} onClick={()=> setIsShow(!isShow)}>Cancel</button>
+              <button className={classes.modal_cancel} onClick={notifyCancel}>Cancel</button>
             </div>
           </div>
           : ""
