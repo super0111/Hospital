@@ -67,6 +67,7 @@
     border-radius: 5px;
     padding: 10px;
     margin: 20px 0;
+    background-color: rgb(0 153 206);
 }
 .messageItem2 {
     width: 70%;
@@ -95,12 +96,28 @@
     font-size: 15px;
     font-weight: bold;
 }
+.name_title_my {
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+}
 .message_text {
     font-size: 14px;
     font-weight: 400;
+}
+.message_text_my {
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
 }
 .date {
     position: absolute;
     right: 10px;
     bottom: 0px;
+}
+.date_my {
+    position: absolute;
+    right: 10px;
+    bottom: 0px;
+    color: white;
 }

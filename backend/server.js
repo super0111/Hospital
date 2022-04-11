@@ -53,13 +53,13 @@ io.on('connection', function(socket){
     io.emit('patientCancel', patientCancel);  
   });
   socket.on("therapistConfirm", (therapistConfirm) => {
+    console.log("therapistConfirm m", therapistConfirm)
     io.emit('therapistConfirm', therapistConfirm);  
   });
   socket.on("therapist_message_send", (therapist_message_send) => {
     io.emit("therapist_message_send", therapist_message_send);
   });
   socket.on("patient_message_send", (patient_message_send) => {
-    console.log(patient_message_send)
     io.emit("patient_message_send", patient_message_send);
   });
 })

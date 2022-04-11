@@ -16,7 +16,6 @@ const addTests = (formData, history) => {
 }
 
 const confirmTest = ( formData ) => {
-  console.log(formData)
   return fetch(`${config.server_url}api/posts/confirmTest`, {
     method: "PUT",
     headers: {
@@ -32,7 +31,6 @@ const confirmTest = ( formData ) => {
 }
 
 const cancelTest = ( formData ) => {
-  console.log(formData)
   return fetch(`${config.server_url}api/posts/cancelTest`, {
     method: "PUT",
     headers: {

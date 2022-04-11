@@ -8,6 +8,8 @@ const TreatmentStatusTherapist = () => {
     const [ patientsLists, setPatientLists ] = useState([])
     const [ dataTestsLists, setTestsLists ] = useState([])
     const [ testLists, setTestList ] = useState([])
+    const [ isActive, setIsActive ] = useState(false) 
+
     useEffect(async () => {
         const fetchPosts = async () => {
             const res = await fetch(`${config.server_url}api/posts/getPatients`);
@@ -29,19 +31,20 @@ const TreatmentStatusTherapist = () => {
         }
     }, [patientsLists]);
     
-    const handlePatientClick = (patient) => {
+    const handlePatientClick = (patient, i) => {
         const patientTests = dataTestsLists.filter((item) => item.patient_name === patient);
         setTestList(patientTests)
+        setIsActive(i)
     }
     return (
         <div className={classes.treatmentStatusTherapist}>
             <div className={classes.patientList}>
                 <div className={classes.title}>Patients Lists</div>
-                { patientsLists.map((patientsList) => {
+                { patientsLists.map((patientsList, i) => {
                     return (
-                        <div key={patientsList._id} className={classes.patient_item} onClick={() => handlePatientClick(patientsList.fullname)}>
+                        <div key={patientsList._id} className={isActive === i ? classes.patient_item_active : classes.patient_item } onClick={() => handlePatientClick(patientsList.fullname, i)}>
                             <img className={classes.avatar} src={patientsList.picture} />
-                            <div className={classes.patient_name}>{patientsList.fullname}</div>
+                            <div className={isActive === i ? classes.patient_name_active : classes.patient_name}>{patientsList.fullname}</div>
                         </div>
                     )   
                 }) }

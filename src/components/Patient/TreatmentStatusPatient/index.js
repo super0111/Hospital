@@ -1,23 +1,17 @@
 import classes from "./TreatmentStatusPatient.module.css"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import config from "../../../config";
 import jwt_decode from "jwt-decode";
-
-const tests = [
-    { patient_id: 1, test_id: 1, date: "2020/12/13", foodguidelines: "aaaaa", status: "New", status_comment: "The therapist entered a new test and the patient was required to confirm" },
-    { patient_id: 2, test_id: 2, date: "2020/12/2", foodguidelines: "asdf", status: "Planned", status_comment: "A future test approved by the patient" },
-    { patient_id: 3, test_id: 3, date: "2020/12/26", foodguidelines: "asdf", status: "Done ", status_comment: "The test was performed correctly, awaiting the therapist's response" },
-    { patient_id: 4, test_id: 4, date: "2020/12/19", foodguidelines: "asdf", status: "Problem", status_comment: "The test was performed not correctly" },
-    { patient_id: 5, test_id: 5, date: "2020/12/14", foodguidelines: "asdf", status: "Completed ", status_comment: "The therapist confirmed the results and gave further instruction" },
-    { patient_id: 6, test_id: 6, date: "2020/12/17", foodguidelines: "asdf", status: "Planned", status_comment: "A future test approved by the patient" },
-    { patient_id: 7, test_id: 7, date: "2020/12/12", foodguidelines: "asdf", status: "Problem", status_comment: "The test was performed not correctly" },
-]
+import { io } from "socket.io-client";
 
 const TreatmentStatusPatient = () => {
 
     const [ dataTestsLists, setTestsLists ] = useState([])
     const [ tests, setTests ] = useState([])
     const [current_PatientName, setCurrent_PatientName] = useState("")
+    const [ notify, setNotify ] = useState({})
+    const [ confirmed, setConfirmed ] = useState(false)
+    const [ confirmedId, setConfirmedId ] = useState("")
 
     useEffect(() => {
         const userString = localStorage.getItem('token');
@@ -44,6 +38,32 @@ const TreatmentStatusPatient = () => {
             console.log("myTests", myTests)
             setTests(myTests)
     }, [current_PatientName, dataTestsLists] )
+
+
+    const socketRef = useRef();
+    useEffect(() => {
+        socketRef.current = io("http://10.10.10.249:5000", { transports : ['websocket'] });
+    }, [socketRef]);
+
+    useEffect(() => {
+        socketRef.current.on('addTest', (notifis) => {
+          setNotify(notifis.test)
+      });
+    }, [socketRef]);
+
+    useEffect(() => {
+        if(notify.patient_name === current_PatientName) {
+            setTests([...tests, notify]);
+        }
+    }, [notify])
+
+    useEffect(() => {
+        socketRef.current.on('therapistConfirm', (therapistConfirm) => {
+            const testId = therapistConfirm.test_id
+            setConfirmedId(testId)
+            setConfirmed(true)
+        });
+      }, [socketRef])
 
     return (
         <div className={classes.treatmentStatusPatient}>
@@ -72,6 +92,7 @@ const TreatmentStatusPatient = () => {
                                 { test.canceled === true ? 
                                     <div className={classes.canceledText}>Canceled</div> : 
                                     test.confirmed === true ? <div className={classes.planedText}>Planed</div> : 
+                                    (confirmed == true && confirmedId == i+1) ? <div className={classes.planedText}>Planed</div> :
                                     <div className={classes.newText}>New</div> 
                                 }
                             </div>

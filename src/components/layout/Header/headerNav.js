@@ -36,9 +36,9 @@ const HeaderNav= () => {
   const [current_userName, setCurrent_userName] = useState("")
   const [current_PatientName, setCurrent_PatientName] = useState("")
   const [currentAvatar, setCurrentAvatar] = useState("");
+
   useEffect(() => {
       const userString = localStorage.getItem('token');
-      console.log("userString", userString)
 
       if(userString) {
         const current_user = jwt_decode(userString);
@@ -86,17 +86,24 @@ const HeaderNav= () => {
         setIsShow(true)
     });
   }, [isShow]);
+  console.log("notifynotifyv", notify.patient_name)
+  console.log("current Nmae", current_PatientName)
 
   useEffect(() => {
     if(notify.patient_name === current_PatientName) {
+      console.log(byUserShow)
       setByUserShow(true)
+    } else {
+      setByUserShow(false)
     }
   }, [notify]);
   
   const notifyConfirm = () => {
     setPatientConfirm(true)
+    console.log("notify", notify)
     const testId = notify._id;
-    socketRef.current.emit("patientConfirm", {patientConfirm, currentPatientId, current_PatientName, testId});
+    const test_id = notify.test_id
+    socketRef.current.emit("patientConfirm", {patientConfirm, currentPatientId, current_PatientName, testId, test_id});
     setIsShow(!isShow)
   }
 
@@ -111,14 +118,15 @@ const HeaderNav= () => {
       const isConfirm = true;
       const id = patientConfirm.currentPatientId;
       const patient_name = patientConfirm.current_PatientName;
-      const test_id = patientConfirm.testId
+      const testId = patientConfirm.testId;
+      const test_id = patientConfirm.test_id;
       const formData = {
-        id :  test_id,
+        id :  testId,
         confirmed: isConfirm,
       }
       confirmTest(formData)
       .then((res) => {
-        socketRef.current.emit("therapistConfirm", patient_name);
+        socketRef.current.emit("therapistConfirm", {patient_name, test_id});
         if(res.message === "success") {
             toast.info("Therapist confirmed successfully")
         }
@@ -151,8 +159,9 @@ const HeaderNav= () => {
 
   useEffect(() => {
     socketRef.current.on('therapistConfirm', (therapistConfirm) => {
+      console.log("header confirm", therapistConfirm)
         setByTherapistShow(true)
-        setNotifyTherapist(therapistConfirm)
+        setNotifyTherapist(therapistConfirm.patient_name)
     });
   }, [])
 
@@ -161,6 +170,9 @@ const HeaderNav= () => {
       toast.info(`Patient ${canceledPatientName} has canceled your test.`);
     }
   }, [isShowCanceled])
+
+
+  console.log("byUserShow", byUserShow)
 
     return (
       <div className={classes.position}>

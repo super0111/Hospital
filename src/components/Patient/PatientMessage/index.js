@@ -80,6 +80,7 @@ const PatientMessage = () => {
                 isTherapistMessage: 2,
             }
             setMessages([...messages, formData]);
+            setMessageValue("")
             saveMessage(formData)
             .then((res) => {
                 socketRef.current.emit("patient_message_send", res);
@@ -97,9 +98,9 @@ const PatientMessage = () => {
                         <div key={i} className={ message.isTherapistMessage === 2 ? classes.messageItem : classes.messageItem2}>
                             <img alt="" className={classes.messageAvatar} src={ message.isTherapistMessage === 2 ? message.patient_avatar : "/images/Therapist_Avatar.png" } />
                             <div className={classes.name_field}>
-                                <div className={classes.name_title}>{message.isTherapistMessage === 2 ? message.patient_name: message.therapist_name}</div>
-                                <div className={classes.message_text}>{message.message}</div>
-                                <div className={classes.date}>{message.date}</div>
+                                <div className={message.isTherapistMessage === 1 ? classes.name_title : classes.name_title_my}>{message.isTherapistMessage === 2 ? message.patient_name: message.therapist_name}</div>
+                                <div className={message.isTherapistMessage === 1 ? classes.message_text : classes.message_text_my}>{message.message}</div>
+                                <div className={message.isTherapistMessage === 1 ? classes.date : classes.date_my}>{message.date}</div>
                             </div>
                         </div>
                     ))}

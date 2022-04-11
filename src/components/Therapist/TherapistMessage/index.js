@@ -59,7 +59,6 @@ const TherapistMessage = () => {
             setPatientLists(patients);
         };
         await fetchMessages(); 
-
         await fetchPatientss();  
     }, [])
 
@@ -97,6 +96,7 @@ const TherapistMessage = () => {
             isTherapistMessage: 1
         }
         setMessages([...messages, formData]);
+        setMessageValue("")
         saveMessage(formData)
         .then((res) => {
             socketRef.current.emit("therapist_message_send", res);

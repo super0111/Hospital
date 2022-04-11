@@ -28,6 +28,17 @@
     border-bottom: 1px dotted #1162cf;
     cursor: pointer;
 }
+.patient_item_active {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 30px ;
+    border-bottom: 1px dotted #1162cf;
+    cursor: pointer;
+    background-color: #096ed2;
+    border-radius: 3px;
+    color: white!important;
+}
 .patient_item:hover {
     background-color: #096ed2;
     border-radius: 3px;
@@ -40,6 +51,11 @@
     width: 50px;
     height: 50px;
     border-radius: 5px;
+}
+.patient_name_active {
+    font-size: 15px;
+    color: white;
+    font-weight: 500;
 }
 .patient_name {
     font-size: 15px;
