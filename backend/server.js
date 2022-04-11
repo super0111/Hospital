@@ -28,7 +28,7 @@ app.use('/api/users/', require('./routes/api/users'));
 app.use('/api/posts/', require('./routes/api/posts'));
 app.use('/api/file/', require('./routes/api/file'));
 app.use('/api/patient/', require('./routes/api/patient'));
-app.use('/api/notifications/', require('./routes/api/notifications'));
+app.use('/api/message/', require('./routes/api/message'));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
@@ -54,6 +54,13 @@ io.on('connection', function(socket){
   });
   socket.on("therapistConfirm", (therapistConfirm) => {
     io.emit('therapistConfirm', therapistConfirm);  
+  });
+  socket.on("therapist_message_send", (therapist_message_send) => {
+    io.emit("therapist_message_send", therapist_message_send);
+  });
+  socket.on("patient_message_send", (patient_message_send) => {
+    console.log(patient_message_send)
+    io.emit("patient_message_send", patient_message_send);
   });
 })
 http.listen(5000, function(){

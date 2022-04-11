@@ -9,11 +9,13 @@ import PrivateRoutes from "./utils/privateRoute";
 import RegisterPatient from "./components/RegisterPatient"
 import AddTest from "./components/Therapist/AddTest"
 import TreatmentStatusTherapist from "./components/Therapist/TreatmentStatusTherapist"
+import PatientMessage from "./components/Patient/PatientMessage"
 
 import ResetPassword from "./components/auth/ResetPassword";
 import ProfileEdit from "./components/Patient/ProfileEdit";
 import ProfileView from "./components/Patient/ProfileView";
 import TreatmentStatusPatient from "./components/Patient/TreatmentStatusPatient";
+import TherapistMessage from "./components/Therapist/TherapistMessage";
 
 function App() {
   return (
@@ -21,15 +23,17 @@ function App() {
       <Switch>
         <PrivateRoutes path="/" exact component={Home} />
         <PrivateRoutes path="/patientHome" exact component={PatientHome} />
-        <Route path="/treatmentStatus_patient" exact component={TreatmentStatusPatient} />
+        <PrivateRoutes path="/treatmentStatus_patient" exact component={TreatmentStatusPatient} />
+        <PrivateRoutes path="/patientMessage" exact component={PatientMessage} />
         <PrivateRoutes path="/resetPassword" exact component={ResetPassword} />
         <PrivateRoutes path="/profileEdit" exact component={ProfileEdit} />
         <PrivateRoutes path="/profileView" exact component={ProfileView} />
         <Route path="/register" component={Registration} />
         <Route path="/login" exact component={Login} />
-        <Route path="/registerPatient" exact component={RegisterPatient} />
-        <Route path="/addTest" exact component={AddTest} />
+        <PrivateRoutes path="/registerPatient" exact component={RegisterPatient} />
+        <PrivateRoutes path="/addTest" exact component={AddTest} />
         <PrivateRoutes path="/treatmentStatus_therapist" exact component={TreatmentStatusTherapist} />
+        <PrivateRoutes path="/therapistMessage" exact component={TherapistMessage} />
       </Switch>
     </Layout>
   );

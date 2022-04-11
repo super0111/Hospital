@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import classes from "./ProfileView.module.css"
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import jwt_decode from "jwt-decode";
-import {editProfile} from "../../../apis/patient";
 import config from "../../../config";
 
 const ProfileView = () => {
@@ -94,11 +93,11 @@ const ProfileView = () => {
                     </div>
                     <div className={classes.flexRow}>
                         <div className={classes.input_name}>Is Allergies :</div>
-                        <div className={classes.input}>{isAllergies==true? "Yes":"No"}</div>
+                        <div className={classes.input}>{isAllergies===true? "Yes":"No"}</div>
                     </div>
                     <div className={classes.flexRow}>
                         <div className={classes.input_name}>Is ADHD :</div>
-                        <div className={classes.input}>{isADHD==true ? "Yes" : "No"}</div>
+                        <div className={classes.input}>{isADHD===true ? "Yes" : "No"}</div>
                     </div>
                     <div className={classes.flexRow}>
                         <div className={classes.input_name}>Height :</div>

@@ -157,7 +157,8 @@ router.post( '/login',
         const payload = {
           user: {
             id: user._id,
-            fullname: user.fullname
+            fullname: user.fullname,
+            avatar: user.picture,
           }
         };
   

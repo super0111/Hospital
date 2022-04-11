@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import classes from './RegisterPatient.module.css'
 
 const PictureUpload = (props) => {
@@ -18,7 +18,7 @@ const PictureUpload = (props) => {
             <div className={classes.addPicture_body}>
                 <label className={classes.imageUpload_field}>
                     <input type="file" style={{display:'none'}} onChange={handleFileChange}  />
-                    <img className={classes.imageUpload_icon} src='images/image uploading.png' />
+                    <img alt='' className={classes.imageUpload_icon} src='images/image uploading.png' />
                 </label>
                 <div className={classes.preview}>
                     <img className={classes.preview_img} src={image.preview} alt="" />

@@ -43,7 +43,7 @@ const Login = (props) => {
     loginUser(formData)
       .then((res) => {
   
-        if(res.token && res.doctor==2)
+        if(res.token && res.doctor===2)
         {
           toast.info("Success Therapist  Register")
           setAuthToken(res.token);
@@ -51,19 +51,19 @@ const Login = (props) => {
           localStorage.setItem("isDoctor", res.doctor);
           history.push("/");
         }
-        if(res.token && res.doctor==1)
+        if(res.token && res.doctor===1)
         {
           toast.info("Success Patient Register")
           setAuthToken(res.token);
           localStorage.setItem("token", res.token);
           localStorage.setItem("isDoctor", res.doctor);
-          if(res.isFirst == 1) {
+          if(res.isFirst === 1) {
             history.push("/resetPassword");
           }
           else history.push("/patientHome");
           
         }
-        else { toast.error(res.errors.msg) }
+        else { toast.error(res.errors.message) }
       })
       .catch((error) => console.log(error));
       resetEmail();

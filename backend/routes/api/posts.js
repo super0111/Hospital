@@ -4,7 +4,6 @@ const Patient = require('../../models/patient');
 const Test = require('../../models/test');
 const { check, validationResult } = require('express-validator');
 const User = require('../../models/User');
-const Notifications = require('../../models/notifications');
 
 router.post('/registerPatient',
     async (req, res) => {

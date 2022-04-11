@@ -1,8 +1,6 @@
 import classes from "./TreatmentStatusPatient.module.css"
 import React, { useState, useEffect } from "react"
 import config from "../../../config";
-import { BiEditAlt } from "react-icons/bi";
-import { MdDeleteForever } from "react-icons/md";
 import jwt_decode from "jwt-decode";
 
 const tests = [
@@ -17,7 +15,6 @@ const tests = [
 
 const TreatmentStatusPatient = () => {
 
-    const [ patientsLists, setPatientLists ] = useState([])
     const [ dataTestsLists, setTestsLists ] = useState([])
     const [ tests, setTests ] = useState([])
     const [current_PatientName, setCurrent_PatientName] = useState("")
@@ -42,16 +39,11 @@ const TreatmentStatusPatient = () => {
         fetchPosts();
     }, []);
 
-
-
     useEffect( () => {
-            const myTests = dataTestsLists.filter((item) => item.patient_name == current_PatientName )
+            const myTests = dataTestsLists.filter((item) => item.patient_name === current_PatientName )
             console.log("myTests", myTests)
             setTests(myTests)
     }, [current_PatientName, dataTestsLists] )
-
-    console.log("dataTests", dataTestsLists)
-    console.log("tests", tests)
 
     return (
         <div className={classes.treatmentStatusPatient}>
@@ -77,9 +69,9 @@ const TreatmentStatusPatient = () => {
                                 {test.foodValue}
                             </div>
                             <div className={classes.text}>
-                                { test.canceled == true ? 
+                                { test.canceled === true ? 
                                     <div className={classes.canceledText}>Canceled</div> : 
-                                    test.confirmed == true ? <div className={classes.planedText}>Planed</div> : 
+                                    test.confirmed === true ? <div className={classes.planedText}>Planed</div> : 
                                     <div className={classes.newText}>New</div> 
                                 }
                             </div>

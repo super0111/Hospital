@@ -70,7 +70,7 @@ const ProfileEdit = () => {
             formData.avatar = resFile.data.file
             editProfile(formData)
             .then((res) => {
-                if(res.status == "success") {
+                if(res.status === "success") {
                     toast.info("Edit profile Successfull!")
                 }
                 else 
@@ -85,12 +85,12 @@ const ProfileEdit = () => {
             <div className={classes.form_wrapper_login}>
                 <h1 className={classes.title}>Profile Edit</h1>
                 <div className={classes.avatar}>
-                    { uploadBtn == "init" ?  <img src={avatar} className={classes.avatar_img} /> : <img src={avatar.preview} className={classes.avatar_img} />}
+                    { uploadBtn === "init" ?  <img alt="" src={avatar} className={classes.avatar_img} /> : <img alt="" src={avatar.preview} className={classes.avatar_img} />}
                 </div>
                 <label onClick={handleUploadClick} className={classes.imageUpload_field}>
                     <input type="file" style={{display:'none'}} onChange={handleFileChange}  />
                     <div className={classes.upload_text}>Avatar Upload</div>
-                    <img className={classes.imageUpload_icon} src='images/image uploading.png' />
+                    <img alt="" className={classes.imageUpload_icon} src='images/image uploading.png' />
                 </label>
                 <form onSubmit={submitHandler}>
                     <div className={classes.flexRow}>

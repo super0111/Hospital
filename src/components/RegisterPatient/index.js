@@ -31,7 +31,6 @@ const RegisterPatient = () => {
 
     const {
       value: fullNameValue,
-      isValid: fullNameIsValid,
       hasError: fullNameHasError,
       valueChangeHandler: fullNameChangeHandler,
       inputBlurHandler: fullNameBlurHandler,
@@ -39,7 +38,6 @@ const RegisterPatient = () => {
     } = useInput(isNotEmpty);
     const {
       value: idValue,
-      isValid: idIsValid,
       hasError: idHasError,
       valueChangeHandler: idChangeHandler,
       inputBlurHandler: idBlurHandler,
@@ -47,7 +45,6 @@ const RegisterPatient = () => {
     } = useInput(isNotEmpty);
     const {
       value: emailValue,
-      isValid: emailIsValid,
       hasError: emailHasError,
       valueChangeHandler: emailChangeHandler,
       inputBlurHandler: emailBlurHandler,
@@ -55,7 +52,6 @@ const RegisterPatient = () => {
     } = useInput(isNotEmpty);
     const {
         value: phoneNumberValue,
-        isValid: phoneNumberIsValid,
         hasError: phoneNumberHasError,
         valueChangeHandler: phoneNumberChangeHandler,
         inputBlurHandler: phoneNumberBlurHandler,
@@ -63,7 +59,6 @@ const RegisterPatient = () => {
     } = useInput(isNotEmpty);
     const {
       value: birthdayValue,
-      isValid: birthdayIsValid,
       hasError: birthdayHasError,
       valueChangeHandler: birthdayChangeHandler,
       inputBlurHandler: birthdayBlurHandler,
@@ -71,7 +66,6 @@ const RegisterPatient = () => {
     } = useInput(isNotEmpty);
     const {
       value: heightValue,
-      isValid: heightIsValid,
       hasError: heightHasError,
       valueChangeHandler: heightChangeHandler,
       inputBlurHandler: heightBlurHandler,
@@ -79,7 +73,6 @@ const RegisterPatient = () => {
     } = useInput(isNotEmpty);
     const {
       value: weightValue,
-      isValid: weightIsValid,
       hasError: weightHasError,
       valueChangeHandler: weightChangeHandler,
       inputBlurHandler: weightBlurHandler,
@@ -87,7 +80,6 @@ const RegisterPatient = () => {
     } = useInput(isNotEmpty);
     const {
         value: informationValue,
-        isValid: informationIsValid,
         hasError: informationHasError,
         valueChangeHandler: informationChangeHandler,
         inputBlurHandler: informationBlurHandler,
@@ -95,28 +87,11 @@ const RegisterPatient = () => {
       } = useInput(isNotEmpty);
       const {
         value: summaryValue,
-        isValid: summaryIsValid,
         hasError: summaryHasError,
         valueChangeHandler: summaryChangeHandler,
         inputBlurHandler: summaryBlurHandler,
         reset: resetSummary,
       } = useInput(isNotEmpty);
-
-    let formIsValid = false;
-
-    if (
-      fullNameIsValid &&
-      idIsValid &&
-      emailIsValid &&
-      phoneNumberIsValid &&
-      birthdayIsValid &&
-      heightIsValid &&
-      weightIsValid &&
-      informationIsValid &&
-      summaryIsValid
-    ) {
-      formIsValid = true;
-    }
 
     const submitHandler = (event) => {
         event.preventDefault();
@@ -141,7 +116,7 @@ const RegisterPatient = () => {
             registerPatient(formData)
             .then((res) => {
                 console.log(res.message)
-                if(res.message == "success") {
+                if(res.message === "success") {
                     toast.info("Register Patient Successfull!")
                 }
                 else 

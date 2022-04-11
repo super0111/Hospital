@@ -1,7 +1,7 @@
 import classes from "./PatientHome.module.css"
-import React, { useState, useEffect, useRef }  from 'react';
+import React, { useEffect, useRef }  from 'react';
 import { io } from "socket.io-client";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const PatientHome = () => {

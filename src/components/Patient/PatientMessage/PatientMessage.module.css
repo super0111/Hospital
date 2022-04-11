@@ -1,0 +1,106 @@
+.patientMessage {
+    width: 80%;
+    margin: auto;
+    
+}
+.title {
+    text-align: center;
+    margin: 100px 0 25px 0;
+    font-size: 30px;
+    color: rgb(5, 95, 174);
+    font-weight: 700;
+}
+.body {
+    position: relative;
+    box-shadow: 0px 1px 5px 1px rgb(0, 121, 161);
+    border-radius: 5px;
+    margin: auto;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+.messageBody {
+    height: 600px;
+    overflow-y: auto;
+    margin-bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.messageSendBox {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 5px;
+    border-top: 1px solid rgb(110, 177, 232);
+    height: 70px;
+    margin: 0 -10px 0px -10px;
+    padding: 0 10px 0 0;
+    width: 100%;
+}
+.messageInput {
+    height: 50px;
+    border-radius: 5px;
+    border: none;
+    padding: 5px 10px;
+    width: 100%;
+}
+.messageInput::placeholder {
+    font-size: 16px;
+    color: rgb(0, 121, 161);
+}
+.messageSendIcon {
+    color: rgb(0, 121, 161);
+    cursor: pointer;
+}
+
+
+.messageItem {
+    width: 70%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border: 1px solid  rgb(0, 121, 161);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 20px 0;
+}
+.messageItem2 {
+    width: 70%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border: 1px solid  rgb(0, 121, 161);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    margin-left: 100px;
+}
+.messageAvatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.name_field {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    width: 100%;
+}
+.name_title {
+    font-size: 15px;
+    font-weight: bold;
+}
+.message_text {
+    font-size: 14px;
+    font-weight: 400;
+}
+.date {
+    position: absolute;
+    right: 10px;
+    bottom: 0px;
+}

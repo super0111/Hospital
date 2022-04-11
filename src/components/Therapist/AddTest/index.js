@@ -33,7 +33,7 @@ const AddTest = () => {
         fetchPosts();
     }, []);
 
-    const [value, setValue] = React.useState(new Date('2014-08-18T21:11:54'));
+    const [value, setValue] = React.useState(new Date('2022-04-10T21:11:54'));
     const handleChange = (newValue) => {
       setValue(newValue);
     };
@@ -43,9 +43,8 @@ const AddTest = () => {
     const handleSelectChange = (e) => {
         setSelectValue(e.target.value);
         if( patientTests ) {
-            const patients = patientTests.filter((item) => item.patient_name == e.target.value);
-            console.log(patients.length)
-            if(patients.length == 0) {
+            const patients = patientTests.filter((item) => item.patient_name === e.target.value);
+            if(patients.length === 0) {
                 setTestId(1);
             }
             else {
@@ -81,9 +80,8 @@ const AddTest = () => {
         }
         addTests(formData)
         .then((res) => {
-            console.log("add test res", res)
             socketRef.current.emit("addTest", res);
-            if(res.message == "success") {
+            if(res.message === "success") {
                 toast.info("Test Add Successfull!")
             }
             else {

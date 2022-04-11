@@ -115,11 +115,8 @@ const Register = (props) => {
       };
       registerUser(formData)
         .then((res) => {
-          console.log("res",res)
           if(res.token) {
             toast.info("Success Register")
-            console.log("sdfsdfsdfs")
-            // window.location.replace("/login");
           }
           else {
           toast.error(res.errors.msg)
