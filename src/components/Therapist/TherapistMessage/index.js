@@ -96,6 +96,7 @@ const TherapistMessage = () => {
             isTherapistMessage: 1
         }
         setMessages([...messages, formData]);
+        setMessageLists([...messageLists, formData]);
         setMessageValue("")
         saveMessage(formData)
         .then((res) => {

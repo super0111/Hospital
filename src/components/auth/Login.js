@@ -42,7 +42,6 @@ const Login = (props) => {
     };
     loginUser(formData)
       .then((res) => {
-  
         if(res.token && res.doctor===2)
         {
           toast.info("Success Therapist  Register")
@@ -63,7 +62,7 @@ const Login = (props) => {
           else history.push("/patientHome");
           
         }
-        else { toast.error(res.errors.message) }
+        else { toast.error(res.errors?.message) }
       })
       .catch((error) => console.log(error));
       resetEmail();

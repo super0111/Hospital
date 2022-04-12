@@ -14,6 +14,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { BiX } from "react-icons/bi";
+import { useFormControlUnstyled } from '@mui/base';
 
 const sections1 = [
     { title: 'Login', url: '/login'},
@@ -30,6 +31,7 @@ const HeaderNav= () => {
     });
   }, []);
 
+  const [token, setToken] = useState(null)
   const [currentUser, setCurrentUser] = useState(undefined);
   const [currentUserId ,setCurrentUserId] = useState("")
   const [currentPatientId ,setCurrentPatientId] = useState("")
@@ -39,6 +41,8 @@ const HeaderNav= () => {
 
   useEffect(() => {
       const userString = localStorage.getItem('token');
+      setToken(userString)
+      console.log("user token", userString)
 
       if(userString) {
         const current_user = jwt_decode(userString);
@@ -59,13 +63,15 @@ const HeaderNav= () => {
           setCurrent_userName(current_userName);
         }
       }
-  }, [currentUser]);
+  }, [token]);
 
   
   const logout = () => {
     history.push("/");
     return localStorage.removeItem("token");
   }
+
+  console.log("token", token)
 
   const [ notify, setNotify ] = useState({})
   const [ isShow, setIsShow ] = useState(false)
@@ -86,12 +92,9 @@ const HeaderNav= () => {
         setIsShow(true)
     });
   }, [isShow]);
-  console.log("notifynotifyv", notify.patient_name)
-  console.log("current Nmae", current_PatientName)
 
   useEffect(() => {
     if(notify.patient_name === current_PatientName) {
-      console.log(byUserShow)
       setByUserShow(true)
     } else {
       setByUserShow(false)
@@ -100,7 +103,6 @@ const HeaderNav= () => {
   
   const notifyConfirm = () => {
     setPatientConfirm(true)
-    console.log("notify", notify)
     const testId = notify._id;
     const test_id = notify.test_id
     socketRef.current.emit("patientConfirm", {patientConfirm, currentPatientId, current_PatientName, testId, test_id});
@@ -141,7 +143,6 @@ const HeaderNav= () => {
   useEffect(() => {
     socketRef.current.on('patientCancel', (patientCancel) => {
       setIsShowCanceled(true)
-
       const isCancel = true;
       const id = patientCancel.testId;
       const patient_name = patientCancel.current_PatientName;
@@ -159,7 +160,6 @@ const HeaderNav= () => {
 
   useEffect(() => {
     socketRef.current.on('therapistConfirm', (therapistConfirm) => {
-      console.log("header confirm", therapistConfirm)
         setByTherapistShow(true)
         setNotifyTherapist(therapistConfirm.patient_name)
     });
@@ -171,9 +171,6 @@ const HeaderNav= () => {
     }
   }, [isShowCanceled])
 
-
-  console.log("byUserShow", byUserShow)
-
     return (
       <div className={classes.position}>
         <div className={ scroll ? classes.headerToolScroll : classes.headerTool}>
@@ -181,7 +178,7 @@ const HeaderNav= () => {
                 <img alt='' className={classes.navbarLogoImg} src="/images/logo.png" />
             </div>
             <Toolbar component="nav" className={classes.toolbar} variant="dense">
-                { (currentUser && currentUserId) ? (
+                { (token && currentUserId) ? (
                 <ul className={classes.navigation}>
                     <Link className={classes.navToolbarLink} href="/" style={{marginBottom: "0px"}}>Home</Link>
                     <Link className={classes.navToolbarLink} href="/therapistMessage" style={{marginBottom: "0px"}}>Message</Link>
@@ -191,7 +188,7 @@ const HeaderNav= () => {
                     <Link className={classes.navToolbarLink} onClick={logout} style={{marginBottom: "0px"}}>Logout</Link>
                 </ul>
                 ) : 
-                (currentUser && currentPatientId) ?
+                (token && currentPatientId) ?
                  (
                   <ul className={classes.navigation}>
                     <Link className={classes.navToolbarLink} href="/patientHome" style={{marginBottom: "0px"}}>PatientHome</Link>
@@ -200,7 +197,7 @@ const HeaderNav= () => {
                     <Link className={classes.navToolbarLink} style={{marginBottom: "0px"}}><ProfileMenu current_PatientName={current_PatientName} currentAvatar={currentAvatar} logout = {logout} /></Link>
                   </ul>
                  ) :
-                 (!currentUser) ?
+                 (token === null) ?
                 (
                 <ul>
                   {sections1.map((section1) => (
