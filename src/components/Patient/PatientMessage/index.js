@@ -5,7 +5,7 @@ import config from "./../../../config";
 import jwt_decode from "jwt-decode";
 import {saveMessage} from './../../../apis/message'
 import { io } from "socket.io-client";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const PatientMessage = () => {
@@ -28,7 +28,7 @@ const PatientMessage = () => {
     
     useEffect(() => {
         if(therapistMessageInfo) {
-            if(currentPatientId == therapistMessageInfo.patient_id) {
+            if(currentPatientId === therapistMessageInfo.patient_id) {
                 setMessages([...messages, therapistMessageInfo]);
             }
         }
@@ -106,7 +106,13 @@ const PatientMessage = () => {
                     ))}
                 </div>
                 <div className={classes.messageSendBox}>
-                    <input className={classes.messageInput} onChange={handleMessageChange} value={messageValue} type="text" placeholder="Enter Message..." />
+                    <input className={classes.messageInput} 
+                        onChange={handleMessageChange} 
+                        onKeyPress={(e) => { if (e.key === "Enter") { handleMessageSend() } }} 
+                        value={messageValue} 
+                        type="text" 
+                        laceholder="Enter Message..." 
+                    />
                     <BiSend size={30} onClick={handleMessageSend} className={classes.messageSendIcon} />
                 </div>
             </div>

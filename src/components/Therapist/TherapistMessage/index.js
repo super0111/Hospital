@@ -20,6 +20,10 @@ const TherapistMessage = () => {
     const [ messageValue, setMessageValue ] = useState("")
     const [ isActive, setIsActive ] = useState(0)
     const [ patientMessageInfo, setPatientMessageInfo ] = useState([])
+
+const [state, setState] = useState({ message: "" })
+
+
     const socketRef = useRef();
     useEffect(() => {
         socketRef.current = io("http://10.10.10.249:5000", { transports : ['websocket'] });
@@ -134,7 +138,11 @@ const TherapistMessage = () => {
                         ))}
                     </div>
                     <div className={classes.messageSendBox}>
-                        <input className={classes.messageInput} onChange={handleMessageChange} value={messageValue} type="text" placeholder="Enter Message..." />
+                        <input className={classes.messageInput} onChange={handleMessageChange} value={messageValue}
+                            onKeyPress={(e) => { if (e.key === "Enter") { handleMessageSend() } }} 
+                            type="text" 
+                            placeholder="Enter Message..." 
+                        />
                         <BiSend size={30} onClick={handleMessageSend} className={classes.messageSendIcon} />
                     </div>
                 </div>

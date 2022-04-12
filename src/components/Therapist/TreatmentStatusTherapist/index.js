@@ -50,7 +50,7 @@ const TreatmentStatusTherapist = () => {
                 }) }
             </div>
             <div className={classes.patientStatus}>
-                <div className={classes.title}>Patients Status</div>
+                <div className={classes.status_title}>Patients Status</div>
                 <div className={classes.statusItem_title_field}>
                     <div className={classes.statusItem_title}>Test ID</div>
                     <div className={classes.statusItem_title}>Test Date</div>

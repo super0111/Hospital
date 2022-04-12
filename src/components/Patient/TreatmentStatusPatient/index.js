@@ -92,7 +92,7 @@ const TreatmentStatusPatient = () => {
                                 { test.canceled === true ? 
                                     <div className={classes.canceledText}>Canceled</div> : 
                                     test.confirmed === true ? <div className={classes.planedText}>Planed</div> : 
-                                    (confirmed == true && confirmedId == i+1) ? <div className={classes.planedText}>Planed</div> :
+                                    (confirmed === true && confirmedId === i+1) ? <div className={classes.planedText}>Planed</div> :
                                     <div className={classes.newText}>New</div> 
                                 }
                             </div>

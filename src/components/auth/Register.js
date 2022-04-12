@@ -202,7 +202,7 @@ const Register = (props) => {
               value={genderValue}
               onChange={handleGenderChange}
             >
-              <option selected disabled>Gender</option>
+              <option disabled>Gender</option>
               <option value="man">Man</option>
               <option value="women">Women</option>
             </select>

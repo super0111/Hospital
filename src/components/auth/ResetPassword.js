@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import jwt_decode from "jwt-decode";
-const isNotEmpty = (value) => value.trim() != "";
+const isNotEmpty = (value) => value.trim() !== "";
 
 const ResetPassword = () => {
 
@@ -59,7 +59,7 @@ const ResetPassword = () => {
         changePassword(formData)
           .then((res) => {
               console.log(res.status)
-              if(res.status == "success") {
+              if(res.status === "success") {
                 history.push("/patientHome");
               }
               else toast.error(res.err.message)

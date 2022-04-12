@@ -16,6 +16,7 @@
     text-align: center;
     margin: 100px 0 25px 0;
     font-size: 30px;
+    font-family: cursive;
     color: rgb(5, 95, 174);
     font-weight: 700;
 }
@@ -27,7 +28,8 @@
 }
 .patientMenu_title {
     text-align: center;
-    font-size: 18px;
+    font-size: 22px;
+    font-family: monospace;
     font-weight: 700;
     color: rgb(109, 190, 218);
     margin-bottom: 20px;
@@ -79,6 +81,7 @@
 }
 .patientMenu_patient {
     font-size: 20px;
+    font-family: monospace;
     font-weight: 500;
 }
 
@@ -115,6 +118,7 @@
     border: none;
     padding: 5px 10px;
     width: 100%;
+    outline-color: rgb(6 150 187);
 }
 .messageInput::placeholder {
     font-size: 16px;

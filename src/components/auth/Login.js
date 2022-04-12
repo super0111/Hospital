@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const isNotEmpty = (value) => value.trim() != "";
+const isNotEmpty = (value) => value.trim() !== "";
 const isEmail = (value) => value.includes("@");
 
 const Login = (props) => {
@@ -112,7 +112,7 @@ const Login = (props) => {
               <input type="checkbox" />
               <div className={classes.remember_text}>Remember Me</div>
             </div>
-            <a className={classes.forgot_btn}>Forgot Password?</a>
+            <button className={classes.forgot_btn}>Forgot Password?</button>
           </div>
           <div className={classes.form_actions}>
             <button className={classes.button} disabled={!formIsValid}>

@@ -12,9 +12,7 @@ import { io } from "socket.io-client";
 import "./styles.css"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 import { BiX } from "react-icons/bi";
-import { useFormControlUnstyled } from '@mui/base';
 
 const sections1 = [
     { title: 'Login', url: '/login'},
@@ -169,7 +167,7 @@ const HeaderNav= () => {
     if(isShowCanceled === true && current_userName) {
       toast.info(`Patient ${canceledPatientName} has canceled your test.`);
     }
-  }, [isShowCanceled])
+  }, [isShowCanceled, current_userName, canceledPatientName])
 
     return (
       <div className={classes.position}>
@@ -269,7 +267,7 @@ const ProfileMenu = (props) => {
       <Dropdown className={classes.profile} color="primary" label="Profile">
         <DropdownItem>
           <div className={classes.flexRow}>
-            <img className={classes.userAvatar} src={currentAvatar} />
+            <img className={classes.userAvatar} src={currentAvatar} alt="" />
             <div className={classes.userName}>{current_PatientName}</div>
           </div>
         </DropdownItem>

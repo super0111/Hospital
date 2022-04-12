@@ -78,9 +78,14 @@ const AddTest = () => {
             foodValue : foodValue,
             addTextValue : addTextValue,
         }
+        
         addTests(formData)
         .then((res) => {
             socketRef.current.emit("addTest", res);
+            setTestId(testId+1);
+            setFoodValue("")
+            setAddTextValue("")
+            setSelectValue("")
             if(res.message === "success") {
                 toast.info("Test Add Successfull!")
             }
@@ -103,7 +108,7 @@ const AddTest = () => {
                         </div>
                     </div>
                     <select onChange={handleSelectChange} className={classes.select}>
-                    <option selected disabled>Paitents List</option>
+                        <option selected disabled>Paitents List</option>
                         { patientsLists.map((patientsList, i) => {
                             return (
                                 <option value={patientsList.fullname} key={i}>{patientsList.fullname}</option>
