@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef }  from 'react';
+import React, { useState, useEffect, useRef, useContext }  from 'react';
 import NavMenuDraw from './navMenuDraw';
 import Link from '@material-ui/core/Link';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -13,6 +13,7 @@ import "./styles.css"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BiX } from "react-icons/bi";
+import { Context } from '../../AppContext';
 
 const sections1 = [
     { title: 'Login', url: '/login'},
@@ -29,7 +30,8 @@ const HeaderNav= () => {
     });
   }, []);
 
-  const [token, setToken] = useState(null)
+  // const [token, setToken] = useState(null)
+  // const { token, setToken } = useContext(Context);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [currentUserId ,setCurrentUserId] = useState("")
   const [currentPatientId ,setCurrentPatientId] = useState("")
@@ -37,18 +39,27 @@ const HeaderNav= () => {
   const [current_PatientName, setCurrent_PatientName] = useState("")
   const [currentAvatar, setCurrentAvatar] = useState("");
 
-  useEffect(() => {
-      const userString = localStorage.getItem('token');
-      setToken(userString)
-      console.log("user token", userString)
+  const [isDoctor, setDoctor] = useState("");
 
+  useEffect(() => {
+    setInterval(() => {
+    // let userString;  
+    // if(!token) {
+    //   userString = localStorage.getItem('token');
+    //   setToken(userString)
+    // }
+    // userString = token?.token;
+         
+    const userString = localStorage.getItem('token');
+    const isDoctor = localStorage.getItem('isDoctor')
+    setCurrentUser(userString);
+    setDoctor(isDoctor);
       if(userString) {
         const current_user = jwt_decode(userString);
         if(current_user.patient_user) {
           const current_id = current_user.patient_user.id;
           const current_userName = current_user.patient_user.fullname;
           const current_avatar = current_user.patient_user.avatar;
-          setCurrentUser(userString);
           setCurrentPatientId(current_id);
           setCurrent_PatientName(current_userName);
           setCurrentAvatar(current_avatar);
@@ -56,20 +67,19 @@ const HeaderNav= () => {
         if(current_user.user) {
           const current_id = current_user.user.id;
           const current_userName = current_user.user.fullname;
-          setCurrentUser(userString);
           setCurrentUserId(current_id);
           setCurrent_userName(current_userName);
         }
       }
-  }, [token]);
+    }, 100 )
+  }, [currentUser]);
 
   
   const logout = () => {
+    // setToken('');
     history.push("/");
     return localStorage.removeItem("token");
   }
-
-  console.log("token", token)
 
   const [ notify, setNotify ] = useState({})
   const [ isShow, setIsShow ] = useState(false)
@@ -169,6 +179,7 @@ const HeaderNav= () => {
     }
   }, [isShowCanceled, current_userName, canceledPatientName])
 
+
     return (
       <div className={classes.position}>
         <div className={ scroll ? classes.headerToolScroll : classes.headerTool}>
@@ -176,7 +187,7 @@ const HeaderNav= () => {
                 <img alt='' className={classes.navbarLogoImg} src="/images/logo.png" />
             </div>
             <Toolbar component="nav" className={classes.toolbar} variant="dense">
-                { (token && currentUserId) ? (
+                { currentUser && currentUserId ? (
                 <ul className={classes.navigation}>
                     <Link className={classes.navToolbarLink} href="/" style={{marginBottom: "0px"}}>Home</Link>
                     <Link className={classes.navToolbarLink} href="/therapistMessage" style={{marginBottom: "0px"}}>Message</Link>
@@ -186,7 +197,7 @@ const HeaderNav= () => {
                     <Link className={classes.navToolbarLink} onClick={logout} style={{marginBottom: "0px"}}>Logout</Link>
                 </ul>
                 ) : 
-                (token && currentPatientId) ?
+                currentUser && currentPatientId ?
                  (
                   <ul className={classes.navigation}>
                     <Link className={classes.navToolbarLink} href="/patientHome" style={{marginBottom: "0px"}}>PatientHome</Link>
@@ -195,7 +206,6 @@ const HeaderNav= () => {
                     <Link className={classes.navToolbarLink} style={{marginBottom: "0px"}}><ProfileMenu current_PatientName={current_PatientName} currentAvatar={currentAvatar} logout = {logout} /></Link>
                   </ul>
                  ) :
-                 (token === null) ?
                 (
                 <ul>
                   {sections1.map((section1) => (
@@ -210,7 +220,7 @@ const HeaderNav= () => {
                     </Link>
                   ))}
                 </ul>
-              ) : "" }
+              )}
             </Toolbar>
         </div>
         <div className={ scroll ? classes.headerToolResponsiveScroll : classes.headerToolResponsive }>

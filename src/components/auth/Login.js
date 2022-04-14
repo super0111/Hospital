@@ -1,15 +1,18 @@
+import { useContext } from 'react';
 import useInput from "../../hooks/use-input";
 import classes from "./Login.module.css";
 import setAuthToken from "../../utils/setAuthToken";
 import { loginUser } from "../../apis/auth";
 import { useHistory } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
+import { Context } from '../AppContext';
 import 'react-toastify/dist/ReactToastify.css';
 
 const isNotEmpty = (value) => value.trim() !== "";
 const isEmail = (value) => value.includes("@");
 
 const Login = (props) => {
+  const { token, setToken } = useContext(Context);
   let history = useHistory();
   const {
     value: emailValue,
@@ -46,23 +49,21 @@ const Login = (props) => {
         {
           toast.info("Success Therapist  Register")
           setAuthToken(res.token);
-          localStorage.setItem("token", res.token);
           localStorage.setItem("isDoctor", res.doctor);
+          setToken(res.token);
           history.push("/");
         }
         if(res.token && res.doctor===1)
         {
           toast.info("Success Patient Register")
           setAuthToken(res.token);
-          localStorage.setItem("token", res.token);
           localStorage.setItem("isDoctor", res.doctor);
           if(res.isFirst === 1) {
             history.push("/resetPassword");
           }
           else history.push("/patientHome");
-          
         }
-        else { toast.error(res.errors?.message) }
+        else { toast.error(res.errors?.msg) }
       })
       .catch((error) => console.log(error));
       resetEmail();
