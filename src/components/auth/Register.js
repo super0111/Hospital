@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import useInput from "../../hooks/use-input";
-import classes from './Register.module.css'
-import './register.css'
 import { registerUser } from "../../apis/auth";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './register.css'
+import classes from './Register.module.css'
 
 const isNotEmpty = (value) => value.trim() !== "";
 const isEmail = (value) => value.includes("@", ".");
 
-const Register = (props) => {
+const Register = () => {
   const [genderValue, setGender] = useState("man")
   function handleGenderChange(e) {
     setGender(e.target.value);

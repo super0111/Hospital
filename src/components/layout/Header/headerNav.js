@@ -42,14 +42,7 @@ const HeaderNav= () => {
   const [isDoctor, setDoctor] = useState("");
 
   useEffect(() => {
-    setInterval(() => {
-    // let userString;  
-    // if(!token) {
-    //   userString = localStorage.getItem('token');
-    //   setToken(userString)
-    // }
-    // userString = token?.token;
-         
+    setInterval(() => {       
     const userString = localStorage.getItem('token');
     const isDoctor = localStorage.getItem('isDoctor')
     setCurrentUser(userString);
@@ -77,6 +70,8 @@ const HeaderNav= () => {
   
   const logout = () => {
     // setToken('');
+    setCurrentUserId("")
+    setCurrentPatientId("")
     history.push("/");
     return localStorage.removeItem("token");
   }
@@ -179,6 +174,8 @@ const HeaderNav= () => {
     }
   }, [isShowCanceled, current_userName, canceledPatientName])
 
+console.log("isDoctor, currentPatientId, currentUserId", isDoctor, currentPatientId)
+console.log("currentUserId", currentUserId)
 
     return (
       <div className={classes.position}>

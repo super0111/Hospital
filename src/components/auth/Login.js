@@ -71,9 +71,7 @@ const Login = (props) => {
   };
 
   const emailClasses = emailHasError ? "form-control invalid" : "form-control";
-  const passwordClasses = passwordHasError
-    ? "form-control invalid"
-    : "form-control";
+  const passwordClasses = passwordHasError ? "form-control invalid" : "form-control";
 
   return (
     <div className={classes.wrapper_login}>
