@@ -26,7 +26,7 @@ const [state, setState] = useState({ message: "" })
 
     const socketRef = useRef();
     useEffect(() => {
-        socketRef.current = io("http://10.10.10.249:5000", { transports : ['websocket'] });
+        socketRef.current = io(config, { transports : ['websocket'] });
         socketRef.current.on('patient_message_send', (patient_message) => {
             setPatientMessageInfo(patient_message.message)
         })

@@ -66,7 +66,7 @@ const AddTest = () => {
     
     const socketRef = useRef();
     useEffect(() => {
-        socketRef.current = io("http://10.10.10.249:5000", { transports : ['websocket'] });
+        socketRef.current = io(config, { transports : ['websocket'] });
     }, []);
 
     const addTest = (event) => {

@@ -1,5 +1,6 @@
-import classes from "./PatientHome.module.css"
 import React, { useEffect, useRef }  from 'react';
+import classes from "./PatientHome.module.css"
+import config from '../../config';
 import { io } from "socket.io-client";
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const PatientHome = () => {
     const socketRef = useRef();
     useEffect(() => {
-        socketRef.current = io("http://10.10.10.249:5000", { transports : ['websocket'] });
+        socketRef.current = io(config, { transports : ['websocket'] });
     }, []);
     useEffect(() => {
         socketRef.current.on('allow', (notifis) => {

@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useRef, useContext }  from 'react';
+import React, { useState, useEffect, useRef }  from 'react';
 import NavMenuDraw from './navMenuDraw';
 import Link from '@material-ui/core/Link';
 import Toolbar from '@material-ui/core/Toolbar';
 import Dropdown from 'muicss/lib/react/dropdown';
 import DropdownItem from 'muicss/lib/react/dropdown-item';
 import classes from './headerNav.module.css';
+import config from '../../../config';
 import { useHistory } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import {confirmTest, cancelTest} from "./../../../apis/addTests";
 import { io } from "socket.io-client";
-import "./styles.css"
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { BiX } from "react-icons/bi";
-import { Context } from '../../AppContext';
+import 'react-toastify/dist/ReactToastify.css';
+import "./styles.css"
 
 const sections1 = [
     { title: 'Login', url: '/login'},
@@ -24,22 +24,27 @@ const sections1 = [
 const HeaderNav= () => {
   const history = useHistory();
   const [scroll, setScroll] = useState(false);
+  const [currentUser, setCurrentUser] = useState(undefined)
+  const [currentUserId ,setCurrentUserId] = useState("")
+  const [currentPatientId ,setCurrentPatientId] = useState("")
+  const [current_userName, setCurrent_userName] = useState("")
+  const [current_PatientName, setCurrent_PatientName] = useState("")
+  const [currentAvatar, setCurrentAvatar] = useState("")
+  const [isDoctor, setDoctor] = useState("")
+  const [ notify, setNotify ] = useState({})
+  const [ isShow, setIsShow ] = useState(false)
+  const [ byUserShow, setByUserShow ] = useState(false)
+  const [isShowCanceled, setIsShowCanceled] = useState(false)
+  const [canceledPatientName, setCanceledPatientName] = useState("")
+  const [ byTherapistShow, setByTherapistShow ] = useState(false)
+  const [ notifyTherapist, setNotifyTherapist ] = useState('')
+  const [ patientConfirm, setPatientConfirm ] = useState(false)
+
   useEffect(() => {
     window.addEventListener("scroll", () => {
       setScroll(window.scrollY > 50);
     });
   }, []);
-
-  // const [token, setToken] = useState(null)
-  // const { token, setToken } = useContext(Context);
-  const [currentUser, setCurrentUser] = useState(undefined);
-  const [currentUserId ,setCurrentUserId] = useState("")
-  const [currentPatientId ,setCurrentPatientId] = useState("")
-  const [current_userName, setCurrent_userName] = useState("")
-  const [current_PatientName, setCurrent_PatientName] = useState("")
-  const [currentAvatar, setCurrentAvatar] = useState("");
-
-  const [isDoctor, setDoctor] = useState("");
 
   useEffect(() => {
     setInterval(() => {       
@@ -66,28 +71,17 @@ const HeaderNav= () => {
       }
     }, 100 )
   }, [currentUser]);
-
-  
+ 
   const logout = () => {
-    // setToken('');
     setCurrentUserId("")
     setCurrentPatientId("")
     history.push("/");
     return localStorage.removeItem("token");
   }
 
-  const [ notify, setNotify ] = useState({})
-  const [ isShow, setIsShow ] = useState(false)
-  const [ byUserShow, setByUserShow ] = useState(false)
-  const [isShowCanceled, setIsShowCanceled] = useState(false)
-  const [canceledPatientName, setCanceledPatientName] = useState("")
-  const [ byTherapistShow, setByTherapistShow ] = useState(false)
-  const [ notifyTherapist, setNotifyTherapist ] = useState('')
-  const [ patientConfirm, setPatientConfirm ] = useState(false)
-
   const socketRef = useRef();
   useEffect(() => {
-      socketRef.current = io("http://10.10.10.249:5000", { transports : ['websocket'] });
+      socketRef.current = io(config, { transports : ['websocket'] });
   }, [socketRef]);
   useEffect(() => {
       socketRef.current.on('addTest', (notifis) => {
