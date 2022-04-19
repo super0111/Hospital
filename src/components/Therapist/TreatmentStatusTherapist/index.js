@@ -3,6 +3,7 @@ import classes from "./TreatmentStatusTherapist.module.css"
 import config from "../../../config";
 import { BiEditAlt } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
+import { testDelete } from "./../../../apis/addTests"
 
 const TreatmentStatusTherapist = () => {
     const [ patientsLists, setPatientLists ] = useState([])
@@ -36,6 +37,13 @@ const TreatmentStatusTherapist = () => {
         setTestList(patientTests)
         setIsActive(i)
     }
+
+    const handleTestDelete = (i) => {
+        testDelete(i)
+        .then((res) => {
+            console.log(res)
+        })
+    }
     return (
         <div className={classes.treatmentStatusTherapist}>
             <div className={classes.patientList}>
@@ -54,11 +62,14 @@ const TreatmentStatusTherapist = () => {
                 <div className={classes.statusItem_title_field}>
                     <div className={classes.statusItem_title}>Test ID</div>
                     <div className={classes.statusItem_title}>Test Date</div>
-                    <div className={classes.statusItem_title}>Food Guidelines</div>
-                    <div className={classes.statusItem_title}>Additional Notes </div>
+                    <div className={classes.statusItem_title}>Food Allergic</div>
+                    <div className={classes.statusItem_title}>Amount Number</div>
+                    <div className={classes.statusItem_title}>Eat Time</div>
+                    <div className={classes.statusItem_title}>Food Instructions</div>
                     <div className={classes.statusItem_title}>Status</div>
                     <div className={classes.statusItem_title}>Actions</div>
                 </div>
+                {console.log("testLists", testLists)}
                 { testLists.map((test, i) => {
                     return(
                         <div key={i} className={classes.status_item}>
@@ -69,10 +80,17 @@ const TreatmentStatusTherapist = () => {
                                 {test.date}
                             </div>
                             <div className={classes.text}>
-                                {test.foodValue}
+                                {test.foodName}
                             </div>
                             <div className={classes.text}>
-                                {test.addTextValue}
+                                {test.whightAmountValue}
+                                {test.whightAmountUnits}
+                            </div>
+                            <div className={classes.text}>
+                                {test.eatTimeValue} Hours
+                            </div>
+                            <div className={classes.text}>
+                                {test.addInstructions}
                             </div>
                             <div className={classes.text}>
                                 { test.canceled === true ? 
@@ -83,7 +101,7 @@ const TreatmentStatusTherapist = () => {
                             </div>
                             <div className={classes.action}>
                                 <BiEditAlt className={classes.icon} />
-                                <MdDeleteForever className={classes.icon} />
+                                <MdDeleteForever className={classes.icon} onClick={handleTestDelete}/>
                             </div>
                         </div>
                     )

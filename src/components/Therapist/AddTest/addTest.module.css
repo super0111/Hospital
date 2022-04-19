@@ -94,8 +94,63 @@
       color: rgb(52, 52, 52);
       margin-left: 5px;
   }
-  .datePicker {
+.datePicker {
     width: 38%!important;
+}
+.testSelect_text {
+    width: 100%;
+    font-size: 18px;
+    color: rgb(52, 52, 52);
+    margin-left: 5px;
+}
+.testSelect_field {
+  width: 38%!important;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.useTestSelect_field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.useTestSelect {
+  width: 38%;
+  margin: 10px 0;
+  padding: 5px;
+  border-radius: 5px;
+}
+.testSelect {
+  width: 100%;
+  outline: none;
+  border: 1px solid rgb(20, 71, 101);
+  border-radius: 5px;
+  padding: 5px 5px;
+  font-size: 16px;
+  color: rgb(2, 40, 77);
+}
+.checkbox {
+  width: 38%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.allergies_textField {
+  margin-top: 5px;
+}
+.allergic_text {
+  font-size: 14px;
+}
+.allergies_input {
+  width: 80px;
+  padding: 3px 5px;
+  margin: 0 5px;
+  border: 1px solid rgb(31, 95, 132);
+  border-radius: 3px;
+  outline: none;
+}
+.allergies_input::placeholder {
+  font-size: 12px;
 }
 .id_name {
     text-align: left;
@@ -112,21 +167,102 @@
     color: rgb(52, 52, 52);
     padding-left: 10px;
 }
-.food_name, .add_text {
-    text-align: left;
+.foodInstruction_field {
+  width: 38%;
+  border: 1px solid rgb(43, 89, 106);
+  border-radius: 5px;
+  padding: 10px;
+}
+.foodIns_field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.foodIns_value {
     width: 100%;
-    font-size: 18px;
-    color: rgb(52, 52, 52);
+    border: 1px solid rgb(43, 89, 106);
+    border-radius: 5px;
+    outline: none;
+    padding: 5px;
+    font-size: 15px;
+    color:rgb(88, 93, 93);
     margin-left: 5px;
 }
+.foodIns_value::placeholder {
+  font-size: 12px;
+}
 .food_input {
-    width: 38%;
+    width: 100%;
     border: 1px solid rgb(43, 89, 106);
     border-radius: 5px;
     outline: none;
     padding: 10px;
     font-size: 15px;
     color:rgb(88, 93, 93);
+}
+.amount_field {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px 0;
+}
+.amount_type {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 10px;
+}
+.amount_type_name {
+  font-size: 12px;
+  color: rgb(28, 121, 213);
+  margin: 0 5px;
+}
+.amount_value_field {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.amount_value {
+  width: 80px;
+  padding: 3px;
+  border: 1px solid rgb(15, 103, 175);
+  border-radius: 3px;
+  outline: none;
+}
+.amount_units {
+  width: 80px;
+  padding: 3px;
+  border: 1px solid rgb(15, 103, 175);
+  border-radius: 3px;
+  outline: none;
+  margin-left: 10px;
+}
+.amount_value::placeholder {
+  font-size: 12px;
+}
+.eat_time_field {
+  margin-bottom: 10px;
+}
+.eat_time_value {
+  width: 40px;
+  padding: 3px;
+  border: 1px solid rgb(15, 103, 175);
+  border-radius: 3px;
+  outline: none;
+  margin-left: 10px;
+}
+.eat_time_text {
+  font-size: 14px;
+  color: rgb(66, 67, 68);
+}
+.food_name, .add_text {
+  text-align: left;
+  width: 100%;
+  font-size: 18px;
+  color: rgb(52, 52, 52);
+  margin-left: 5px;
 }
 .addText_value {
     width: 38%;

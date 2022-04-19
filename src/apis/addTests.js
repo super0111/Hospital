@@ -1,6 +1,7 @@
 import config from '../config'
 
 const addTests = (formData, history) => {
+  console.log("formData", formData)
     return fetch(`${config.server_url}api/posts/addTests`, {
       method: "POST",
       headers: {
@@ -44,4 +45,16 @@ const cancelTest = ( formData ) => {
     return res.json();
   });
 }
-export { addTests, confirmTest, cancelTest }
+
+const testDelete = (i) => {
+  return fetch(`${config.server_url}api/posts/deleteTest`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+  .then((res) =>{
+    return res.json();
+  });
+}
+export { addTests, confirmTest, cancelTest, testDelete }
