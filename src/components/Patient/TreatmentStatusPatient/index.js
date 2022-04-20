@@ -35,7 +35,6 @@ const TreatmentStatusPatient = () => {
 
     useEffect( () => {
             const myTests = dataTestsLists.filter((item) => item.patient_name === current_PatientName )
-            console.log("myTests", myTests)
             setTests(myTests)
     }, [current_PatientName, dataTestsLists] )
 
@@ -50,6 +49,13 @@ const TreatmentStatusPatient = () => {
           setNotify(notifis.test)
       });
     }, [socketRef]);
+
+    useEffect(() => {
+        socketRef.current.on('deleteTest', (tests) => {
+            console.log(tests)
+        //   setNotify(tests.test)
+      });
+    }, [socketRef]);   
 
     useEffect(() => {
         if(notify.patient_name === current_PatientName) {

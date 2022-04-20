@@ -69,14 +69,21 @@ router.get('/getPatients',
 
 router.post('/addTests',
     async (req, res) => {
-        const { patient_name, test_id, date, foodValue, addTextValue  } = req.body;
+        const { patient_name, test_id, testName, date, allergies, foodName, whightAmountValue, whightAmountUnits, unitsAmountValue, eatTimeValue, eatTimeUnits, addInstructions  } = req.body;
         try {
             const test = new Test({
                 patient_name,
                 test_id,
+                testName,
                 date,
-                foodValue,
-                addTextValue,
+                allergies,
+                foodName,
+                whightAmountValue,
+                whightAmountUnits,
+                unitsAmountValue,
+                eatTimeValue,
+                eatTimeUnits,
+                addInstructions,
             })
             await test.save()
             .then(test => res.json({message: "success", test}))
@@ -88,6 +95,41 @@ router.post('/addTests',
             console.error(err);
             res.status(500).send("Server 500 error");
         }
+    }
+)
+
+router.put('/editTest/:id',
+    async (req, res) => {
+        const id = req.params.id;
+        const { patient_name, test_id, testName, date, allergies, foodName, whightAmountValue, whightAmountUnits, unitsAmountValue, eatTimeValue, eatTimeUnits, addInstructions  } = req.body;
+        try {
+            
+            // await test.save()
+            // .then(test => res.json({message: "success", test}))
+            // .catch(err => {
+            //     res.status(400).json({AddTest: err.message})
+            // });
+        }
+        catch (err) {
+            console.error(err);
+            res.status(500).send("Server 500 error");
+        }
+    }
+)
+
+router.delete('/deleteTest/:id',
+    (req, res) => {
+        Test.findById(req.params.id)
+        .then(test => {
+            test.delete()
+            .then( () => {
+                Test.find()
+                .then( tests =>res.json({success: true, data: tests}))
+            } )
+        })
+        .catch(err => {
+            res.status(400).json({Test: err.message})
+        })
     }
 )
 
@@ -127,7 +169,7 @@ router.put("/changePassword",
 
 router.get('/getTests',
     (req, res) => {
-        Test.find().sort({ date: 1 })
+        Test.find()
         .then(tests => res.json(tests))
         .catch(err => {console.log(err)
             res.status(404).json({err: "Tests no found"})

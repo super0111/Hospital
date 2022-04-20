@@ -46,6 +46,9 @@ io.on('connection', function(socket){
   socket.on("addTest", (notifis) => {
     io.emit('addTest', notifis);  
   });
+  socket.on("deleteTest", (tests) => {
+    io.emit('deleteTest', tests);  
+  });
   socket.on("patientConfirm", (patientConfirm) => {
     io.emit('patientConfirm', patientConfirm);  
   });

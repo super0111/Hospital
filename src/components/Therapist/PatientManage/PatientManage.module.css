@@ -1,0 +1,86 @@
+.patientManage {
+    display: flex;
+    flex-direction: column;
+}
+.title {
+    text-align: center;
+    margin: 100px 0 25px 0;
+    font-size: 30px;
+    font-family: cursive;
+    color: rgb(5, 95, 174);
+    font-weight: 700;
+}
+.body {
+    width: 85%;
+    box-shadow: 0px 1px 3px #555;
+    margin: auto;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+.patientList {
+    border-right: 1px solid rgb(156, 155, 155);
+    width: 20%;
+    padding: 20px;
+}
+.patient_title {
+    font-size: 22px;
+    font-family: monospace;
+    color: #096ed2;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 25px;
+}
+.patient_item_active {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 30px ;
+    border-bottom: 1px dotted #1162cf;
+    cursor: pointer;
+    background-color: #096ed2;
+    border-radius: 3px;
+    color: white!important;
+}
+.patient_item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 30px ;
+    border-bottom: 1px dotted #1162cf;
+    cursor: pointer;
+}
+.patient_item:hover {
+    background-color: #096ed2;
+    border-radius: 3px;
+    color: white;
+}
+.patient_item:hover .patient_name  {
+    color: white;
+}
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+}
+.patient_name_active {
+    font-size: 15px;
+    color: white;
+    font-weight: 500;
+}
+.patient_name {
+    font-size: 15px;
+    color: #555;
+    font-weight: 500;
+}
+.patientBody {
+    padding: 30px 60px;
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+}
+.patientDetails {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+}

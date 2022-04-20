@@ -8,14 +8,38 @@ const TestSchema = new mongoose.Schema({
     test_id : {
         type: Number,
     },
+    testName: {
+        type: String,
+        required: true,
+    },
     date: {
         type: String,
         required: true,
     },
-    foodValue: {
+    allergies : {
+        type: String,
+        required: true,
+    },
+    foodName : {
+        type: String,
+        required: true,
+    },
+    whightAmountValue : {
+        type: Number,
+    },
+    whightAmountUnits : {
         type: String,
     },
-    addTextValue: {
+    unitsAmountValue : {
+        type: Number,
+    },
+    eatTimeValue : {
+        type: Number,
+    },
+    eatTimeUnits : {
+        type: String,
+    },
+    addInstructions : {
         type: String,
     },
     confirmed: {

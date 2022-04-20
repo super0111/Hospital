@@ -47,7 +47,7 @@ const cancelTest = ( formData ) => {
 }
 
 const testDelete = (i) => {
-  return fetch(`${config.server_url}api/posts/deleteTest`, {
+  return fetch(`${config.server_url}api/posts/deleteTest/${i}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -57,4 +57,16 @@ const testDelete = (i) => {
     return res.json();
   });
 }
-export { addTests, confirmTest, cancelTest, testDelete }
+
+const testEdit = (i) => {
+  return fetch(`${config.server_url}api/posts/editTest/${i}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+  .then((res) =>{
+    return res.json();
+  });
+}
+export { addTests, confirmTest, cancelTest, testDelete, testEdit }

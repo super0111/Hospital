@@ -1,21 +1,33 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
+import { useHistory } from "react-router-dom";
 import classes from "./TreatmentStatusTherapist.module.css"
 import config from "../../../config";
+import { io } from "socket.io-client";
 import { BiEditAlt } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
-import { testDelete } from "./../../../apis/addTests"
+import { testDelete, testEdit } from "./../../../apis/addTests"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { FcAlphabeticalSortingAz, FcAlphabeticalSortingZa, FcDownload, FcUpload } from "react-icons/fc";
+
 
 const TreatmentStatusTherapist = () => {
+    let history = useHistory();
     const [ patientsLists, setPatientLists ] = useState([])
     const [ dataTestsLists, setTestsLists ] = useState([])
     const [ testLists, setTestList ] = useState([])
-    const [ isActive, setIsActive ] = useState(false) 
+    const [ isActive, setIsActive ] = useState(false)
+    const [ sortIcon, setSortIcon ] = useState(false)
+    const [ dateSort, setDateSort ] = useState(false)
+    const [ statusSort, setStatusSort ] = useState(false)
+    const [ searchResults, setSearchResults ] = useState([])
 
     useEffect(async () => {
         const fetchPosts = async () => {
             const res = await fetch(`${config.server_url}api/posts/getPatients`);
             const patients = await res.json();
             setPatientLists(patients);
+            setSearchResults(patients);
         };
         const fetchTestPosts = async () => {
             const res = await fetch(`${config.server_url}api/posts/getTests`);
@@ -26,6 +38,11 @@ const TreatmentStatusTherapist = () => {
         await fetchPosts();   
     }, []);
 
+    const socketRef = useRef();
+    useEffect(() => {
+        socketRef.current = io(config, { transports : ['websocket'] });
+    }, []);
+
     useEffect(() => {
         if(patientsLists && patientsLists.length > 0) {
             handlePatientClick(patientsLists[0]['fullname']);
@@ -33,7 +50,7 @@ const TreatmentStatusTherapist = () => {
     }, [patientsLists]);
     
     const handlePatientClick = (patient, i) => {
-        const patientTests = dataTestsLists.filter((item) => item.patient_name === patient);
+        const patientTests = dataTestsLists.filter((item) => { return item.patient_name === patient});
         setTestList(patientTests)
         setIsActive(i)
     }
@@ -41,73 +58,169 @@ const TreatmentStatusTherapist = () => {
     const handleTestDelete = (i) => {
         testDelete(i)
         .then((res) => {
-            console.log(res)
+            socketRef.current.emit("deleteTest", res)
+            setTestList(res.data)
+            if(res.success === true) {
+                toast.info("Test Delete Successfully")
+            }
         })
     }
+
+    const handleTestEdit = (i) => {
+        history.push(
+            { pathname: "./editTest", 
+            state: i, });
+    }
+
+    const handlePatientSort = () => {
+        setSortIcon(!sortIcon)
+        if(sortIcon === true) {
+            patientsLists.sort(function(a, b){
+                if(a.fullname < b.fullname) { return -1; }
+                if(a.fullname > b.fullname) { return 1; }
+                return 0;
+            })
+        } else {
+            patientsLists.sort(function(a, b){
+                if(a.fullname > b.fullname) { return -1; }
+                if(a.fullname < b.fullname) { return 1; }
+                return 0;
+            })
+        }
+    }
+
+    const handleDateSort = () => {
+        setDateSort(!dateSort)
+        if(dateSort === true) {
+            const values = testLists.sort(function (a, b) {
+                var dateA = new Date(a.date), dateB = new Date(b.date)
+                return dateA - dateB
+            });
+            setTestList(values)
+        } else {
+            const values = testLists.sort(function (a, b) {
+                var dateA = new Date(a.date), dateB = new Date(b.date)
+                return dateB - dateA
+            });
+            setTestList(values)
+        }
+        
+    }
+
+    const handleStatusSort = () => {
+        setStatusSort(!statusSort)
+        if(statusSort === true) {
+            testLists.sort(function(a, b){
+                if(a.confirmed < b.confirmed) { return -1; }
+                if(a.confirmed > b.confirmed) { return 1; }
+                return 0;
+            })
+        } else {
+            testLists.sort(function(a, b){
+                if(a.confirmed > b.confirmed) { return -1; }
+                if(a.confirmed < b.confirmed) { return 1; }
+                return 0;
+            })
+        }
+    }
+
+    const hanldeSerchPatient = (e) => {
+        const values = patientsLists.filter((item) => item.fullname.toLowerCase().includes(e.target.value));
+        setSearchResults(values)
+    }
+
     return (
-        <div className={classes.treatmentStatusTherapist}>
-            <div className={classes.patientList}>
-                <div className={classes.title}>Patients Lists</div>
-                { patientsLists.map((patientsList, i) => {
-                    return (
-                        <div key={patientsList._id} className={isActive === i ? classes.patient_item_active : classes.patient_item } onClick={() => handlePatientClick(patientsList.fullname, i)}>
-                            <img className={classes.avatar} src={patientsList.picture} />
-                            <div className={isActive === i ? classes.patient_name_active : classes.patient_name}>{patientsList.fullname}</div>
-                        </div>
-                    )   
-                }) }
+        <div className={classes.statusField}>
+            <div className={classes.filter_field}>
+                <input className={classes.filter} type="text" placeholder="&#xf167; Search Patient" onChange={hanldeSerchPatient} />
             </div>
-            <div className={classes.patientStatus}>
-                <div className={classes.status_title}>Patients Status</div>
-                <div className={classes.statusItem_title_field}>
-                    <div className={classes.statusItem_title}>Test ID</div>
-                    <div className={classes.statusItem_title}>Test Date</div>
-                    <div className={classes.statusItem_title}>Food Allergic</div>
-                    <div className={classes.statusItem_title}>Amount Number</div>
-                    <div className={classes.statusItem_title}>Eat Time</div>
-                    <div className={classes.statusItem_title}>Food Instructions</div>
-                    <div className={classes.statusItem_title}>Status</div>
-                    <div className={classes.statusItem_title}>Actions</div>
+            <div className={classes.treatmentStatusTherapist}>
+                <div className={classes.patientList}>
+                    <div className={classes.title}>Patients Lists</div>
+                    <div className={classes.patient_sort_field} onClick={handlePatientSort}>
+                        <div className={classes.patient_sort}>Sort By Patient</div>
+                        { sortIcon === false ? <FcAlphabeticalSortingAz size={20} /> : <FcAlphabeticalSortingZa size={20} /> }
+                    </div>
+                    { searchResults.map((patientsList, i) => {
+                        return (
+                            <div 
+                                key={patientsList._id} 
+                                className={isActive === i ? classes.patient_item_active : classes.patient_item } 
+                                onClick={() => handlePatientClick(patientsList.fullname, i)}
+                            >
+                                <img className={classes.avatar} src={patientsList.picture} />
+                                <div className={isActive === i ? classes.patient_name_active : classes.patient_name}>{patientsList.fullname}</div>
+                            </div>
+                        )   
+                    }) }
                 </div>
-                {console.log("testLists", testLists)}
-                { testLists.map((test, i) => {
-                    return(
-                        <div key={i} className={classes.status_item}>
-                            <div className={classes.text}>
-                                {test.test_id}
-                            </div>
-                            <div className={classes.text}>
-                                {test.date}
-                            </div>
-                            <div className={classes.text}>
-                                {test.foodName}
-                            </div>
-                            <div className={classes.text}>
-                                {test.whightAmountValue}
-                                {test.whightAmountUnits}
-                            </div>
-                            <div className={classes.text}>
-                                {test.eatTimeValue} Hours
-                            </div>
-                            <div className={classes.text}>
-                                {test.addInstructions}
-                            </div>
-                            <div className={classes.text}>
-                                { test.canceled === true ? 
-                                    <div className={classes.canceledText}>Canceled</div> : 
-                                    test.confirmed === true ? <div className={classes.planedText}>Planed</div> : 
-                                    <div className={classes.newText}>New</div> 
-                                }
-                            </div>
-                            <div className={classes.action}>
-                                <BiEditAlt className={classes.icon} />
-                                <MdDeleteForever className={classes.icon} onClick={handleTestDelete}/>
-                            </div>
+                <div className={classes.patientStatus}>
+                    <div className={classes.status_title}>Patients Status</div>
+                    <div className={classes.statusItem_title_field}>
+                        <div className={classes.statusItem_title}>Test ID</div>
+                        <div className={classes.statusItem_title} onClick={handleDateSort}>
+                            Test Date{dateSort === true? <FcUpload size={18} /> : <FcDownload size={18} />}
                         </div>
-                    )
-                }) }
+                        <div className={classes.statusItem_title}>Food Allergic</div>
+                        <div className={classes.statusItem_title}>Amount Number</div>
+                        <div className={classes.statusItem_title}>Eat Time</div>
+                        <div className={classes.statusItem_title}>Food Instructions</div>
+                        <div className={classes.statusItem_title} onClick={handleStatusSort}>
+                            Status{statusSort === true ? <FcUpload size={18} /> : <FcDownload size={18} />} </div>
+                        <div className={classes.statusItem_title}>Actions</div>
+                    </div>
+                    { testLists && testLists.map((test, i) => {
+                        return(
+                            <div key={i} className={classes.status_item}>
+                                <div className={classes.text}>
+                                    {i+1}
+                                </div>
+                                <div className={classes.text}>
+                                    {test.date}
+                                </div>
+                                <div className={classes.text}>
+                                    {test.foodName}
+                                </div>
+                                <div className={classes.text}>
+                                    {test.whightAmountValue}
+                                    {test.whightAmountUnits}
+                                </div>
+                                <div className={classes.text}>
+                                    {test.eatTimeValue} {test.eatTimeUnits}
+                                </div>
+                                <div className={classes.text}>
+                                    {test.addInstructions}
+                                </div>
+                                <div className={classes.text}>
+                                    { 
+                                        // test.canceled === true ?
+                                        // <div ref={ref} className={classes.canceledText}>Canceled</div> 
+                                        // : 
+                                        test.confirmed === true 
+                                        ? 
+                                        <div className={classes.planedText}>Planed</div> 
+                                        : 
+                                        <div className={classes.newText}>New</div>
+                                    }
+                                </div>
+                                <div className={classes.action}>
+                                    <div onClick={() => handleTestEdit(test._id)}>
+                                        <BiEditAlt className={classes.icon} />
+                                    </div>
+                                    <div onClick={() => handleTestDelete(test._id)}>
+                                        <MdDeleteForever 
+                                            className={classes.icon}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    }) }
+                </div>
+                <ToastContainer />
             </div>
         </div>
+        
     )
 }
 export default TreatmentStatusTherapist

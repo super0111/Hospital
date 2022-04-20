@@ -1,0 +1,36 @@
+.testLists {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+.title {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: rgb(41, 111, 231);
+    text-align: center;
+    margin-bottom: 10px;
+}
+.body {
+    width: 100%;
+    border: 1px solid rgb(176, 178, 183);
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    border-bottom: 1px dotted rgb(50, 113, 191);
+}
+.item_id {
+    font-size: 15px;
+    font-weight: 500;
+}
+.item_name {
+    font-size: 16px;
+    font-weight: 600;
+}

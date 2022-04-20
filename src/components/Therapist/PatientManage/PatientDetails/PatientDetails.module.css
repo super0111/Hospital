@@ -1,0 +1,78 @@
+.patientDetails {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+}
+.title {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: rgb(41, 111, 231);
+    text-align: center;
+    margin-bottom: 10px;
+}
+.body {
+    width: 100%;
+    border: 1px solid rgb(176, 178, 183);
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.flexRow {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dotted rgb(50, 113, 191);
+    margin: 10px 0;
+}
+.name {
+    font-size: 15px;
+    font-weight: 500;
+}
+.value {
+    font-size: 16px;
+    font-weight: 600;
+}
+.patient_info_field {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: 10px;
+}
+.patient_info {
+    border: 1px dotted rgb(50, 113, 191);
+    padding: 5px;
+    width: 100%;
+    border-radius: 5px;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+
+
+.patientTreatment {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    width: 100%;
+    border: 1px solid rgb(176, 178, 183);
+    border-radius: 5px;
+    padding: 10px;
+}
+.treatmentName {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: rgb(41, 111, 231);
+}
+.treatmentStatus {
+    font-size: 18px;
+    color: rgb(33, 64, 217);
+    font-weight: 600;
+}

@@ -83,12 +83,19 @@ const HeaderNav= () => {
   useEffect(() => {
       socketRef.current = io(config, { transports : ['websocket'] });
   }, [socketRef]);
+
   useEffect(() => {
       socketRef.current.on('addTest', (notifis) => {
         setNotify(notifis.test)
         setIsShow(true)
     });
   }, [isShow]);
+
+  useEffect(() => {
+      socketRef.current.on('deleteTest', (tests) => {
+        toast.info("Test is deleted")
+    });
+  }, []);
 
   useEffect(() => {
     if(notify.patient_name === current_PatientName) {
@@ -168,9 +175,6 @@ const HeaderNav= () => {
     }
   }, [isShowCanceled, current_userName, canceledPatientName])
 
-console.log("isDoctor, currentPatientId, currentUserId", isDoctor, currentPatientId)
-console.log("currentUserId", currentUserId)
-
     return (
       <div className={classes.position}>
         <div className={ scroll ? classes.headerToolScroll : classes.headerTool}>
@@ -181,6 +185,7 @@ console.log("currentUserId", currentUserId)
                 { currentUser && currentUserId ? (
                 <ul className={classes.navigation}>
                     <Link className={classes.navToolbarLink} href="/" style={{marginBottom: "0px"}}>Home</Link>
+                    <Link className={classes.navToolbarLink} href="/managePatients" style={{marginBottom: "0px"}}>Manage Patients</Link>
                     <Link className={classes.navToolbarLink} href="/therapistMessage" style={{marginBottom: "0px"}}>Message</Link>
                     <Link className={classes.navToolbarLink} href="/addTest" style={{marginBottom: 0}}>Add Test</Link>
                     <Link className={classes.navToolbarLink} href="/treatmentStatus_therapist" style={{marginBottom: "0px"}}>Patient Treatment Status</Link>

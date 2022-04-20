@@ -11,11 +11,12 @@ import Switch from "react-switch";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {addTests} from "../../../apis/addTests"
-import { FcCalendar, FcPortraitMode, FcDocument, FcFlowChart, FcAcceptDatabase } from "react-icons/fc";
+import { FcCalendar, FcPortraitMode, FcDocument, FcFlowChart, FcAcceptDatabase, FcBusinessContact } from "react-icons/fc";
 
 const AddTest = () => {
     const [ patientsLists, setPatientLists ] = useState([])
     const [ patientTests, setTests ] = useState([])
+    const [ testName, setTestName ] = useState("")
     const [ useTests ,setUseTests ] = useState([])
     const [value, setValue] = React.useState(new Date('2022-04-10T21:11:54'))
     const [ testId, setTestId ] = useState("")
@@ -24,14 +25,15 @@ const AddTest = () => {
     const [ usedTestSelect ,setUsedTestSelect ] = useState(1)
 
     const [allergiesCheckValue, setAllergiesCheck] = useState({checked:false})
-    const [allergiesValue, setAllergiesValue] = useState("")
+    const [allergiesValue, setAllergiesValue] = useState("false")
     const [allergies, setAllergies] = useState("")
     const [foodName, setFoodName] = useState("")
-    const [ amountTypeCheck ,setAmountTypeCheck ] = useState({checked:false})
-    const [whightAmountValue ,setWhightAmountValue] = useState("")
-    const [whightAmountUnits ,setWhightAmountUnits] = useState("gram")
-    const [unitsAmountValue ,setUnitsAmountValue] = useState("")
-    const [ eatTimeValue ,setEatTime ] = useState("")
+    const [ amountTypeCheck, setAmountTypeCheck ] = useState({checked:false})
+    const [whightAmountValue, setWhightAmountValue] = useState("")
+    const [whightAmountUnits, setWhightAmountUnits] = useState("gram")
+    const [unitsAmountValue, setUnitsAmountValue] = useState("")
+    const [ eatTimeValue, setEatTime ] = useState("")
+    const [ eatTimeUnits, setEatTimeUnits ] = useState("hours")
     const [ addInstructions, setAddInstructions ] = useState("")
 
     useEffect( () => {
@@ -69,41 +71,48 @@ const AddTest = () => {
             }
         }
     }
+
     const handleTestSelectChange = (e) => {
         setTestSelectValue(e.target.value);
         if(useTests) {
             const tests = useTests.find((item) =>( item.test_id == usedTestSelect ));
-            console.log("tests", tests)
-            setAllergies(tests.allergies)
-            setFoodName(tests.foodName)
-            setWhightAmountValue(tests.whightAmountValue)
-            setWhightAmountUnits(tests.whightAmountUnits)
-            setUnitsAmountValue(tests.unitsAmountValue)
-            setEatTime(tests.eatTimeValue)
-            setAddInstructions(tests.addInstructions)
+            setAllergies(tests?.allergies)
+            setFoodName(tests?.foodName)
+            setWhightAmountValue(tests?.whightAmountValue)
+            setWhightAmountUnits(tests?.whightAmountUnits)
+            setUnitsAmountValue(tests?.unitsAmountValue)
+            setEatTime(tests?.eatTimeValue)
+            setEatTimeUnits(tests?.eatTimeUnits)
+            setAddInstructions(tests?.addInstructions)
         }
         if(e.target.value === "new") {
             setAllergies("")
             setFoodName("")
+            setAllergiesValue("")
             setWhightAmountValue("")
             setWhightAmountUnits("")
             setUnitsAmountValue("")
             setEatTime("")
+            setEatTimeUnits("")
             setAddInstructions("")
         }
+    }
+
+    const handleTestName = (e) => {
+        setTestName(e.target.value)
     }
 
     const handleUsedTestSelectChange = (e) => {
         setUsedTestSelect(e.target.value)
         if(useTests) {
             const tests = useTests.find((item) =>( item.test_id == usedTestSelect ));
-            console.log("tests", tests)
             setAllergies(tests.allergies)
             setFoodName(tests.foodName)
             setWhightAmountValue(tests.whightAmountValue)
             setWhightAmountUnits(tests.whightAmountUnits)
             setUnitsAmountValue(tests.unitsAmountValue)
             setEatTime(tests.eatTimeValue)
+            setEatTimeUnits(tests.eatTimeUnits)
             setAddInstructions(tests.addInstructions)
         }
     }
@@ -133,6 +142,9 @@ const AddTest = () => {
     const handleEatTimeChange = (e) => {
         setEatTime(e.target.value)
     }
+    const handleEatTimeUnitsChange = (e) => {
+        setEatTimeUnits(e.target.value)
+    }
     const handleAddInstructionsChange = (e) => {
         setAddInstructions(e.target.value)
     }
@@ -153,19 +165,22 @@ const AddTest = () => {
         const formData = {
             patient_name : patientSelectValue,
             test_id : testId,
+            testName : testName,
             date :  value,
-            allergies : allergies,
+            allergies : allergiesValue,
             foodName : foodName,
             whightAmountValue : whightAmountValue,
             whightAmountUnits : whightAmountUnits,
             unitsAmountValue : unitsAmountValue,
             eatTimeValue : eatTimeValue,
+            eatTimeUnits : eatTimeUnits,
             addInstructions : addInstructions,
         }
         addTests(formData)
         .then((res) => {
-            socketRef.current.emit("addTest", res);
-            setTestId(testId+1);
+            socketRef.current.emit("addTest", res)
+            setTestId(testId+1)
+            setTestName("")
             setPatientSelectValue("")
             setAllergiesValue("")
             setFoodName("")
@@ -209,6 +224,13 @@ const AddTest = () => {
                         <div className={classes.id_name}>Test ID</div>
                     </div>
                     <div className={classes.id_value}>{testId}</div>
+                </div>
+                <div className={classes.item_field}>
+                    <div className={classes.flexRow}>
+                        <FcBusinessContact size={30} />
+                        <div className={classes.id_name}>Test Name</div>
+                    </div>
+                    <input className={classes.testName_input} type="text" placeholder='Test Name' onChange={handleTestName} />
                 </div>
                 <div className={classes.item_field}>
                     <div className={classes.flexRow}>
@@ -333,7 +355,12 @@ const AddTest = () => {
                                             placeholder="time" 
                                             className={classes.eat_time_value} 
                                         />
-                                        hours before the test.
+                                        <select onChange={handleEatTimeUnitsChange} className={classes.eat_time_units}>
+                                            <option value="hours">Hours</option>
+                                            <option value="mins">Minuites</option>
+                                            <option value="seconds">Seconds</option>
+                                        </select>
+                                        before the test.
                                     </div>
                                 </div>
                                 <div className={classes.amount_name}>
