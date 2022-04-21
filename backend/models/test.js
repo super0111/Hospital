@@ -3,26 +3,26 @@ const mongoose = require('mongoose')
 const TestSchema = new mongoose.Schema({
     patient_name : {
         type: String,
-        required: true,
+        // required: true,
     },
     test_id : {
         type: Number,
     },
     testName: {
         type: String,
-        required: true,
+        // required: true,
     },
     date: {
         type: String,
-        required: true,
+        // required: true,
     },
     allergies : {
         type: String,
-        required: true,
+        // required: true,
     },
     foodName : {
         type: String,
-        required: true,
+        // required: true,
     },
     whightAmountValue : {
         type: Number,
@@ -35,11 +35,14 @@ const TestSchema = new mongoose.Schema({
     },
     eatTimeValue : {
         type: Number,
+        // required: true,
     },
     eatTimeUnits : {
         type: String,
+        // required: true,
     },
     addInstructions : {
+        required: true,
         type: String,
     },
     confirmed: {

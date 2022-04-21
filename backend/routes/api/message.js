@@ -5,7 +5,6 @@ const Message = require('../../models/message');
 router.post('/', 
     async (req, res) => {
         const { therapist_id, therapist_name, therapist_avatar, patient_name, patient_avatar, patient_id, message, isTherapistMessage, date } = req.body;
-        console.log(req.body)
         const messages = new Message({
             therapist_id,
             therapist_name,

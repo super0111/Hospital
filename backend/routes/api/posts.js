@@ -67,6 +67,16 @@ router.get('/getPatients',
     }
 )
 
+router.get('/getTests',
+    (req, res) => {
+        Test.find()
+        .then(tests => res.json(tests))
+        .catch(err => {console.log(err)
+            res.status(404).json({err: "Tests no found"})
+        });
+    }
+)
+
 router.post('/addTests',
     async (req, res) => {
         const { patient_name, test_id, testName, date, allergies, foodName, whightAmountValue, whightAmountUnits, unitsAmountValue, eatTimeValue, eatTimeUnits, addInstructions  } = req.body;
@@ -98,17 +108,28 @@ router.post('/addTests',
     }
 )
 
-router.put('/editTest/:id',
+router.put('/editTest',
     async (req, res) => {
-        const id = req.params.id;
-        const { patient_name, test_id, testName, date, allergies, foodName, whightAmountValue, whightAmountUnits, unitsAmountValue, eatTimeValue, eatTimeUnits, addInstructions  } = req.body;
+        const { id, patient_name, test_id, testName, date, allergies, foodName, whightAmountValue, whightAmountUnits, unitsAmountValue, eatTimeValue, eatTimeUnits, addInstructions  } = req.body;
         try {
-            
-            // await test.save()
-            // .then(test => res.json({message: "success", test}))
-            // .catch(err => {
-            //     res.status(400).json({AddTest: err.message})
-            // });
+            Test.findByIdAndUpdate(id, 
+                { 
+                    patient_name: patient_name, 
+                    testName: testName, 
+                    date: date, 
+                    allergies: allergies, 
+                    foodName: foodName,
+                    whightAmountValue: whightAmountValue,
+                    whightAmountUnits: whightAmountUnits,
+                    unitsAmountValue: unitsAmountValue,
+                    eatTimeValue: eatTimeValue,
+                    eatTimeUnits: eatTimeUnits,
+                    addInstructions: addInstructions,
+                })
+            .then(test => res.json({message: "success", test}))
+            .catch(err => {
+                res.status(400).json({AddTest: err.message})
+            });
         }
         catch (err) {
             console.error(err);
@@ -147,7 +168,6 @@ router.put('/confirmTest',
 router.put('/cancelTest',
     async (req, res) => {
         const { id, canceled } = req.body;
-        console.log("req.body", req.body)
         Test.findByIdAndUpdate(id, { canceled: canceled })
         .then(results => res.json({status: "success", results}))
         .catch(err => {
@@ -165,16 +185,6 @@ router.put("/changePassword",
       res.status(400).json({ChangePatientPassword: err.message})
     })
   }
-)
-
-router.get('/getTests',
-    (req, res) => {
-        Test.find()
-        .then(tests => res.json(tests))
-        .catch(err => {console.log(err)
-            res.status(404).json({err: "Tests no found"})
-        });
-    }
 )
 
 module.exports = router;

@@ -7,14 +7,12 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http, {
   cors: {
-    origin: "*",
+    origin: "http://localhost:3000/",
     // methods: ["GET", "POST"],
     methods: 'GET,PUT,POST,DELETE,OPTIONS'.split(','),
     transports : ['websocket']
   }
 });
-
-
 
 // Connect Database
 connectDB();
@@ -42,11 +40,16 @@ if (process.env.NODE_ENV === 'production') {
 
 const PORT = process.env.PORT || 5000;
 
-io.on('connection', function(socket){
+io.on('connection', function(socket) {
   socket.on("addTest", (notifis) => {
+    console.log("notifies", notifis)
     io.emit('addTest', notifis);  
   });
+  socket.on("editTest", (test) => {
+    io.emit('editTest', test);  
+  });
   socket.on("deleteTest", (tests) => {
+    console.log("deleteTest", tests)
     io.emit('deleteTest', tests);  
   });
   socket.on("patientConfirm", (patientConfirm) => {
@@ -56,10 +59,10 @@ io.on('connection', function(socket){
     io.emit('patientCancel', patientCancel);  
   });
   socket.on("therapistConfirm", (therapistConfirm) => {
-    console.log("therapistConfirm m", therapistConfirm)
     io.emit('therapistConfirm', therapistConfirm);  
   });
   socket.on("therapist_message_send", (therapist_message_send) => {
+    console.log("therapist_message_send", therapist_message_send)
     io.emit("therapist_message_send", therapist_message_send);
   });
   socket.on("patient_message_send", (patient_message_send) => {
