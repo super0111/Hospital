@@ -11,30 +11,32 @@ import Switch from "react-switch";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {addTests} from "../../../apis/addTests"
-import { FcCalendar, FcPortraitMode, FcDocument, FcFlowChart, FcAcceptDatabase, FcBusinessContact } from "react-icons/fc";
+import { FcCalendar, FcPortraitMode, FcDocument, FcFlowChart, FcAcceptDatabase, FcBusinessContact, FcAddImage, FcDeleteDatabase } from "react-icons/fc";
 
 const AddTest = () => {
     const [ patientsLists, setPatientLists ] = useState([])
     const [ patientTests, setTests ] = useState([])
     const [ testName, setTestName ] = useState("")
     const [ useTests ,setUseTests ] = useState([])
-    const [value, setValue] = React.useState(new Date('2022-04-10T21:11:54'))
+    const [ value, setValue ] = React.useState(new Date('2022-04-10T21:11:54'))
     const [ testId, setTestId ] = useState("")
     const [ patientSelectValue, setPatientSelectValue ] = useState()
     const [ testSelectValue, setTestSelectValue ] = useState("new")
-    const [ usedTestSelect ,setUsedTestSelect ] = useState(1)
+    const [ usedTestSelect, setUsedTestSelect ] = useState("")
 
-    const [allergiesCheckValue, setAllergiesCheck] = useState({checked:false})
-    const [allergiesValue, setAllergiesValue] = useState("false")
-    const [allergies, setAllergies] = useState("")
-    const [foodName, setFoodName] = useState("")
+    const [ allergiesCheckValue, setAllergiesCheck ] = useState({checked:false})
+    const [ allergiesValue, setAllergiesValue ] = useState("false")
+    const [ allergies, setAllergies ] = useState("")
+    const [ foodName, setFoodName ] = useState("")
     const [ amountTypeCheck, setAmountTypeCheck ] = useState({checked:false})
-    const [whightAmountValue, setWhightAmountValue] = useState("")
-    const [whightAmountUnits, setWhightAmountUnits] = useState("gram")
-    const [unitsAmountValue, setUnitsAmountValue] = useState("")
+    const [ whightAmountValue, setWhightAmountValue ] = useState("")
+    const [ whightAmountUnits, setWhightAmountUnits ] = useState("gram")
+    const [ unitsAmountValue, setUnitsAmountValue ] = useState("")
     const [ eatTimeValue, setEatTime ] = useState("")
     const [ eatTimeUnits, setEatTimeUnits ] = useState("hours")
     const [ addInstructions, setAddInstructions ] = useState("")
+    const [ addMore, setAddmore ] = useState(1)
+    const socketRef = useRef();
 
     useEffect( () => {
         const fetchPosts = async () => {
@@ -56,9 +58,11 @@ const AddTest = () => {
 
     const handleChange = (newValue) => {
       setValue(newValue);
+      setAddmore(1)
     };
 
     const handlePatientSelectChange = (e) => {
+        setAddmore(1)
         setPatientSelectValue(e.target.value);
         if( patientTests ) {
             const patients = patientTests.filter((item) => item.patient_name === e.target.value);
@@ -74,6 +78,7 @@ const AddTest = () => {
 
     const handleTestSelectChange = (e) => {
         setTestSelectValue(e.target.value);
+        setAddmore(1)
         if(useTests) {
             const tests = useTests.find((item) =>( item.test_id == usedTestSelect ));
             setAllergies(tests?.allergies)
@@ -100,23 +105,30 @@ const AddTest = () => {
 
     const handleTestName = (e) => {
         setTestName(e.target.value)
+        setAddmore(1)
     }
 
+    useEffect(() => {
+        if(useTests && useTests.length > 0) {
+            setUsedTestSelect(useTests[0].test_id);
+        }
+    }, [useTests]);
+
     const handleUsedTestSelectChange = (e) => {
+        setAddmore(1)
         setUsedTestSelect(e.target.value)
         if(useTests) {
             const tests = useTests.find((item) =>( item.test_id == usedTestSelect ));
-            setAllergies(tests.allergies)
-            setFoodName(tests.foodName)
-            setWhightAmountValue(tests.whightAmountValue)
-            setWhightAmountUnits(tests.whightAmountUnits)
-            setUnitsAmountValue(tests.unitsAmountValue)
-            setEatTime(tests.eatTimeValue)
-            setEatTimeUnits(tests.eatTimeUnits)
-            setAddInstructions(tests.addInstructions)
+            setAllergies(tests?.allergies)
+            setFoodName(tests?.foodName)
+            setWhightAmountValue(tests?.whightAmountValue)
+            setWhightAmountUnits(tests?.whightAmountUnits)
+            setUnitsAmountValue(tests?.unitsAmountValue)
+            setEatTime(tests?.eatTimeValue)
+            setEatTimeUnits(tests?.eatTimeUnits)
+            setAddInstructions(tests?.addInstructions)
         }
     }
-    
 
     const handleAllergiesSwitchChange = (checked) => {
         setAllergiesCheck({ checked });
@@ -132,6 +144,7 @@ const AddTest = () => {
     }
     const handleWhightAmountValue = (e) => {
         setWhightAmountValue(e.target.value)
+
     }
     const handleWhightAmountUnits = (e) => {
         setWhightAmountUnits(e.target.value)
@@ -149,7 +162,7 @@ const AddTest = () => {
         setAddInstructions(e.target.value)
     }
 
-    const socketRef = useRef();
+    
     useEffect(() => {
         socketRef.current = io(config, { transports : ['websocket'] });
     }, []);
@@ -161,7 +174,6 @@ const AddTest = () => {
         } else {
             setAllergies(allergiesValue)
         }
-
         const formData = {
             patient_name : patientSelectValue,
             test_id : testId,
@@ -176,6 +188,7 @@ const AddTest = () => {
             eatTimeUnits : eatTimeUnits,
             addInstructions : addInstructions,
         }
+        setAddmore(1)
         addTests(formData)
         .then((res) => {
             socketRef.current.emit("addTest", res)
@@ -192,10 +205,18 @@ const AddTest = () => {
                 toast.info("Test Add Successfull!")
             }
             else {
-                toast.error(res.errors.msg)
+                toast.error(res.AddTest)
             }
         })
         .catch((error) => console.log(error));
+    }
+
+    const handleAddMore = () => {
+        setAddmore(addMore+1)
+    }
+
+    const hanldeCancel = () => {
+        setAddmore(addMore-1)
     }
 
     return (
@@ -268,8 +289,6 @@ const AddTest = () => {
                                 </select>
                             </div> : ""
                         }
-                        
-                        
                     </div>
                 </div>
                 { testSelectValue === "new" ?
@@ -302,79 +321,94 @@ const AddTest = () => {
                                 <div className={classes.food_name}>Food instructions</div>
                             </div>
                             <div className={classes.foodInstruction_field}>
-                                <div className={classes.foodIns_field}>
-                                    <div className={classes.foodIns_name}>Food:</div>
-                                    <input
-                                        value={foodName}
-                                        onChange={handleFoodNameChange} 
-                                        className={classes.foodIns_value} 
-                                        type="text" 
-                                        placeholder="Food Name" 
-                                    />
-                                </div>
-                                <div className={classes.amount_field}>
-                                    <div className={classes.amount_name}>Amount Type: </div>
-                                    <div className={classes.amount_type}>
-                                        <span className={classes.amount_type_name}>Whight</span>
-                                        <Switch onChange={handleAmountTypeChange} checked={amountTypeCheck.checked} />
-                                        <span className={classes.amount_type_name}>Unites</span>
-                                    </div>
-                                </div>
-                                { amountTypeCheck.checked === false ?
-                                    <div className={classes.amount_value_field}>
-                                        <input 
-                                            value={whightAmountValue}
-                                            onChange={handleWhightAmountValue} 
-                                            type="text" 
-                                            placeholder="Amount Numbers" 
-                                            className={classes.amount_value} 
-                                        />
-                                        <select onChange={handleWhightAmountUnits} className={classes.amount_units}>
-                                            <option value="gram">gram</option>
-                                            <option value="kg">kg</option>
-                                        </select>
-                                    </div>
-                                    :
-                                    <div className={classes.amount_value_field}>
+                            {[...Array(addMore)].map((x, i) =>
+                                <div key={i} className={classes.foodInstruction}>
+                                    <div className={classes.foodIns_field}>
+                                        <div className={classes.foodIns_name}>Food:</div>
                                         <input
-                                            value={unitsAmountValue}
-                                            onChange={handleUnitsAmountValue} 
+                                            value={foodName}
+                                            onChange={handleFoodNameChange} 
+                                            className={classes.foodIns_value} 
                                             type="text" 
-                                            placeholder="Amount Numbers" 
-                                            className={classes.amount_value} 
+                                            placeholder="Food Name" 
                                         />
                                     </div>
-                                }
-                                <div className={classes.eat_time_field}>
-                                    <div className={classes.eat_time_name}>When to eat?</div>
-                                    <div className={classes.eat_time_text}>
-                                        <input
-                                            value={eatTimeValue}
-                                            onChange={handleEatTimeChange} 
-                                            type="text" 
-                                            placeholder="time" 
-                                            className={classes.eat_time_value} 
-                                        />
-                                        <select onChange={handleEatTimeUnitsChange} className={classes.eat_time_units}>
-                                            <option value="hours">Hours</option>
-                                            <option value="mins">Minuites</option>
-                                            <option value="seconds">Seconds</option>
-                                        </select>
-                                        before the test.
+                                    <div className={classes.amount_field}>
+                                        <div className={classes.amount_name}>Amount Type: </div>
+                                        <div className={classes.amount_type}>
+                                            <span className={classes.amount_type_name}>Whight</span>
+                                            <Switch onChange={handleAmountTypeChange} checked={amountTypeCheck.checked} />
+                                            <span className={classes.amount_type_name}>Unites</span>
+                                        </div>
+                                    </div>
+                                    { amountTypeCheck.checked === false ?
+                                        <div className={classes.amount_value_field}>
+                                            <input 
+                                                value={whightAmountValue}
+                                                onChange={handleWhightAmountValue} 
+                                                type="text" 
+                                                placeholder="Amount Numbers" 
+                                                className={classes.amount_value} 
+                                            />
+                                            <select onChange={handleWhightAmountUnits} className={classes.amount_units}>
+                                                <option value="gram">gram</option>
+                                                <option value="kg">kg</option>
+                                            </select>
+                                        </div>
+                                        :
+                                        <div className={classes.amount_value_field}>
+                                            <input
+                                                value={unitsAmountValue}
+                                                onChange={handleUnitsAmountValue} 
+                                                type="text" 
+                                                placeholder="Amount Numbers" 
+                                                className={classes.amount_value} 
+                                            />
+                                        </div>
+                                    }
+                                    <div className={classes.eat_time_field}>
+                                        <div className={classes.eat_time_name}>When to eat?</div>
+                                        <div className={classes.eat_time_text}>
+                                            <input
+                                                value={eatTimeValue}
+                                                onChange={handleEatTimeChange} 
+                                                type="text" 
+                                                placeholder="time" 
+                                                className={classes.eat_time_value} 
+                                            />
+                                            <select onChange={handleEatTimeUnitsChange} className={classes.eat_time_units}>
+                                                <option value="hours">Hours</option>
+                                                <option value="minutes">Minuites</option>
+                                                <option value="seconds">Seconds</option>
+                                            </select>
+                                            before the test.
+                                        </div>
+                                    </div>
+                                    <div className={classes.amount_name}>
+                                        Additional Instructions 
+                                    </div>
+                                    <textarea 
+                                        rows={4} 
+                                        cols={8} 
+                                        onChange={handleAddInstructionsChange} 
+                                        value={addInstructions} 
+                                        className={classes.food_input} 
+                                        placeholder="Food Instructions">
+                                    </textarea>
+                                </div>
+                            )}
+                                <div className={classes.addCancelField}>
+                                    <div className={classes.addMore} onClick={handleAddMore}>
+                                        <FcAddImage size={20} /> 
+                                        <span style={{marginLeft:"5px", marginTop: "2px"}}>Add More</span>
+                                    </div>
+                                    <div className={classes.addMore} onClick={hanldeCancel}>
+                                        <FcDeleteDatabase size={20} />
+                                        <span style={{marginLeft: "5px", marginTop: "2px"}}>Cancel</span>
                                     </div>
                                 </div>
-                                <div className={classes.amount_name}>
-                                    Additional Instructions 
-                                </div>
-                                <textarea 
-                                    rows={4} 
-                                    cols={8} 
-                                    onChange={handleAddInstructionsChange} 
-                                    value={addInstructions} 
-                                    className={classes.food_input} 
-                                    placeholder="Food Instructions">
-                                </textarea>
                             </div>
+                            
                         </div>
                     </>
                     : 
@@ -407,79 +441,94 @@ const AddTest = () => {
                                 <FcDocument size={30} />
                                 <div className={classes.food_name}>Food instructions</div>
                             </div>
+                            
                             <div className={classes.foodInstruction_field}>
-                                <div className={classes.foodIns_field}>
-                                    <div className={classes.foodIns_name}>Food:</div>
-                                    <input
-                                        value={foodName}
-                                        onChange={handleFoodNameChange}
-                                        className={classes.foodIns_value}
-                                        type="text"
-                                        placeholder="Food Name"
-                                    />
-                                </div>
-                                <div className={classes.amount_field}>
-                                    <div className={classes.amount_name}>Amount Type: </div>
-                                    <div className={classes.amount_type}>
-                                        <span className={classes.amount_type_name}>
-                                            Whight
-                                        </span>
-                                        <Switch onChange={handleAmountTypeChange} checked={amountTypeCheck.checked} />
-                                        <span className={classes.amount_type_name}>
-                                            Unites
-                                        </span>
+                                {[...Array(addMore)].map((x, i) =>
+                                    <div key={i} className={classes.foodInstruction}>
+                                        <div className={classes.foodIns_field}>
+                                            <div className={classes.foodIns_name}>Food:</div>
+                                            <input
+                                                value={foodName}
+                                                onChange={handleFoodNameChange}
+                                                className={classes.foodIns_value}
+                                                type="text"
+                                                placeholder="Food Name"
+                                            />
+                                        </div>
+                                        <div className={classes.amount_field}>
+                                            <div className={classes.amount_name}>Amount Type: </div>
+                                            <div className={classes.amount_type}>
+                                                <span className={classes.amount_type_name}>
+                                                    Whight
+                                                </span>
+                                                <Switch onChange={handleAmountTypeChange} checked={amountTypeCheck.checked} />
+                                                <span className={classes.amount_type_name}>
+                                                    Unites
+                                                </span>
+                                            </div>
+                                        </div>
+                                        { amountTypeCheck.checked === false ?
+                                            <div className={classes.amount_value_field}>
+                                                <input  
+                                                    value={whightAmountValue}
+                                                    onChange={handleWhightAmountValue}
+                                                    type="text" 
+                                                    placeholder="Amount Numbers" 
+                                                    className={classes.amount_value} 
+                                                />
+                                                <select onChange={handleWhightAmountUnits} className={classes.amount_units}>
+                                                    <option value="gram">gram</option>
+                                                    <option value="kg">kg</option>
+                                                </select>
+                                            </div>
+                                            :
+                                            <div className={classes.amount_value_field}>
+                                                <input 
+                                                    value={unitsAmountValue}
+                                                    onChange={handleUnitsAmountValue} 
+                                                    type="text" 
+                                                    placeholder="Amount Numbers" 
+                                                    className={classes.amount_value} 
+                                                />
+                                            </div>
+                                        }
+                                        <div className={classes.eat_time_field}>
+                                            <div className={classes.eat_time_name}>When to eat?</div>
+                                            <div className={classes.eat_time_text}>
+                                                <input
+                                                    value={eatTimeValue}
+                                                    onChange={handleEatTimeChange}
+                                                    type="text"
+                                                    placeholder="time"
+                                                    className={classes.eat_time_value} 
+                                                />
+                                                hours before the test.
+                                            </div>
+                                        </div>
+                                        <div className={classes.amount_name}>
+                                            Additional Instructions 
+                                        </div>
+                                        <textarea 
+                                            rows={4} 
+                                            cols={8}
+                                            value={addInstructions}
+                                            onChange={handleAddInstructionsChange} 
+                                            className={classes.food_input}
+                                            placeholder="Food Instructions"
+                                        >
+                                        </textarea>
+                                    </div>
+                                )}
+                                 <div className={classes.addCancelField}>
+                                    <div className={classes.addMore} onClick={handleAddMore}>
+                                        <FcAddImage size={20} /> 
+                                        <span style={{marginLeft:"5px", marginTop: "2px"}}>Add More</span>
+                                    </div>
+                                    <div className={classes.addMore} onClick={hanldeCancel}>
+                                        <FcDeleteDatabase size={20} />
+                                        <span style={{marginLeft: "5px", marginTop: "2px"}}>Cancel</span>
                                     </div>
                                 </div>
-                                { amountTypeCheck.checked === false ?
-                                    <div className={classes.amount_value_field}>
-                                        <input  
-                                            value={whightAmountValue}
-                                            onChange={handleWhightAmountValue}
-                                            type="text" 
-                                            placeholder="Amount Numbers" 
-                                            className={classes.amount_value} 
-                                        />
-                                        <select onChange={handleWhightAmountUnits} className={classes.amount_units}>
-                                            <option value="gram">gram</option>
-                                            <option value="kg">kg</option>
-                                        </select>
-                                    </div>
-                                    :
-                                    <div className={classes.amount_value_field}>
-                                        <input 
-                                            value={unitsAmountValue}
-                                            onChange={handleUnitsAmountValue} 
-                                            type="text" 
-                                            placeholder="Amount Numbers" 
-                                            className={classes.amount_value} 
-                                        />
-                                    </div>
-                                }
-                                <div className={classes.eat_time_field}>
-                                    <div className={classes.eat_time_name}>When to eat?</div>
-                                    <div className={classes.eat_time_text}>
-                                        <input
-                                            value={eatTimeValue}
-                                            onChange={handleEatTimeChange}
-                                            type="text"
-                                            placeholder="time"
-                                            className={classes.eat_time_value} 
-                                        />
-                                        hours before the test.
-                                    </div>
-                                </div>
-                                <div className={classes.amount_name}>
-                                    Additional Instructions 
-                                </div>
-                                <textarea 
-                                    rows={4} 
-                                    cols={8}
-                                    value={addInstructions}
-                                    onChange={handleAddInstructionsChange} 
-                                    className={classes.food_input}
-                                    placeholder="Food Instructions"
-                                >
-                                </textarea>
                             </div>
                         </div>
                     </>

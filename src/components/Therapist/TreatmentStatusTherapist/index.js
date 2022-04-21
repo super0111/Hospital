@@ -5,11 +5,10 @@ import config from "../../../config";
 import { io } from "socket.io-client";
 import { BiEditAlt } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
-import { testDelete, testEdit } from "./../../../apis/addTests"
+import { testDelete } from "./../../../apis/addTests"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FcAlphabeticalSortingAz, FcAlphabeticalSortingZa, FcDownload, FcUpload } from "react-icons/fc";
-
 
 const TreatmentStatusTherapist = () => {
     let history = useHistory();
@@ -169,7 +168,7 @@ const TreatmentStatusTherapist = () => {
                             Status{statusSort === true ? <FcUpload size={18} /> : <FcDownload size={18} />} </div>
                         <div className={classes.statusItem_title}>Actions</div>
                     </div>
-                    { testLists && testLists.map((test, i) => {
+                    { testLists.length !=0 ? testLists.map((test, i) => {
                         return(
                             <div key={i} className={classes.status_item}>
                                 <div className={classes.text}>
@@ -215,7 +214,9 @@ const TreatmentStatusTherapist = () => {
                                 </div>
                             </div>
                         )
-                    }) }
+                    }) : 
+                    <div className={classes.noTests}>No Your Tests...</div> 
+                    }
                 </div>
                 <ToastContainer />
             </div>

@@ -4,7 +4,6 @@
 }
 .title {
     text-align: center;
-    margin: 100px 0 25px 0;
     font-size: 30px;
     font-family: cursive;
     color: rgb(5, 95, 174);
@@ -18,10 +17,45 @@
     display: flex;
     justify-content: space-between;
 }
+.flexRow {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    margin: 100px 0 10px 0;
+}
+.filter_field {
+    display: flex;
+    justify-content: flex-end;
+    width: 90%;
+}
+.filter {
+    width: 200px;
+    padding: 8px;
+    border: 1px solid rgb(7, 111, 207);
+    border-radius: 5px;
+    outline: none;
+}
 .patientList {
     border-right: 1px solid rgb(156, 155, 155);
     width: 20%;
     padding: 20px;
+}
+.patient_sort_field {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #096ed2;
+    margin: 5px 0 10px 0;
+    padding-bottom: 5px;
+    cursor: pointer;
+}
+.patient_sort {
+    font-size: 16px;
+    font-weight: 500;
+    color: #096ed2;
+    text-align: center;
+    margin-right: 5px;
 }
 .patient_title {
     font-size: 22px;

@@ -3,15 +3,19 @@ import React, { useState, useEffect, useRef } from "react"
 import config from "../../../config";
 import jwt_decode from "jwt-decode";
 import { io } from "socket.io-client";
+import { FcDownload, FcUpload } from "react-icons/fc";
 
 const TreatmentStatusPatient = () => {
 
     const [ dataTestsLists, setTestsLists ] = useState([])
-    const [ tests, setTests ] = useState([])
+    const [ testLists, setTestList ] = useState([])
     const [current_PatientName, setCurrent_PatientName] = useState("")
     const [ notify, setNotify ] = useState({})
     const [ confirmed, setConfirmed ] = useState(false)
     const [ confirmedId, setConfirmedId ] = useState("")
+    const [ sortIcon, setSortIcon ] = useState(false)
+    const [ dateSort, setDateSort ] = useState(false)
+    const [ statusSort, setStatusSort ] = useState(false)
 
     useEffect(() => {
         const userString = localStorage.getItem('token');
@@ -34,10 +38,9 @@ const TreatmentStatusPatient = () => {
     }, []);
 
     useEffect( () => {
-            const myTests = dataTestsLists.filter((item) => item.patient_name === current_PatientName )
-            setTests(myTests)
+        const myTests = dataTestsLists.filter((item) => item.patient_name === current_PatientName )
+        setTestList(myTests)
     }, [current_PatientName, dataTestsLists] )
-
 
     const socketRef = useRef();
     useEffect(() => {
@@ -59,7 +62,7 @@ const TreatmentStatusPatient = () => {
 
     useEffect(() => {
         if(notify.patient_name === current_PatientName) {
-            setTests([...tests, notify]);
+            setTestList([...testLists, notify]);
         }
     }, [notify])
 
@@ -71,43 +74,99 @@ const TreatmentStatusPatient = () => {
         });
       }, [socketRef])
 
+    const handleDateSort = () => {
+        setDateSort(!dateSort)
+        if(dateSort === true) {
+            const values = testLists.sort(function (a, b) {
+                var dateA = new Date(a.date), dateB = new Date(b.date)
+                return dateA - dateB
+            });
+            setTestList(values)
+        } else {
+            const values = testLists.sort(function (a, b) {
+                var dateA = new Date(a.date), dateB = new Date(b.date)
+                return dateB - dateA
+            });
+            setTestList(values)
+        }    
+    }
+
+    const handleStatusSort = () => {
+        setStatusSort(!statusSort)
+        if(statusSort === true) {
+            testLists.sort(function(a, b){
+                if(a.confirmed < b.confirmed) { return -1; }
+                if(a.confirmed > b.confirmed) { return 1; }
+                return 0;
+            })
+        } else {
+            testLists.sort(function(a, b){
+                if(a.confirmed > b.confirmed) { return -1; }
+                if(a.confirmed < b.confirmed) { return 1; }
+                return 0;
+            })
+        }
+    }
+
     return (
         <div className={classes.treatmentStatusPatient}>
             <div className={classes.patientStatus}>
                 <div className={classes.title}> My treatment status</div>
                 <div className={classes.statusItem_title_field}>
                     <div className={classes.statusItem_title}>Test ID</div>
-                    <div className={classes.statusItem_title}>Test Date</div>
-                    <div className={classes.statusItem_title}>Food Guidelines</div>
-                    <div className={classes.statusItem_title}>Status</div>
-                    <div className={classes.statusItem_title}>Additional Notes </div>
+                    <div className={classes.statusItem_title} onClick={handleDateSort}>
+                        Test Date{dateSort === true? <FcUpload size={18} /> : <FcDownload size={18} />}
+                    </div>
+                    <div className={classes.statusItem_title}>Food Allergic</div>
+                    <div className={classes.statusItem_title}>Amount Number</div>
+                    <div className={classes.statusItem_title}>Eat Time</div>
+                    <div className={classes.statusItem_title}>Food Instructions</div>
+                    <div 
+                        className={classes.statusItem_title} 
+                        onClick={handleStatusSort}
+                    >
+                        Status{statusSort === true ? <FcUpload size={18} /> : <FcDownload size={18} />} 
+                    </div>
                 </div>
-                { tests.map((test, i) => {
+                { testLists.length !=0 ? testLists.map((test, i) => {
                     return(
                         <div key={i} className={classes.status_item}>
                             <div className={classes.text}>
-                                {test.test_id}
+                                {i+1}
                             </div>
                             <div className={classes.text}>
                                 {test.date}
                             </div>
                             <div className={classes.text}>
-                                {test.foodValue}
+                                {test.foodName}
                             </div>
                             <div className={classes.text}>
-                                { test.canceled === true ? 
-                                    <div className={classes.canceledText}>Canceled</div> : 
-                                    test.confirmed === true ? <div className={classes.planedText}>Planed</div> : 
-                                    (confirmed === true && confirmedId === i+1) ? <div className={classes.planedText}>Planed</div> :
-                                    <div className={classes.newText}>New</div> 
+                                {test.whightAmountValue}
+                                {test.whightAmountUnits}
+                            </div>
+                            <div className={classes.text}>
+                                {test.eatTimeValue} {test.eatTimeUnits}
+                            </div>
+                            <div className={classes.text}>
+                                {test.addInstructions}
+                            </div>
+                            <div className={classes.text}>
+                                { 
+                                    // test.canceled === true ?
+                                    // <div ref={ref} className={classes.canceledText}>Canceled</div> 
+                                    // : 
+                                    test.confirmed === true 
+                                    ? 
+                                    <div className={classes.planedText}>Planed</div> 
+                                    : 
+                                    <div className={classes.newText}>New</div>
                                 }
-                            </div>
-                            <div className={classes.text}>
-                                {test.addTextValue}
                             </div>
                         </div>
                     )
-                }) }
+                }) : 
+                <div className={classes.noTests}>No Your Tests...</div> 
+                }
             </div>
         </div>
     )

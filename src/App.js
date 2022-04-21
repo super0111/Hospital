@@ -1,12 +1,12 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import Home from "./components/Home";
-import PatientHome from "./components/PatientHome";
+import HomePage from "./components/Therapist/HomePage";
+import PatientHomePage from "./components/Patient/PatientHomePage";
 import Registration from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Layout from "./components/layout/Layout";
 import PrivateRoutes from "./utils/privateRoute";
-import RegisterPatient from "./components/RegisterPatient"
+import RegisterPatient from "./components/Therapist/RegisterPatient"
 import AddTest from "./components/Therapist/AddTest"
 import EditTest from "./components/Therapist/EditTest"
 import TreatmentStatusTherapist from "./components/Therapist/TreatmentStatusTherapist"
@@ -25,8 +25,8 @@ function App() {
     <AppProvider>
       <Layout>
         <Switch>
-          <PrivateRoutes path="/" exact component={Home} />
-          <PrivateRoutes path="/patientHome" exact component={PatientHome} />
+          <PrivateRoutes path="/" exact component={HomePage} />
+          <PrivateRoutes path="/patientHomePage" exact component={PatientHomePage} />
           <PrivateRoutes path="/treatmentStatus_patient" exact component={TreatmentStatusPatient} />
           <PrivateRoutes path="/patientMessage" exact component={PatientMessage} />
           <PrivateRoutes path="/resetPassword" exact component={ResetPassword} />

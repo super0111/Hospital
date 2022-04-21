@@ -10,15 +10,13 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 import Switch from "react-switch";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {addTests} from "../../../apis/addTests"
+import { editTest } from "../../../apis/addTests"
 import { FcCalendar, FcPortraitMode, FcDocument, FcFlowChart, FcAcceptDatabase, FcBusinessContact } from "react-icons/fc";
 import { useLocation } from 'react-router-dom';
-
 
 const EditTest = () => {
     const location = useLocation();
     const id = location.state;
-    console.log("id", id)
 
     const [ test, setTest ] = useState([])
     const [ testName, setTestName ] = useState("")
@@ -38,17 +36,16 @@ const EditTest = () => {
     const [eatTimeUnits, setEatTimeUnits ] = useState("hours")
     const [addInstructions, setAddInstructions ] = useState("")
 
-
     useEffect( () => {
         const fetchPosts = async () => {
-            console.log("effect id", id)
             const res = await fetch(`${config.server_url}api/posts/getTests`);
             const tests = await res.json();
-            console.log("add tests", tests)
             const test = tests.find((item) => (
-                item._id = id
+                item._id === id
             ))
             setTestId(test.test_id)
+            setPatientSelectValue(test.patient_name)
+            setTestName(test.testName)
             setAllergies(test.allergies)
             setFoodName(test.foodName)
             setValue(test.date)
@@ -62,7 +59,6 @@ const EditTest = () => {
         };
         fetchPosts();
     }, []);
-
 
     const handleTestName = (e) => {
         setTestName(e.target.value)
@@ -106,16 +102,16 @@ const EditTest = () => {
         socketRef.current = io(config, { transports : ['websocket'] });
     }, []);
 
-    const addTest = (event) => {
+    const testEdit = (event) => {
         event.preventDefault();
         if(allergiesCheckValue.checked === false) {
             setAllergies("false")
         } else {
             setAllergies(allergiesValue)
         }
-
         const formData = {
-            patient_name : patientSelectValue,
+            id: id,
+            patient_name : test.patient_name,
             test_id : testId,
             testName : testName,
             date :  value,
@@ -128,31 +124,21 @@ const EditTest = () => {
             eatTimeUnits : eatTimeUnits,
             addInstructions : addInstructions,
         }
-        addTests(formData)
+        editTest(formData)
         .then((res) => {
-            socketRef.current.emit("editTest", res)
-            setTestName("")
-            setPatientSelectValue("")
-            setAllergiesValue("")
-            setFoodName("")
-            setWhightAmountValue("")
-            setUnitsAmountValue("")
-            setEatTime("")
-            setAddInstructions("")
+            socketRef.current.emit("editTest", res.test)
             if(res.message === "success") {
                 toast.info("Test Edit Successfull!")
             }
             else {
-                toast.error(res.errors.msg)
+                toast.error(res.AddTest)
             }
         })
         .catch((error) => console.log(error));
     }
 
-    console.log("test", test)
-
     return (
-        <div className={classes.addTest}>
+        <div className={classes.editTest}>
             <div className={classes.title}>Edit TEST</div>
             <div className={classes.body}>
                 <div className={classes.item_field}>
@@ -162,7 +148,7 @@ const EditTest = () => {
                             Patient Name
                         </div>
                     </div>
-                    <div className={classes.patient_name}></div>
+                    <div className={classes.patient_name_value}>{patientSelectValue}</div>
                 </div>
                 <div className={classes.item_field}>
                     <div className={classes.flexRow}>
@@ -176,7 +162,13 @@ const EditTest = () => {
                         <FcBusinessContact size={30} />
                         <div className={classes.id_name}>Test Name</div>
                     </div>
-                    <input className={classes.testName_input} type="text" placeholder='Test Name' onChange={handleTestName} />
+                    <input 
+                        className={classes.testName_input} 
+                        type="text" 
+                        placeholder='Test Name' 
+                        onChange={handleTestName} 
+                        value={testName}    
+                    />
                 </div>
                 <div className={classes.item_field}>
                     <div className={classes.flexRow}>
@@ -206,7 +198,7 @@ const EditTest = () => {
                                 <span className={classes.allergic_text}>
                                     Note that this patient is allergic to 
                                     <input type="text" 
-                                        value={allergies}
+                                        value={allergies === "false" ? "" : allergies}
                                         onChange={handleAllergiesChange} 
                                         className={classes.allergies_input} 
                                         placeholder="Patient Allergies" 
@@ -262,7 +254,7 @@ const EditTest = () => {
                             :
                             <div className={classes.amount_value_field}>
                                 <input 
-                                    value={unitsAmountValue}
+                                    value={unitsAmountValue ? unitsAmountValue : "" }
                                     onChange={handleUnitsAmountValue} 
                                     type="text" 
                                     placeholder="Amount Numbers" 
@@ -280,6 +272,11 @@ const EditTest = () => {
                                     placeholder="time"
                                     className={classes.eat_time_value} 
                                 />
+                                {/* <select onChange={handleEatTimeUnitsChange} className={classes.eat_time_units}>
+                                    <option value="hours">Hours</option>
+                                    <option value="mins">Minuites</option>
+                                    <option value="seconds">Seconds</option>
+                                </select> */}
                                 {eatTimeUnits} before the test.
                             </div>
                         </div>
@@ -298,7 +295,7 @@ const EditTest = () => {
                     </div>
                 </div>
             </div>
-           <button onClick={addTest} className={classes.btn}>Edit Test</button>
+           <button onClick={testEdit} className={classes.btn}>Edit Test</button>
            <ToastContainer /> 
         </div>
     )

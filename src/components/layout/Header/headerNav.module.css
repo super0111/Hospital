@@ -117,11 +117,8 @@
     overflow-y: auto;
     transition: background-color 0.5s;
   }
-
-
-
 .toolbar {
-    width: 60%!important;
+    width: 100%!important;
     justify-content: flex-end;
 }
 .navToolbarLink:hover {

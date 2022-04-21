@@ -1,9 +1,9 @@
 import classes from "./PatientMessage.module.css"
 import { BiSend } from "react-icons/bi";
 import { useEffect, useState, useRef } from "react";
-import config from "./../../../config";
+import config from "../../../config";
 import jwt_decode from "jwt-decode";
-import {saveMessage} from './../../../apis/message'
+import {saveMessage} from '../../../apis/message'
 import { io } from "socket.io-client";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

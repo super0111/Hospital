@@ -93,6 +93,14 @@ const HeaderNav= () => {
 
   useEffect(() => {
       socketRef.current.on('deleteTest', (tests) => {
+        console.log("tests", tests)
+        // setNotify(tests.test)
+        // setIsShow(true)
+    });
+  }, []);
+
+  useEffect(() => {
+      socketRef.current.on('deleteTest', (tests) => {
         toast.info("Test is deleted")
     });
   }, []);
@@ -196,7 +204,7 @@ const HeaderNav= () => {
                 currentUser && currentPatientId ?
                  (
                   <ul className={classes.navigation}>
-                    <Link className={classes.navToolbarLink} href="/patientHome" style={{marginBottom: "0px"}}>PatientHome</Link>
+                    <Link className={classes.navToolbarLink} href="/patientHomePage" style={{marginBottom: "0px"}}>PatientHome</Link>
                     <Link className={classes.navToolbarLink} href="/patientMessage" style={{marginBottom: "0px"}}>Message</Link>
                     <Link className={classes.navToolbarLink} href="treatmentStatus_patient" style={{marginBottom: "0px"}}>My Treatment Status</Link>
                     <Link className={classes.navToolbarLink} style={{marginBottom: "0px"}}><ProfileMenu current_PatientName={current_PatientName} currentAvatar={currentAvatar} logout = {logout} /></Link>

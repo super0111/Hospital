@@ -104,6 +104,7 @@ const [state, setState] = useState({ message: "" })
         setMessageValue("")
         saveMessage(formData)
         .then((res) => {
+            console.log("message res", res)
             socketRef.current.emit("therapist_message_send", res);
         })
         .catch((error) => console.log(error));

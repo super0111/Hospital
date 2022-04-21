@@ -11,6 +11,13 @@
     text-align: center;
     margin-bottom: 10px;
 }
+.noTests {
+    font-size: 16px;
+    color: rgb(14, 148, 205);
+    font-weight: 500;
+    text-align: center;
+    margin-top: 5px;
+}
 .body {
     width: 100%;
     border: 1px solid rgb(176, 178, 183);

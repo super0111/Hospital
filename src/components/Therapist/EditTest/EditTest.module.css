@@ -1,4 +1,4 @@
-.addTest {
+.editTest {
     padding: 20px 50px;
     color: rgb(6, 131, 194);
     display: flex;
@@ -85,6 +85,14 @@
     font-size: 18px;
     color: rgb(52, 52, 52);
     margin-left: 5px;
+}
+.patient_name_value {
+  width: 38%;
+  text-align: left;
+  font-size: 20px;
+  font-weight: 500;
+  color: rgb(52, 52, 52);
+  padding-left: 10px;
 }
 .date_name {
     width: 100%;

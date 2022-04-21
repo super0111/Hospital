@@ -58,15 +58,18 @@ const testDelete = (i) => {
   });
 }
 
-const testEdit = (i) => {
-  return fetch(`${config.server_url}api/posts/editTest/${i}`, {
+const editTest = (formData) => {
+  return fetch(`${config.server_url}api/posts/editTest`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
+    body: JSON.stringify({
+      ...formData, // Use your own property name / key
+    }),
   })
   .then((res) =>{
     return res.json();
   });
 }
-export { addTests, confirmTest, cancelTest, testDelete, testEdit }
+export { addTests, confirmTest, cancelTest, testDelete, editTest }

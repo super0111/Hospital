@@ -177,9 +177,27 @@
 }
 .foodInstruction_field {
   width: 38%;
+  display: flex;
+  flex-direction: column;
+}
+.foodInstruction {
+  width: 100%;
   border: 1px solid rgb(43, 89, 106);
   border-radius: 5px;
   padding: 10px;
+  margin: 5px 0;
+}
+.addCancelField {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.addMore {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px;
+  cursor: pointer;
 }
 .foodIns_field {
   display: flex;
@@ -311,4 +329,8 @@
     background-color: white;
     border: 1px solid rgb(66, 155, 233);
     color: rgb(66, 155, 233);
+}
+.error {
+  color: red;
+  font-size: 13px;
 }
