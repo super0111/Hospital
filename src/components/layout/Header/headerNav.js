@@ -86,12 +86,10 @@ const HeaderNav= () => {
 
   useEffect(() => {
       socketRef.current.on('addTest', (notifis, notifyInfo, test_id) => {
-        console.log("notifisnotifisnotifis", notifis)
         const info = {
           notifyInfo,
           test_id,
         }
-        console.log("info", info)
         setNotify(info)
         setIsShow(true)
     });
@@ -99,9 +97,6 @@ const HeaderNav= () => {
 
   useEffect(() => {
       socketRef.current.on('deleteTest', (tests) => {
-        console.log("tests", tests)
-        // setNotify(tests.test)
-        // setIsShow(true)
     });
   }, []);
 
@@ -112,7 +107,6 @@ const HeaderNav= () => {
   }, []);
 
   useEffect(() => {
-    console.log("notifyyyy", notify)
     const note = notify?.notifyInfo;
     if(note?.patientSelectValue === current_PatientName) {
       setByUserShow(true)
@@ -140,7 +134,6 @@ const HeaderNav= () => {
 
   useEffect(() => {
     socketRef.current.on('patientConfirm', (patientConfirm) => {
-      console.log('patientConfirm on', patientConfirm)
       const isConfirm = true;
       const id = patientConfirm._id;
       const patient_name = patientConfirm.current_PatientName;
@@ -158,9 +151,7 @@ const HeaderNav= () => {
         if(res.message === "success") {
             toast.info("Therapist confirmed successfully")
         }
-        else {
-            toast.error(res.errors.msg)
-        }
+        else { toast.error(res.err.message) }
       })
       .catch((error) => console.log(error));
     });

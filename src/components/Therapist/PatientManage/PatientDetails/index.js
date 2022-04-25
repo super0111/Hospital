@@ -1,8 +1,25 @@
 import classes from "./PatientDetails.module.css"
+import { treatmentChange } from "./../../../../apis/registerPatient"
 
 const PatientDetails = (props) => {
     const selectPatientList = props.selectPatientList;
-    console.log("selectPatientList", selectPatientList)
+    const setSelectPatientList = props.setSelectPatientList;
+    
+    const handleTreatmentChange = () => {
+        const id = selectPatientList._id;
+        const treatmentStatus = "hold"
+        const formData = {
+            id,
+            treatmentStatus,
+        }
+        treatmentChange(formData)
+        .then((res) => {
+            setSelectPatientList(res.patient)
+            console.log("hold res", res.patient)
+        })
+        .catch((error) => console.log(error));
+    }
+
     return(
         <div className={classes.patientDetails}>
             <div className={classes.title}>Patient Details</div>
@@ -55,11 +72,21 @@ const PatientDetails = (props) => {
                         {selectPatientList.information}
                     </div>
                 </div>
+                <div className={classes.treatmentChange_field}>
+                    <div className={classes.name}>Patient Treatment Status Change</div>
+                    <butttn className={classes.treatmentChange} onClick={handleTreatmentChange}>Hold</butttn>
+                </div>
               
             </div>
             <div className={classes.patientTreatment}>
                 <div className={classes.treatmentName}>Patient Treatment Status</div>
-                <div className={classes.treatmentStatus}>In Progress</div>
+                { 
+                    selectPatientList.treatmentStatus === "new" ? 
+                    <div className={classes.treatmentStatus_new}>{selectPatientList.treatmentStatus}</div> :
+                    selectPatientList.treatmentStatus === "hold" ?
+                    <div className={classes.treatmentStatus_hold}>{selectPatientList.treatmentStatus}</div> :
+                    <div className={classes.treatmentStatus_progress}>{selectPatientList.treatmentStatus}</div>
+                }
             </div>
         </div>
     )

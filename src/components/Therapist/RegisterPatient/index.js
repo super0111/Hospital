@@ -109,6 +109,7 @@ const RegisterPatient = () => {
             weight: weightValue,
             information: informationValue,
             summary: summaryValue,
+            treatmentStatus: "new",
         };
         fileUpload(image.data)
         .then((resFile) => {

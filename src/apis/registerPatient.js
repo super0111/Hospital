@@ -16,5 +16,20 @@ const registerPatient = (formData, history) => {
   } );
 };
 
+const treatmentChange = (formData, history) => {
+  return fetch(`${config.server_url}api/posts/changeTreatment`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ...formData, // Use your own property name / key
+    }),
+  })
+  .then((res) =>{
+    return res.json();
+  } );
+};
 
-export { registerPatient };
+
+export { registerPatient, treatmentChange };

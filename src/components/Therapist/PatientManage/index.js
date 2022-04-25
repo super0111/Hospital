@@ -3,6 +3,7 @@ import classes from "./PatientManage.module.css"
 import config from "../../../config"
 import PatientDetails from "./PatientDetails"
 import TestLists from "./TestLists"
+import { treatmentChange } from './../../../apis/registerPatient'
 import { FcAlphabeticalSortingAz, FcAlphabeticalSortingZa, FcDownload, FcUpload } from "react-icons/fc";
 
 const PatientManage = () => {
@@ -13,7 +14,6 @@ const PatientManage = () => {
     const [ patientIsActive, setPatientIsActive ] = useState(false)
     const [ sortIcon, setSortIcon ] = useState(false)
     const [ searchResults, setSearchResults ] = useState([])
-
 
     useEffect(async () => {
         const fetchPosts = async () => {
@@ -28,7 +28,7 @@ const PatientManage = () => {
             setTestsLists(tests);
         };
         await fetchTestPosts();
-        await fetchPosts();   
+        await fetchPosts();
     }, []);
 
     useEffect(() => {
@@ -43,6 +43,23 @@ const PatientManage = () => {
         setSelectPatientList(selectedPatient)
         setSelectPatientTests(selectedTests)
         setPatientIsActive(i)
+        if(selectPatientTests.length > 0) {
+            console.log("selectPatientList.treatmentStatus", selectPatientList.treatmentStatus)
+            if(selectPatientList.treatmentStatus != "hold") {
+                const id = selectPatientList._id;
+                const treatmentStatus = "In Progress";
+                const formData = {
+                    id,
+                    treatmentStatus,
+                }
+                treatmentChange(formData)
+                .then((res) => {
+                    // setSelectPatientList(res.patient)
+                    console.log("progress res", res.patient)
+                })
+                .catch((error) => console.log(error));
+            }
+        }
     }
 
     const handlePatientSort = () => {
@@ -67,6 +84,10 @@ const PatientManage = () => {
         setSearchResults(values)
     }
 
+    // useEffect(() => {
+    //     console.log("selectPatientList", selectPatientList)
+  
+    // }, [selectPatientTests, selectPatientList])
 
     return(
         <div className={classes.patientManage}>
@@ -85,21 +106,24 @@ const PatientManage = () => {
                         <div className={classes.patient_sort}>Sort By Patient</div>
                         { sortIcon === false ? <FcAlphabeticalSortingAz size={20} /> : <FcAlphabeticalSortingZa size={20} /> }
                     </div>
-                    { searchResults.map((patientsList, i) => {
-                        return (
-                            <div 
-                                key={patientsList._id} 
-                                className={patientIsActive === i ? classes.patient_item_active : classes.patient_item } 
-                                onClick={() => handlePatientClick(patientsList.fullname, i)}
-                            >
-                                <img className={classes.avatar} src={patientsList.picture} />
-                                <div className={patientIsActive === i ? classes.patient_name_active : classes.patient_name}>{patientsList.fullname}</div>
-                            </div>
-                        )   
-                    })}
+                    { searchResults.length != 0 ?
+                        searchResults.map((patientsList, i) => {
+                            return (
+                                <div 
+                                    key={patientsList._id} 
+                                    className={patientIsActive === i ? classes.patient_item_active : classes.patient_item } 
+                                    onClick={() => handlePatientClick(patientsList.fullname, i)}
+                                >
+                                    <img className={classes.avatar} src={patientsList.picture} />
+                                    <div className={patientIsActive === i ? classes.patient_name_active : classes.patient_name}>{patientsList.fullname}</div>
+                                </div>
+                            )   
+                        }) :
+                        <div className={classes.emptyNote}>No Patients</div>
+                }
                 </div>
                 <div className={classes.patientBody}>
-                    <PatientDetails selectPatientList={selectPatientList} />
+                    <PatientDetails selectPatientTests={selectPatientTests} selectPatientList={selectPatientList} setSelectPatientList={setSelectPatientList} />
                     <TestLists selectPatientTests={selectPatientTests} />
                 </div>
             </div>

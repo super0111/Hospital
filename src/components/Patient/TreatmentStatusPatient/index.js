@@ -11,13 +11,10 @@ const TreatmentStatusPatient = () => {
     const [ dataTestsLists, setTestsLists ] = useState([])
     const [ testLists, setTestList ] = useState([])
     const [current_PatientName, setCurrent_PatientName] = useState("")
-    const [ notify, setNotify ] = useState({})
     const [ confirmed, setConfirmed ] = useState(false)
     const [ confirmedId, setConfirmedId ] = useState("")
-    const [ sortIcon, setSortIcon ] = useState(false)
     const [ dateSort, setDateSort ] = useState(false)
     const [ statusSort, setStatusSort ] = useState(false)
-    const [ addedTest, setAddedTest ] = useState([])
 
     useEffect(() => {
         const userString = localStorage.getItem('token');
@@ -34,7 +31,6 @@ const TreatmentStatusPatient = () => {
         const fetchPosts = async () => {
             const res = await fetch(`${config.server_url}api/posts/getTests`);
             const tests = await res.json();
-            console.log("tssss", tests)
             setTestsLists(tests);
         };
         fetchPosts();
@@ -51,9 +47,9 @@ const TreatmentStatusPatient = () => {
     }, [socketRef]);
 
     useEffect(() => {
-        socketRef.current.on('addTest', (notifis) => {
-            console.log("adddddtest", notifis)
-            setTestList(notifis)
+        socketRef.current.on('addTest', (tests) => {
+            const myTests = tests.filter((item) => item.patient_name === current_PatientName)
+            setTestList(myTests)
       });
     }, [dataTestsLists, testLists]);
 

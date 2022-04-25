@@ -52,9 +52,6 @@
     font-size: 12px;
     margin-top: 5px;
 }
-
-
-
 .patientTreatment {
     display: flex;
     justify-content: space-between;
@@ -71,8 +68,46 @@
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     color: rgb(41, 111, 231);
 }
-.treatmentStatus {
+.treatmentStatus_new {
     font-size: 18px;
     color: rgb(33, 64, 217);
     font-weight: 600;
+    border-bottom: 1px dotted rgb(33, 64, 217);
+}
+.treatmentStatus_hold {
+    font-size: 18px;
+    color: rgb(231, 92, 28);
+    font-weight: 600;
+    border-bottom: 1px dotted rgb(231, 92, 28);
+}
+.treatmentStatus_progress {
+    font-size: 18px;
+    color: rgb(16, 179, 86);
+    font-weight: 600;
+    border-bottom: 1px dotted rgb(16, 179, 86);
+}
+.treatmentChange_field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    margin: 20px 0;
+    border: 1px dotted rgb(41, 111, 231);
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+.treatmentChange {
+    width: 60px;
+    border: 1px solid rgb(228, 63, 21);
+    border-radius: 3px;
+    outline: none;
+    padding: 3px;
+    font-size: 13px;
+    text-align: center;
+    color: rgb(228, 63, 21);
+    cursor: pointer;
+}
+.treatmentChange:hover {
+    background-color: rgb(228, 63, 21);
+    color: white;
 }

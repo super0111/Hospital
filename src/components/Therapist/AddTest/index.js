@@ -254,6 +254,16 @@ const AddTest = () => {
             else {
                 toast.error(res.AddTest)
             }
+            setTestName("")
+            setForms([{
+                food: "",
+                whightAmountValue: "",
+                whightAmountUnits: "", 
+                unitsAmountValue: "", 
+                eatTimeValue: "", 
+                eatTimeUnits: "", 
+                addInstructions: "",
+            }])
         })
         .catch((error) => console.log(error));
     }
