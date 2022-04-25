@@ -54,11 +54,15 @@ io.on('connection', function(socket) {
       const content = notify;
       const patient_name = name;
       const date = new Date()
+      console.log("content", content)
+      console.log("date", date)
+      console.log("patient_name", patient_name)
       const notifications = new Notify({
           patient_name,
           content,
           date,
       })
+      console.log("notifications", notifications)
       notifications.save()
       .then(() => {
           Notify.find()
@@ -69,7 +73,6 @@ io.on('connection', function(socket) {
     io.emit('deleteTest', tests);
   });
   socket.on("patientConfirm", (patientConfirm) => {
-    console.log("patientConfirm", patientConfirm)
     io.emit('patientConfirm', patientConfirm);  
   });
   socket.on("patientCancel", (patientCancel) => {

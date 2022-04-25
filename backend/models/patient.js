@@ -56,6 +56,9 @@ const PatientSchema = new mongoose.Schema({
   picture: {
     type: String,
   },
+  treatmentStatus: {
+    type: String,
+  },
   date: {
     type: Date,
     default: Date.now

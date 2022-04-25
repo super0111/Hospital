@@ -7,21 +7,35 @@ const User = require('../../models/User');
 
 router.post('/registerPatient',
     async (req, res) => {
-
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        const { therapist_id, fullname, id, email,isDoctor, phoneNumber, gender, birthday, isAllergies, isADHD, height, weight, information, summary, picture } = req.body;
+        const { 
+            therapist_id,
+            fullname, 
+            id, 
+            email,
+            isDoctor, 
+            phoneNumber, 
+            gender, 
+            birthday, 
+            isAllergies, 
+            isADHD, 
+            height, 
+            weight, 
+            information, 
+            summary, 
+            picture, 
+            treatmentStatus 
+        } = req.body;
         let patient_user = await Patient.findOne({ email });
         let user = await User.findOne({ email })
-
         if (patient_user && user) {
             return res
               .status(400)
               .json({ errors: { msg: 'User already exists' } });
           }
-
         try {
             const date = new Date();
             const password = id;
@@ -42,6 +56,7 @@ router.post('/registerPatient',
                 information,
                 summary,
                 picture,
+                treatmentStatus,
                 date
             })
              await patient.save()
@@ -51,6 +66,30 @@ router.post('/registerPatient',
             });
         }
         catch  (err) {
+            console.error(err);
+            res.status(500).send("Server 500 error");
+        }
+    }
+)
+
+router.put('/changeTreatment', 
+    async (req, res) => {
+        const {
+            id,
+            treatmentStatus,
+        } = req.body;
+        try {
+            Patient.findByIdAndUpdate(id, { 
+                treatmentStatus: treatmentStatus,
+            })
+            .then( 
+                patient => res.json({message: "success", patient})
+            )
+            .catch(err => {
+                res.status(400).json({Patient: err.message})
+            });
+        }
+        catch (err) {
             console.error(err);
             res.status(500).send("Server 500 error");
         }
