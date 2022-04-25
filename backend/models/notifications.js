@@ -3,11 +3,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const NotificationsSchema = new Schema({
-  image: String,
-  name: String,
-  action: String,
+  patient_name: String,
   content: String,
-  read: Boolean,
+  date: String,
 });
 
 module.exports = mongoose.model('notifications', NotificationsSchema);

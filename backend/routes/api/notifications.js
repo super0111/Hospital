@@ -1,32 +1,41 @@
 const express = require('express');
 const router = express.Router();
-const Notifications = require('../../models/notifications');
+const Notify = require('../../models/notifications');
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http, {
+  cors: {
+    origin: "http://localhost:3000/",
+    // methods: ["GET", "POST"],
+    methods: 'GET,PUT,POST,DELETE,OPTIONS'.split(','),
+    transports : ['websocket']
+  }
+});
 
-router.get('/notifications', (req, res) => {
-    Notifications.find((err, notifications) => {
-      if (err) {
-        res.send(err);
-      }
-      return res.json(notifications);
-    });
-  });
-  
-  router.put('/notifications', () => {
-    Notifications.find((err, notifs) => {
-      notifs.forEach((notif) => {
-        notif.read = true;
-        notif.save();
-      });
-    });
-  });
-  
-  router.delete('/notifications', (req, res) => {
-    Notifications.remove({}, (err) => {
-      if (err) {
-        console.log(err);
-      }
-      console.log('Database Truncated');
-      res.send('/notifications');
-    });
-  });
+router.get('/',
+    async (req, res) => {
+        Notify.find().sort({ date: 1 })
+        .then(notify => res.json(notify))
+        .catch(err => {console.log(err)
+            res.status(404).json({err: "Notifications no found"})
+        });
+    }
+)
+
+router.delete('/deleteNotify/:id',
+    (req, res) => {
+        Notify.findById(req.params.id)
+        .then(notify => {
+            notify.delete()
+            .then( () => {
+                Notify.find()
+                .then( notify =>res.json({success: true, data: notify}))
+            } )
+        })
+        .catch(err => {
+            res.status(400).json({Notify: err.message})
+        })
+    }
+)
+
 module.exports = router;

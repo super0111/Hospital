@@ -79,7 +79,14 @@ router.get('/getTests',
 
 router.post('/addTests',
     async (req, res) => {
-        const { patient_name, test_id, testName, date, allergies, foodName, whightAmountValue, whightAmountUnits, unitsAmountValue, eatTimeValue, eatTimeUnits, addInstructions  } = req.body;
+        const { 
+            patient_name, 
+            test_id, 
+            testName, 
+            date, 
+            allergies, 
+            formString,
+        } = req.body;
         try {
             const test = new Test({
                 patient_name,
@@ -87,16 +94,15 @@ router.post('/addTests',
                 testName,
                 date,
                 allergies,
-                foodName,
-                whightAmountValue,
-                whightAmountUnits,
-                unitsAmountValue,
-                eatTimeValue,
-                eatTimeUnits,
-                addInstructions,
+                formString,
             })
             await test.save()
-            .then(test => res.json({message: "success", test}))
+            .then((test) => {
+                const id = test._id;
+                Test.find()
+                .then( tests =>res.json({message: "success", data: tests, id: id}))
+                // test => res.json({message: "success", test})
+            })
             .catch(err => {
                 res.status(400).json({AddTest: err.message})
             });
@@ -110,23 +116,27 @@ router.post('/addTests',
 
 router.put('/editTest',
     async (req, res) => {
-        const { id, patient_name, test_id, testName, date, allergies, foodName, whightAmountValue, whightAmountUnits, unitsAmountValue, eatTimeValue, eatTimeUnits, addInstructions  } = req.body;
+        const {
+            id,
+            patient_name,
+            test_id,
+            testName,
+            date,
+            allergies,
+            formString,
+        } = req.body;
         try {
-            Test.findByIdAndUpdate(id, 
-                { 
-                    patient_name: patient_name, 
-                    testName: testName, 
-                    date: date, 
-                    allergies: allergies, 
-                    foodName: foodName,
-                    whightAmountValue: whightAmountValue,
-                    whightAmountUnits: whightAmountUnits,
-                    unitsAmountValue: unitsAmountValue,
-                    eatTimeValue: eatTimeValue,
-                    eatTimeUnits: eatTimeUnits,
-                    addInstructions: addInstructions,
-                })
-            .then(test => res.json({message: "success", test}))
+            Test.findByIdAndUpdate(id, { 
+                patient_name: patient_name, 
+                testName: testName, 
+                date: date, 
+                allergies: allergies, 
+                formString,
+            })
+            .then( () => {
+                Test.find()
+                .then( tests =>res.json({success: true, data: tests}))
+            })
             .catch(err => {
                 res.status(400).json({AddTest: err.message})
             });
@@ -146,7 +156,7 @@ router.delete('/deleteTest/:id',
             .then( () => {
                 Test.find()
                 .then( tests =>res.json({success: true, data: tests}))
-            } )
+            })
         })
         .catch(err => {
             res.status(400).json({Test: err.message})

@@ -1,8 +1,10 @@
+
 const express = require('express');
 const connectDB = require('./config/db');
 const path = require('path');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
+const Notify = require('./models/notifications');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http, {
@@ -27,6 +29,7 @@ app.use('/api/posts/', require('./routes/api/posts'));
 app.use('/api/file/', require('./routes/api/file'));
 app.use('/api/patient/', require('./routes/api/patient'));
 app.use('/api/message/', require('./routes/api/message'));
+app.use('/api/notifications', require("./routes/api/notifications"));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
@@ -41,18 +44,32 @@ if (process.env.NODE_ENV === 'production') {
 const PORT = process.env.PORT || 5000;
 
 io.on('connection', function(socket) {
-  socket.on("addTest", (notifis) => {
-    console.log("notifies", notifis)
-    io.emit('addTest', notifis);  
+  socket.on("addTest", (notifis, notifyInfo, id) => {
+    io.emit('addTest', notifis, notifyInfo, id);  
   });
   socket.on("editTest", (test) => {
-    io.emit('editTest', test);  
+    io.emit('editTest', test);
+  });
+  socket.on("notifications", (notify, name) => {
+      const content = notify;
+      const patient_name = name;
+      const date = new Date()
+      const notifications = new Notify({
+          patient_name,
+          content,
+          date,
+      })
+      notifications.save()
+      .then(() => {
+          Notify.find()
+          .then( notityList => io.emit('notifications', notityList))
+      })
   });
   socket.on("deleteTest", (tests) => {
-    console.log("deleteTest", tests)
-    io.emit('deleteTest', tests);  
+    io.emit('deleteTest', tests);
   });
   socket.on("patientConfirm", (patientConfirm) => {
+    console.log("patientConfirm", patientConfirm)
     io.emit('patientConfirm', patientConfirm);  
   });
   socket.on("patientCancel", (patientCancel) => {
@@ -62,7 +79,6 @@ io.on('connection', function(socket) {
     io.emit('therapistConfirm', therapistConfirm);  
   });
   socket.on("therapist_message_send", (therapist_message_send) => {
-    console.log("therapist_message_send", therapist_message_send)
     io.emit("therapist_message_send", therapist_message_send);
   });
   socket.on("patient_message_send", (patient_message_send) => {
