@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import { io } from "socket.io-client";
 import classes from "./PatientHome.module.css"
 import config from "../../../config"
 import jwt_decode from "jwt-decode";
@@ -7,9 +8,13 @@ import NextSession from "./NextSession"
 import TestLists from "./TestLists"
 
 const PatientHomePage = () => {
+    const socketRef = useRef();
     const [current_PatientName, setCurrent_PatientName] = useState("")
     const [ testLists, setTestsLists ] = useState([])
     const [ testList, setTestList ] = useState([])
+    const [ notifications, setNotifications ] = useState([])
+    const [ patientNotifications, setPatientNotifications ] = useState([])
+    const [ confirmed, setConfirmed ] = useState(false)
 
     useEffect(() => {
       const userString = localStorage.getItem('token');
@@ -20,29 +25,65 @@ const PatientHomePage = () => {
           setCurrent_PatientName(current_userName);
         }
       }
-  }, []);
+    }, []);
 
-  useEffect(async () => {
-      const fetchTestPosts = async () => {
-          const res = await fetch(`${config.server_url}api/posts/getTests`);
-          const tests = await res.json();
-          setTestsLists(tests);
+    useEffect(async () => {
+        const fetchTestPosts = async () => {
+            const res = await fetch(`${config.server_url}api/posts/getTests`);
+            const tests = await res.json();
+            setTestsLists(tests);
+        };
+        await fetchTestPosts();
+    }, []);
+
+    useEffect( () => {
+        const myTests = testLists.filter((item) => item.patient_name === current_PatientName )
+        setTestList(myTests)
+    }, [current_PatientName, testLists])
+
+    useEffect(async () => {
+      const fetchNotifications = async () => {
+          const res = await fetch(`${config.server_url}api/notifications`);
+          const notification = await res.json();
+          setNotifications(notification);
       };
-      await fetchTestPosts();
-  }, []);
+      await fetchNotifications();
+    }, [])
 
-  useEffect( () => {
-      const myTests = testLists.filter((item) => item.patient_name === current_PatientName )
-      setTestList(myTests)
-  }, [current_PatientName, testLists] )
+    useEffect( () => {
+      const myNotifications = notifications.filter((item) => item.patient_name === current_PatientName )
+      setPatientNotifications(myNotifications)
+    }, [current_PatientName, notifications] )
+
+    useEffect(() => {
+      socketRef.current = io(config.server_url, { transports : ['websocket'] });
+    }, [socketRef]);
+
+    useEffect(() => {
+      socketRef.current.on('notifications', (notifyLists) => {
+        setNotifications(notifyLists)
+      });
+    }, [socketRef])
+
+    useEffect(() => {
+      socketRef.current.on('addTest', (tests) => {
+          setTestsLists(tests)
+    });
+  }, [socketRef]);
+
+  useEffect(() => {
+    socketRef.current.on('therapistConfirm', (therapistConfirm) => {
+        setConfirmed(true)
+    });
+  }, [socketRef])
 
   return (
     <div className={classes.home}>
       <div className={classes.flexRow}>
-        <Updates />
+        <Updates notifications={patientNotifications} setNotifications={setNotifications} />
         <NextSession testList={testList} />
       </div>
-      <TestLists testList={testList} setTestList={setTestList} />
+      <TestLists testList={testList} setTestList={setTestList} confirmed={confirmed} />
     </div>
   );
 };

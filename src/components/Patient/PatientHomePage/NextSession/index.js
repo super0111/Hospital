@@ -1,9 +1,19 @@
+import { useState, useEffect } from 'react'
 import classes from "./NextSession.module.css"
 import { FcAlarmClock } from 'react-icons/fc'
 
+
 const NextSession = (props) => {
+    const [ test, setTest ] = useState([])
     const { testList } = props;
-    const test = testList[1]
+    
+    useEffect(() => {
+        if(testList.length > 1) {
+            setTest(testList[1])
+        } else {
+            setTest(testList[0])
+        }
+    }, [testList])
 
     return(
         <div className={classes.nextSession}>

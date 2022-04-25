@@ -1,7 +1,6 @@
 import config from '../config'
 
 const addTests = (formData, history) => {
-  console.log("formData", formData)
     return fetch(`${config.server_url}api/posts/addTests`, {
       method: "POST",
       headers: {

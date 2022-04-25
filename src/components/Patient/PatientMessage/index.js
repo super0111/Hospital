@@ -20,7 +20,7 @@ const PatientMessage = () => {
     const socketRef = useRef();
 
     useEffect(() => {
-        socketRef.current = io(config, { transports : ['websocket'] });
+        socketRef.current = io(config.server_url, { transports : ['websocket'] });
         socketRef.current.on('therapist_message_send', (therapist_message) => {
             setTherapistMessageInfo(therapist_message.message)
         })

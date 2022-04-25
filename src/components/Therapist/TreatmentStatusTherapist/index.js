@@ -39,7 +39,7 @@ const TreatmentStatusTherapist = () => {
 
     const socketRef = useRef();
     useEffect(() => {
-        socketRef.current = io(config, { transports : ['websocket'] });
+        socketRef.current = io(config.server_url, { transports : ['websocket'] });
     }, []);
 
     useEffect(() => {
@@ -54,13 +54,15 @@ const TreatmentStatusTherapist = () => {
         setIsActive(i)
     }
 
-    const handleTestDelete = (i) => {
+    const handleTestDelete = (i, name) => {
+        const deleteNotify = `A test for ${name} has been deleted`;
+        const patient_name = name;
         testDelete(i)
         .then((res) => {
-            socketRef.current.emit("deleteTest", res)
-            setTestList(res.data)
             if(res.success === true) {
-                toast.info("Test Delete Successfully")
+                socketRef.current.emit("deleteTest", res.data)
+                socketRef.current.emit("notifications", deleteNotify, patient_name)
+                setTestList(res.data)
             }
         })
     }
@@ -178,17 +180,30 @@ const TreatmentStatusTherapist = () => {
                                     {test.date}
                                 </div>
                                 <div className={classes.text}>
-                                    {test.foodName}
+                                    {test.allergies}
                                 </div>
-                                <div className={classes.text}>
-                                    {test.whightAmountValue}
-                                    {test.whightAmountUnits}
-                                </div>
-                                <div className={classes.text}>
-                                    {test.eatTimeValue} {test.eatTimeUnits}
-                                </div>
-                                <div className={classes.text}>
-                                    {test.addInstructions}
+                                <div className={classes.formDataField}>
+                                    {JSON.parse(test.formString).map((formData, i) => (
+                                        <div key={i} className={classes.formData}>
+                                            {/* <div className={classes.text}>
+                                                {formData.foodName}
+                                            </div> */}
+                                            <div className={classes.formData_number}>
+                                                {i+1}th
+                                            </div>
+                                            <div className={classes.formData_text}>
+                                                {formData.whightAmountValue} {" "}
+                                                {formData.whightAmountUnits}
+                                            </div>
+                                            <div className={classes.formData_text}>
+                                                {formData.eatTimeValue} {" "}
+                                                {formData.eatTimeUnits}
+                                            </div>
+                                            <div className={classes.formData_text}>
+                                                {formData.addInstructions}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                                 <div className={classes.text}>
                                     { 
@@ -206,7 +221,7 @@ const TreatmentStatusTherapist = () => {
                                     <div onClick={() => handleTestEdit(test._id)}>
                                         <BiEditAlt className={classes.icon} />
                                     </div>
-                                    <div onClick={() => handleTestDelete(test._id)}>
+                                    <div onClick={() => handleTestDelete(test._id, test.patient_name)}>
                                         <MdDeleteForever 
                                             className={classes.icon}
                                         />

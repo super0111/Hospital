@@ -11,8 +11,8 @@ import jwt_decode from "jwt-decode";
 import {confirmTest, cancelTest} from "./../../../apis/addTests";
 import { io } from "socket.io-client";
 import { ToastContainer, toast } from 'react-toastify';
-import { BiX } from "react-icons/bi";
 import 'react-toastify/dist/ReactToastify.css';
+import { BiX } from "react-icons/bi";
 import "./styles.css"
 
 const sections1 = [
@@ -24,6 +24,7 @@ const sections1 = [
 const HeaderNav= () => {
   const history = useHistory();
   const [scroll, setScroll] = useState(false);
+  const socketRef = useRef();
   const [currentUser, setCurrentUser] = useState(undefined)
   const [currentUserId ,setCurrentUserId] = useState("")
   const [currentPatientId ,setCurrentPatientId] = useState("")
@@ -79,14 +80,19 @@ const HeaderNav= () => {
     return localStorage.removeItem("token");
   }
 
-  const socketRef = useRef();
   useEffect(() => {
-      socketRef.current = io(config, { transports : ['websocket'] });
+      socketRef.current = io(config.server_url, { transports : ['websocket'] });
   }, [socketRef]);
 
   useEffect(() => {
-      socketRef.current.on('addTest', (notifis) => {
-        setNotify(notifis.test)
+      socketRef.current.on('addTest', (notifis, notifyInfo, test_id) => {
+        console.log("notifisnotifisnotifis", notifis)
+        const info = {
+          notifyInfo,
+          test_id,
+        }
+        console.log("info", info)
+        setNotify(info)
         setIsShow(true)
     });
   }, [isShow]);
@@ -106,7 +112,9 @@ const HeaderNav= () => {
   }, []);
 
   useEffect(() => {
-    if(notify.patient_name === current_PatientName) {
+    console.log("notifyyyy", notify)
+    const note = notify?.notifyInfo;
+    if(note?.patientSelectValue === current_PatientName) {
       setByUserShow(true)
     } else {
       setByUserShow(false)
@@ -115,22 +123,26 @@ const HeaderNav= () => {
   
   const notifyConfirm = () => {
     setPatientConfirm(true)
-    const testId = notify._id;
-    const test_id = notify.test_id
-    socketRef.current.emit("patientConfirm", {patientConfirm, currentPatientId, current_PatientName, testId, test_id});
+    const testId = notify.test_id;
+    const confirmNotify = `${current_PatientName} has been confirmed new test`
+    socketRef.current.emit("patientConfirm", {patientConfirm, currentPatientId, current_PatientName, testId});
+    socketRef.current.emit("notifications", confirmNotify, current_PatientName)
     setIsShow(!isShow)
   }
 
   const notifyCancel = () => {
     setIsShow(false)
     const testId = notify._id;
+    const cancelNotify = `${current_PatientName} has been canceled new test`
     socketRef.current.emit("patientCancel", {currentPatientId, current_PatientName, testId});
+    socketRef.current.emit("notifications", cancelNotify, current_PatientName)
   }
 
   useEffect(() => {
     socketRef.current.on('patientConfirm', (patientConfirm) => {
+      console.log('patientConfirm on', patientConfirm)
       const isConfirm = true;
-      const id = patientConfirm.currentPatientId;
+      const id = patientConfirm._id;
       const patient_name = patientConfirm.current_PatientName;
       const testId = patientConfirm.testId;
       const test_id = patientConfirm.test_id;
@@ -140,7 +152,9 @@ const HeaderNav= () => {
       }
       confirmTest(formData)
       .then((res) => {
+        const patientConfirmNotify = `${patient_name} has been confirmed new test`
         socketRef.current.emit("therapistConfirm", {patient_name, test_id});
+        socketRef.current.emit("notifications", patientConfirmNotify, patient_name)
         if(res.message === "success") {
             toast.info("Therapist confirmed successfully")
         }
@@ -165,6 +179,8 @@ const HeaderNav= () => {
       }
       cancelTest(formData)
       .then((res) => {
+        const patientCancelNotify = `${patient_name} has been canceled new test`
+        socketRef.current.emit("notifications", patientCancelNotify, patient_name)
       })
       .catch((error) => console.log(error));
     });
@@ -247,10 +263,10 @@ const HeaderNav= () => {
               <div className={classes.closeBtn} onClick={ () =>setIsShow(!isShow)}><BiX color='white' size={25} /></div>
             </div>
             <div className={classes.notify_body}>
-              <div className={classes.modal_text}>Test ID : {notify.test_id}</div>
-              <div className={classes.modal_text}>Date : {notify.date}</div>
-              <div className={classes.modal_text}>Food Instructions : {notify.foodValue}</div>
-              <div className={classes.modal_text}>Additional Notes : {notify.addTextValue}</div>
+              {/* <div className={classes.modal_text}>Test ID : {notify.test_id}</div> */}
+              {/* <div className={classes.modal_text}>Date : {notify.date}</div> */}
+              <div className={classes.modal_note}>New Test is Added</div>
+              <div className={classes.modal_text}>Test Name : {notify.testName}</div>
             </div>
             <div className={classes.modal_footer}>
               <button className={classes.modal_confirm} onClick={notifyConfirm}>Confirm</button>

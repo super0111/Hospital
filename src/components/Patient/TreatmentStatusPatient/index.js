@@ -5,6 +5,7 @@ import jwt_decode from "jwt-decode";
 import { io } from "socket.io-client";
 import { FcDownload, FcUpload } from "react-icons/fc";
 
+
 const TreatmentStatusPatient = () => {
 
     const [ dataTestsLists, setTestsLists ] = useState([])
@@ -16,6 +17,7 @@ const TreatmentStatusPatient = () => {
     const [ sortIcon, setSortIcon ] = useState(false)
     const [ dateSort, setDateSort ] = useState(false)
     const [ statusSort, setStatusSort ] = useState(false)
+    const [ addedTest, setAddedTest ] = useState([])
 
     useEffect(() => {
         const userString = localStorage.getItem('token');
@@ -32,39 +34,40 @@ const TreatmentStatusPatient = () => {
         const fetchPosts = async () => {
             const res = await fetch(`${config.server_url}api/posts/getTests`);
             const tests = await res.json();
+            console.log("tssss", tests)
             setTestsLists(tests);
         };
         fetchPosts();
     }, []);
-
+   
     useEffect( () => {
-        const myTests = dataTestsLists.filter((item) => item.patient_name === current_PatientName )
+        const myTests = dataTestsLists?.filter((item) => item.patient_name === current_PatientName )
         setTestList(myTests)
     }, [current_PatientName, dataTestsLists] )
 
     const socketRef = useRef();
     useEffect(() => {
-        socketRef.current = io(config, { transports : ['websocket'] });
+        socketRef.current = io(config.server_url, { transports : ['websocket'] });
     }, [socketRef]);
 
     useEffect(() => {
         socketRef.current.on('addTest', (notifis) => {
-          setNotify(notifis.test)
+            console.log("adddddtest", notifis)
+            setTestList(notifis)
+      });
+    }, [dataTestsLists, testLists]);
+
+    useEffect(() => {
+        socketRef.current.on('deleteTest', (tests) => {
+        setTestsLists(tests);
       });
     }, [socketRef]);
 
     useEffect(() => {
-        socketRef.current.on('deleteTest', (tests) => {
-            console.log(tests)
-        //   setNotify(tests.test)
+        socketRef.current.on('editTest', (tests) => {
+            setTestsLists(tests);
       });
     }, [socketRef]);   
-
-    useEffect(() => {
-        if(notify.patient_name === current_PatientName) {
-            setTestList([...testLists, notify]);
-        }
-    }, [notify])
 
     useEffect(() => {
         socketRef.current.on('therapistConfirm', (therapistConfirm) => {
@@ -135,26 +138,41 @@ const TreatmentStatusPatient = () => {
                                 {i+1}
                             </div>
                             <div className={classes.text}>
-                                {test.date}
+                                {test?.date}
                             </div>
                             <div className={classes.text}>
-                                {test.foodName}
+                                {test?.allergies}
                             </div>
-                            <div className={classes.text}>
-                                {test.whightAmountValue}
-                                {test.whightAmountUnits}
-                            </div>
-                            <div className={classes.text}>
-                                {test.eatTimeValue} {test.eatTimeUnits}
-                            </div>
-                            <div className={classes.text}>
-                                {test.addInstructions}
+                            <div className={classes.formDataField}>
+                                {JSON.parse(test?.formString).map((formData, i) => (
+                                    <div key={i} className={classes.formData}>
+                                        {/* <div className={classes.text}>
+                                            {formData.foodName}
+                                        </div> */}
+                                        <div className={classes.formData_number}>
+                                            {i+1}th
+                                        </div>
+                                        <div className={classes.formData_text}>
+                                            {formData.whightAmountValue} {" "}
+                                            {formData.whightAmountUnits}
+                                        </div>
+                                        <div className={classes.formData_text}>
+                                            {formData.eatTimeValue} {" "}
+                                            {formData.eatTimeUnits}
+                                        </div>
+                                        <div className={classes.formData_text}>
+                                            {formData.addInstructions}
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                             <div className={classes.text}>
                                 { 
                                     // test.canceled === true ?
                                     // <div ref={ref} className={classes.canceledText}>Canceled</div> 
                                     // : 
+                                    confirmed === true ?
+                                    <div className={classes.planedText}>Planed</div> :
                                     test.confirmed === true 
                                     ? 
                                     <div className={classes.planedText}>Planed</div> 

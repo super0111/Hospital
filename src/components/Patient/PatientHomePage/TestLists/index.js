@@ -3,7 +3,7 @@ import classes from "./TestLists.module.css"
 import { BiArrowFromTop, BiArrowToTop } from "react-icons/bi";
 
 const TestLists = (props) => {
-    const { testList, setTestList } = props;
+    const { testList, setTestList, confirmed } = props;
 
     const [ dateSort, setDateSort ] = useState(false)
     const [ statusSort, setStatusSort ] = useState(false)
@@ -95,6 +95,8 @@ const TestLists = (props) => {
                                 // test.canceled === true ?
                                 // <div ref={ref} className={classes.canceledText}>Canceled</div> 
                                 // : 
+                                confirmed === true ?
+                                <div className={classes.planedText}>Planed</div> :
                                 test.confirmed === true 
                                 ? 
                                 <div className={classes.planedText}>Planed</div> 

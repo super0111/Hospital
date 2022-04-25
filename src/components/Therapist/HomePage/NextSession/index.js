@@ -4,7 +4,6 @@ import { FcAlarmClock } from 'react-icons/fc'
 const NextSession = (props) => {
     const { testLists } = props;
     const testList = testLists[1];
-    console.log("testList",testList)
     return(
         <div className={classes.nextSession}>
             <div className={classes.header}>

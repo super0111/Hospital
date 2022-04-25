@@ -33,11 +33,26 @@
 }
 .treatmentStatusTherapist {
     width: 85%;
+    height: 600px;
+    overflow-y: auto;
     box-shadow: 0px 1px 3px #555;
     margin: auto;
     margin-bottom: 30px;
     display: flex;
     justify-content: space-between;
+}
+.treatmentStatusTherapist::-webkit-scrollbar {
+    width: 12px;
+}
+
+.treatmentStatusTherapist::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+
+.treatmentStatusTherapist::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
 }
 .title {
     font-size: 22px;
@@ -157,6 +172,30 @@
     position: relative;
     display: inline-block;
 }
+.formData_text {
+    width: 33%;
+    overflow-x: auto;
+    font-size: 16px;
+    color: #555;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+}
+.formData_text::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.formData_text::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+
+.formData_text::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
 .tooltiptext {
     visibility: hidden;
     width: 150px;
@@ -170,9 +209,9 @@
     z-index: 1;
   }
   
-  .text:hover .tooltiptext {
+.text:hover .tooltiptext {
     visibility: visible;
-  }
+}
 .action {
     width: 12%;
     display: flex;
@@ -200,4 +239,17 @@
     font-size: 16px;
     font-weight: 600;
     color: rgb(23, 60, 229);
+}
+
+.formDataField {
+    width: 36%;
+    display: flex;
+    flex-direction: column;
+}
+.formData {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dotted rgb(62, 136, 209);
 }

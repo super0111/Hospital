@@ -4,7 +4,7 @@
     width: 60%;
     border: 2px solid rgb(75, 133, 219);
     border-radius: 5px;
-    padding: 20px;
+    padding: 30px 20px;
     margin: 10px;
     position: relative;
 }
@@ -12,7 +12,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 .header_title {
     font-size: 20px;
@@ -35,7 +35,7 @@
     font-size: 18px;
     font-weight: 600;
     color: rgb(67, 85, 102);
-    margin-bottom: 25px;
+    margin-bottom: 35px;
 }
 .text {
     font-size: 18px;

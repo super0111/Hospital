@@ -1,11 +1,11 @@
 .updates {
     display: flex;
     flex-direction: column;
-    width: 28%;
+    width: 30%;
     border: 2px solid rgb(75, 133, 219);
     border-radius: 5px;
-    padding: 20px;
     margin: 10px;
+    padding-top: 10px;
     position: relative;
 }
 .updates_title {
@@ -18,20 +18,39 @@
 .body {
     display: flex;
     flex-direction: column;
+    height: 200px;
+    overflow-y: auto;
+    padding: 0 20px;
+    margin-bottom: 30px;
+}
+.body::-webkit-scrollbar {
+    width: 12px;
+}
+.body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+
+.body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
 }
 .item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 10px 0;
-    margin-bottom: 20px;
+    margin: 5px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px dotted rgb(80, 155, 213);
 }
 .date {
+    width: 48%;
     font-size: 16px;
     font-weight: 600;
     color: rgb(103, 159, 207);
 }
 .text {
+    width: 48%;
     font-size: 16px;
     font-weight: 600;
     color: rgb(120, 200, 232); 
@@ -44,8 +63,11 @@
     align-items: center;
     background-color: rgb(22, 131, 241);
     color: white;
-    margin: -1px -20px;
     padding: 5px;
+    margin-top: 20px;
     width: 100.1%;
+    cursor: pointer;
+}
+.delete_btn {
     cursor: pointer;
 }

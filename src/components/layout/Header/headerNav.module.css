@@ -273,7 +273,7 @@
 }
 .notificationModal {
     position: absolute;
-    top: -20px;
+    top: 80px;
     right: 20px;
     width: 400px;
     background-color: white;
@@ -304,6 +304,12 @@
     margin: 5px 0;
     font-size: 16px;
     color: rgb(10, 124, 200);
+}
+.modal_note {
+    margin: 10px 0;
+    font-size: 15px;
+    color: #417fcb;
+    border-bottom: 1px dotted rgb(53, 67, 191);
 }
 .closeBtn {
     cursor: pointer;
