@@ -20,6 +20,9 @@ const TestSchema = new mongoose.Schema({
         type: String,
         // required: true,
     },
+    patientAllergies: {
+        type: String,
+    },
     formString : {
         type: String,
     },

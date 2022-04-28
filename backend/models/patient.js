@@ -35,6 +35,9 @@ const PatientSchema = new mongoose.Schema({
   isAllergies: {
       type: Boolean,
   },
+  allergiesValue: {
+    type: String,
+  },
   isADHD: {
       type: Boolean,
   },

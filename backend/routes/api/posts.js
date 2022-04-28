@@ -20,7 +20,8 @@ router.post('/registerPatient',
             phoneNumber, 
             gender, 
             birthday, 
-            isAllergies, 
+            isAllergies,
+            allergiesValue, 
             isADHD, 
             height, 
             weight, 
@@ -50,6 +51,7 @@ router.post('/registerPatient',
                 gender, 
                 birthday,
                 isAllergies,
+                allergiesValue,
                 isADHD,
                 height,
                 weight,
@@ -83,7 +85,10 @@ router.put('/changeTreatment',
                 treatmentStatus: treatmentStatus,
             })
             .then( 
-                patient => res.json({message: "success", patient})
+                patient => {
+                    patient.treatmentStatus = treatmentStatus;
+                    res.json({message: "success", patient})
+                }
             )
             .catch(err => {
                 res.status(400).json({Patient: err.message})
@@ -124,6 +129,7 @@ router.post('/addTests',
             testName, 
             date, 
             allergies, 
+            patientAllergies,
             formString,
         } = req.body;
         try {
@@ -133,13 +139,25 @@ router.post('/addTests',
                 testName,
                 date,
                 allergies,
+                patientAllergies,
                 formString,
             })
             await test.save()
             .then((test) => {
                 const id = test._id;
                 Test.find()
-                .then( tests =>res.json({message: "success", data: tests, id: id}))
+                .then(async (tests) =>{
+                    
+                    console.log(patient_name);
+                    await Patient.findOne({fullname: patient_name})
+                    .then(async (p) => {
+                        console.log('a patient found ', p);
+                        p.treatmentStatus="in progress";
+                        await p.save();
+                        res.json({message: "success", data: tests, id: id})
+                    })
+                    
+                })
                 // test => res.json({message: "success", test})
             })
             .catch(err => {
