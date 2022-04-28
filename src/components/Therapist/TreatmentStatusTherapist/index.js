@@ -105,7 +105,6 @@ const TreatmentStatusTherapist = () => {
             });
             setTestList(values)
         }
-        
     }
 
     const handleStatusSort = () => {

@@ -24,9 +24,13 @@ const RegisterPatient = () => {
         setADD({ checked });
     }
 
-    const [AllergiesValue, setAllergies] = useState({checked:false})
+    const [Allergies, setAllergies] = useState({checked:false})
     const handleAllergiesChange = (checked) => {
         setAllergies({ checked });
+    }
+    const [allergiesValue, setAllergiesValue] = useState("")
+    const handleAllergiesValueChange = (e) => {
+        setAllergiesValue(e.target.value)
     }
 
     const {
@@ -103,7 +107,8 @@ const RegisterPatient = () => {
             phoneNumber: phoneNumberValue,
             gender: genderValue,
             birthday: birthdayValue,
-            isAllergies: AllergiesValue.checked,
+            isAllergies: Allergies.checked,
+            allergiesValue: allergiesValue,
             isADHD: ADHDValue.checked,
             height: heightValue,
             weight: weightValue,
@@ -116,7 +121,6 @@ const RegisterPatient = () => {
             formData.picture = resFile.data.file
             registerPatient(formData)
             .then((res) => {
-                console.log(res.message)
                 if(res.message === "success") {
                     toast.info("Register Patient Successfull!")
                 }
@@ -243,9 +247,17 @@ const RegisterPatient = () => {
                         <div className={classes.allergiesText}>
                             If you have allergies, Please check yes.
                         </div>
-                        <div className={classes.checkbox} value={AllergiesValue}>
-                            <Switch onChange={handleAllergiesChange} checked={AllergiesValue.checked} />
+                        <div className={classes.checkbox} value={Allergies}>
+                            <Switch onChange={handleAllergiesChange} checked={Allergies.checked} />
                         </div>
+                        { Allergies.checked === true ? 
+                            <input 
+                                className={classes.input}
+                                type="text" 
+                                placeholder='Enter your Allergies' 
+                                onChange={handleAllergiesValueChange}
+                            /> : ""
+                        }
                     </div>
 
                     <div className={classes.allergiesClasses}>

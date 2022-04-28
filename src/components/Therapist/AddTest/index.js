@@ -21,13 +21,13 @@ const AddTest = () => {
     const [ value, setValue ] = React.useState(new Date('2022-04-10T21:11:54'))
     const [ testId, setTestId ] = useState("")
     const [ patientSelectValue, setPatientSelectValue ] = useState()
+    const [ patientAllergies, setPatientAllergies ] = useState("")
     const [ testSelectValue, setTestSelectValue ] = useState("new")
     const [ usedTestSelect, setUsedTestSelect ] = useState("")
     const [ allergiesCheckValue, setAllergiesCheck ] = useState({checked:false})
     const [ allergiesValue, setAllergiesValue ] = useState("false")
     const [ allergies, setAllergies ] = useState("")
     const [ amountTypeCheck, setAmountTypeCheck ] = useState({checked:false})
-    const [ addMore, setAddmore ] = useState(1)
     const socketRef = useRef();
 
     const [forms, setForms] = useState([{
@@ -83,27 +83,30 @@ const AddTest = () => {
 
     const handleDateChange = (newValue) => {
       setValue(newValue);
-      setAddmore(1)
     };
 
     const handlePatientSelectChange = (e) => {
-        setAddmore(1)
         setPatientSelectValue(e.target.value);
+        const patient = patientsLists.find((item) => item.fullname === e.target.value)
+        setPatientAllergies(patient.allergiesValue)
+        if(patient.treatmentStatus === "hold") {
+            toast.info("You can't add tests because treatment of this patient is hold")
+            return
+        }
         if( patientTests ) {
-            const patients = patientTests.filter((item) => item.patient_name === e.target.value);
-            setUseTests(patients)
-            if(patients.length === 0) {
+            const tests = patientTests.filter((item) => item.patient_name === e.target.value);
+            setUseTests(tests)
+            if(tests.length === 0) {
                 setTestId(1);
             }
             else {
-                setTestId(1 + patients.length)
+                setTestId(1 + tests.length)
             }
         }
     }
 
     const handleTestSelectChange = (e) => {
         setTestSelectValue(e.target.value);
-        setAddmore(1)
         if(useTests) {
             const tests = useTests.find((item) =>( item.testName == usedTestSelect ));
             const testFormDatas =JSON.parse(tests.formString)
@@ -134,7 +137,6 @@ const AddTest = () => {
 
     const handleTestName = (e) => {
         setTestName(e.target.value)
-        setAddmore(1)
     }
 
     useEffect(() => {
@@ -223,11 +225,6 @@ const AddTest = () => {
 
     const addTest = (event) => {
         event.preventDefault();
-        if(allergiesCheckValue.checked === false) {
-            setAllergies("false")
-        } else {
-            setAllergies(allergiesValue)
-        }
         const addNotify = `A test for ${patientSelectValue} has been added`
         const formString = JSON.stringify(forms);
         const formData = {
@@ -235,14 +232,13 @@ const AddTest = () => {
             test_id : testId,
             testName : testName,
             date :  value,
-            allergies : allergiesValue,
+            patientAllergies: patientAllergies,
             formString : formString,
         }
         const notifyInfo = {
             patientSelectValue,
             testName,
         }
-        setAddmore(1)
         addTests(formData)
         .then((res) => {
             socketRef.current.emit("addTest", res.data, notifyInfo, res.id)
@@ -273,7 +269,7 @@ const AddTest = () => {
     }
 
     const hanldeCancel = () => {
-        setAddmore(addMore-1)
+        // setAddmore(addMore-1)
     }
 
     return (
@@ -355,9 +351,10 @@ const AddTest = () => {
                                 <FcAcceptDatabase size={30} />
                                 <div className={classes.testSelect_text}>Patient Allergic</div>
                             </div>
-                            <div className={classes.checkbox} value={allergiesCheckValue}>
-                                <Switch onChange={handleAllergiesSwitchChange} checked={allergiesCheckValue.checked} />
-                                { allergiesCheckValue.checked === true ? 
+                            <div className={classes.allergic_text}>
+                                {patientAllergies}
+                                {/* <Switch onChange={handleAllergiesSwitchChange} checked={allergiesCheckValue.checked} /> */}
+                                {/* { allergiesCheckValue.checked === true ? 
                                     <div className={classes.allergies_textField}>
                                         <span className={classes.allergic_text}>
                                             Note that this patient is allergic to 
@@ -369,7 +366,7 @@ const AddTest = () => {
                                             , do not instruct patient to eat this type of food!
                                         </span>
                                     </div> : ""
-                                }
+                                } */}
                             </div>
                         </div>
                         <div className={classes.item_field}>
@@ -474,10 +471,10 @@ const AddTest = () => {
                                         <FcAddImage size={20} /> 
                                         <span style={{marginLeft:"5px", marginTop: "2px"}}>Add More</span>
                                     </div>
-                                    <div className={classes.addMore} onClick={hanldeCancel}>
+                                    {/* <div className={classes.addMore} onClick={hanldeCancel}>
                                         <FcDeleteDatabase size={20} />
                                         <span style={{marginLeft: "5px", marginTop: "2px"}}>Cancel</span>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                             
@@ -490,22 +487,8 @@ const AddTest = () => {
                                 <FcAcceptDatabase size={30} />
                                 <div className={classes.testSelect_text}>Patient Allergic</div>
                             </div>
-                            <div className={classes.checkbox} value={allergiesCheckValue}>
-                                <Switch onChange={handleAllergiesSwitchChange} checked={allergiesCheckValue.checked} />
-                                { allergiesCheckValue.checked === true ? 
-                                    <div className={classes.allergies_textField}>
-                                        <span className={classes.allergic_text}>
-                                            Note that this patient is allergic to 
-                                            <input type="text" 
-                                                value={allergies}
-                                                onChange={handleAllergiesChange} 
-                                                className={classes.allergies_input} 
-                                                placeholder="Patient Allergies" 
-                                            />
-                                            , do not instruct patient to eat this type of food!
-                                        </span>
-                                    </div> : ""
-                                }
+                            <div className={classes.allergic_text}>
+                                {patientAllergies}
                             </div>
                         </div>
                         <div className={classes.item_field}>

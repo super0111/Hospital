@@ -15,11 +15,9 @@ const PatientDetails = (props) => {
         treatmentChange(formData)
         .then((res) => {
             setSelectPatientList(res.patient)
-            console.log("hold res", res.patient)
         })
         .catch((error) => console.log(error));
     }
-
     return(
         <div className={classes.patientDetails}>
             <div className={classes.title}>Patient Details</div>
@@ -80,12 +78,13 @@ const PatientDetails = (props) => {
             </div>
             <div className={classes.patientTreatment}>
                 <div className={classes.treatmentName}>Patient Treatment Status</div>
-                { 
+                { selectPatientList ? (
                     selectPatientList.treatmentStatus === "new" ? 
                     <div className={classes.treatmentStatus_new}>{selectPatientList.treatmentStatus}</div> :
                     selectPatientList.treatmentStatus === "hold" ?
                     <div className={classes.treatmentStatus_hold}>{selectPatientList.treatmentStatus}</div> :
                     <div className={classes.treatmentStatus_progress}>{selectPatientList.treatmentStatus}</div>
+                    ) : <div className={classes.noStatus}>no status</div>
                 }
             </div>
         </div>

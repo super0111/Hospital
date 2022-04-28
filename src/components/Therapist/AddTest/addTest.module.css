@@ -147,7 +147,9 @@
   margin-top: 5px;
 }
 .allergic_text {
-  font-size: 14px;
+  font-size: 18px;
+  width: 38%;
+  text-align: left;
 }
 .allergies_input {
   width: 80px;

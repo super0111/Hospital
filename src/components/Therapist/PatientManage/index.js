@@ -3,7 +3,6 @@ import classes from "./PatientManage.module.css"
 import config from "../../../config"
 import PatientDetails from "./PatientDetails"
 import TestLists from "./TestLists"
-import { treatmentChange } from './../../../apis/registerPatient'
 import { FcAlphabeticalSortingAz, FcAlphabeticalSortingZa, FcDownload, FcUpload } from "react-icons/fc";
 
 const PatientManage = () => {
@@ -34,32 +33,17 @@ const PatientManage = () => {
     useEffect(() => {
         if(patientsLists && patientsLists.length > 0) {
             handlePatientClick(patientsLists[0]['fullname']);
+            setPatientIsActive(0)
         }
     }, [patientsLists]);
     
-    const handlePatientClick = (patient, i) => {
-        const selectedPatient = patientsLists.find((item) => { return item.fullname === patient });
-        const selectedTests = testsLists.filter((item) => { return item.patient_name === patient });
+    const handlePatientClick = (patient, i, pdata) => {
+        const selectedPatient = patientsLists.find((item) =>  item.fullname === patient );
+        const selectedTests = testsLists.filter((item) =>  item.patient_name === patient );
+        
         setSelectPatientList(selectedPatient)
         setSelectPatientTests(selectedTests)
         setPatientIsActive(i)
-        if(selectPatientTests.length > 0) {
-            console.log("selectPatientList.treatmentStatus", selectPatientList.treatmentStatus)
-            if(selectPatientList.treatmentStatus != "hold") {
-                const id = selectPatientList._id;
-                const treatmentStatus = "In Progress";
-                const formData = {
-                    id,
-                    treatmentStatus,
-                }
-                treatmentChange(formData)
-                .then((res) => {
-                    // setSelectPatientList(res.patient)
-                    console.log("progress res", res.patient)
-                })
-                .catch((error) => console.log(error));
-            }
-        }
     }
 
     const handlePatientSort = () => {
@@ -84,11 +68,6 @@ const PatientManage = () => {
         setSearchResults(values)
     }
 
-    // useEffect(() => {
-    //     console.log("selectPatientList", selectPatientList)
-  
-    // }, [selectPatientTests, selectPatientList])
-
     return(
         <div className={classes.patientManage}>
             <div className={classes.flexRow}>
@@ -112,7 +91,7 @@ const PatientManage = () => {
                                 <div 
                                     key={patientsList._id} 
                                     className={patientIsActive === i ? classes.patient_item_active : classes.patient_item } 
-                                    onClick={() => handlePatientClick(patientsList.fullname, i)}
+                                    onClick={() => handlePatientClick(patientsList.fullname, i, patientsList)}
                                 >
                                     <img className={classes.avatar} src={patientsList.picture} />
                                     <div className={patientIsActive === i ? classes.patient_name_active : classes.patient_name}>{patientsList.fullname}</div>
