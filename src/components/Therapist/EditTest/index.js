@@ -1,6 +1,7 @@
 import * as React from 'react';
 import classes from "./EditTest.module.css"
 import { useState, useEffect, useRef } from "react"
+import { useLocation, useHistory } from 'react-router-dom';
 import config from "../../../config";
 import { io } from "socket.io-client";
 import TextField from '@mui/material/TextField';
@@ -13,7 +14,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { editTest } from "../../../apis/addTests"
 import { FcCalendar, FcPortraitMode, FcDocument, FcFlowChart, FcAcceptDatabase, FcBusinessContact, FcAddImage } from "react-icons/fc";
 
-import { useLocation, useHistory } from 'react-router-dom';
 
 const EditTest = () => {
     const location = useLocation();
@@ -134,7 +134,7 @@ const EditTest = () => {
             socketRef.current.emit("notifications", editNotify, name)
             if(res.success === true) {
                 toast.info("Test Edit Successfull!")
-                history.push("/treatmentStatus_therapist");
+                history.push("/");
             }
             else {
                 toast.error(res.AddTest)

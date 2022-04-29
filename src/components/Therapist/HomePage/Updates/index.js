@@ -26,15 +26,14 @@ const Updates = (props) => {
             Notifitions
           </div>
           <div className={classes.body}>
-            {notifications?.map((notification, i) => (
+            {notifications.length != 0 ? notifications.map((notification, i) => (
               <div key={i} className={classes.item}>
                   <div className={classes.date}>{Moment(notification.date).format('YYYY-MM-DD HH:mm')}</div>
                   <div className={classes.text}>{notification.content}</div>
                   <div className={classes.delete_btn} onClick={ () => handleDelete(notification._id)} ><MdDeleteForever size={20} color="rgb(215, 95, 61)" /></div>
               </div>
-            ))}     
+            )) : <div className={classes.notify_content}>No Notifications</div>}     
           </div>
-          <div className={classes.btn}>All Updates <BiFastForward size={22} color="white" /></div>
           <ToastContainer />
         </div>
     )

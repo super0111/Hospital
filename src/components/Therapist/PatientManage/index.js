@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import jwt_decode from "jwt-decode";
 import classes from "./PatientManage.module.css"
 import config from "../../../config"
 import PatientDetails from "./PatientDetails"
@@ -13,13 +14,25 @@ const PatientManage = () => {
     const [ patientIsActive, setPatientIsActive ] = useState(false)
     const [ sortIcon, setSortIcon ] = useState(false)
     const [ searchResults, setSearchResults ] = useState([])
+    const [ currentUserId, setCurrnetUserId ] = useState("")
+
+    useEffect(() => {
+        const userString = localStorage.getItem('token');
+        if(userString) {
+            const current_user = jwt_decode(userString);
+            if(current_user.user) {
+              setCurrnetUserId(current_user.user.id)
+            }
+          }
+    }, []);
 
     useEffect(async () => {
         const fetchPosts = async () => {
             const res = await fetch(`${config.server_url}api/posts/getPatients`);
             const patients = await res.json();
-            setPatientLists(patients);
-            setSearchResults(patients);
+            const current_patients = patients.filter(item => item.currentUserId === currentUserId)
+            setPatientLists(current_patients);
+            setSearchResults(current_patients);
         };
         const fetchTestPosts = async () => {
             const res = await fetch(`${config.server_url}api/posts/getTests`);
@@ -28,19 +41,18 @@ const PatientManage = () => {
         };
         await fetchTestPosts();
         await fetchPosts();
-    }, []);
+    }, [currentUserId]);
 
     useEffect(() => {
         if(patientsLists && patientsLists.length > 0) {
             handlePatientClick(patientsLists[0]['fullname']);
-            setPatientIsActive(0)
         }
+        setPatientIsActive(0)
     }, [patientsLists]);
     
     const handlePatientClick = (patient, i, pdata) => {
         const selectedPatient = patientsLists.find((item) =>  item.fullname === patient );
         const selectedTests = testsLists.filter((item) =>  item.patient_name === patient );
-        
         setSelectPatientList(selectedPatient)
         setSelectPatientTests(selectedTests)
         setPatientIsActive(i)

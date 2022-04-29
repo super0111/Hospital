@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
+import jwt_decode from "jwt-decode";
 import config from "../../../config"
 import classes from "./HomePage.module.css"
 import Updates from "./Updates"
-import NextSession from "./NextSession"
 import TestLists from "./TestLists"
 import { io } from "socket.io-client";
 
@@ -15,13 +15,25 @@ const HomePage = () => {
     const [ isActive, setIsActive ] = useState(false)
     const [ notify, setNotify ] = useState([])
     const [ notifications, setNotifications ] = useState([])
+    const [ currentUserId, setCurrnetUserId ] = useState("")
+
+    useEffect(() => {
+      const userString = localStorage.getItem('token');
+      if(userString) {
+          const current_user = jwt_decode(userString);
+          if(current_user.user) {
+            setCurrnetUserId(current_user.user.id)
+          }
+        }
+    }, []);
 
     useEffect(async () => {
       const fetchPosts = async () => {
           const res = await fetch(`${config.server_url}api/posts/getPatients`);
           const patients = await res.json();
-          setPatientLists(patients);
-          setSearchResults(patients);
+          const current_patients = patients.filter(item => item.currentUserId === currentUserId)
+          setPatientLists(current_patients);
+          setSearchResults(current_patients);
       };
       const fetchTestPosts = async () => {
           const res = await fetch(`${config.server_url}api/posts/getTests`);
@@ -29,14 +41,15 @@ const HomePage = () => {
           setTestsLists(tests);
       };
       await fetchTestPosts();
-      await fetchPosts();   
-  }, []);
+      await fetchPosts();
+    }, [currentUserId]);
 
-  useEffect(() => {
-      if(patientsLists && patientsLists.length > 0) {
-          handlePatientClick(patientsLists[0]['fullname']);
-      }
-  }, [patientsLists]);
+    useEffect(() => {
+        if(patientsLists && patientsLists.length > 0) {
+            handlePatientClick(patientsLists[0]['fullname'], 0);
+        }
+        setIsActive(0)
+    }, [patientsLists]);
 
   const handlePatientClick = (patient, i) => {
       const patientTests = dataTestsLists.filter((item) => { return item.patient_name === patient});
@@ -50,7 +63,6 @@ const HomePage = () => {
 
   useEffect(() => {
     socketRef.current.on('notifications', (notifis) => {
-      console.log("notifications.......", notifis)
       setNotify(notifis)
     });
   }, []);

@@ -1,11 +1,14 @@
+import React, { useState } from 'react'
 import classes from "./PatientDetails.module.css"
 import { treatmentChange } from "./../../../../apis/registerPatient"
 
 const PatientDetails = (props) => {
     const selectPatientList = props.selectPatientList;
+    const selectPatientTests = props.selectPatientTests;
     const setSelectPatientList = props.setSelectPatientList;
+    const [ treatmentStatus, setTreatmentStatus ] = useState("")
     
-    const handleTreatmentChange = () => {
+    const handleHoldTreatment = () => {
         const id = selectPatientList._id;
         const treatmentStatus = "hold"
         const formData = {
@@ -14,6 +17,21 @@ const PatientDetails = (props) => {
         }
         treatmentChange(formData)
         .then((res) => {
+            setSelectPatientList(res.patient)
+        })
+        .catch((error) => console.log(error));
+    }
+
+    const handleHoldCancelTreatment = () => {
+        const id = selectPatientList._id;
+        const treatmentStatus = "In progress"
+        const formData = {
+            id,
+            treatmentStatus,
+        }
+        treatmentChange(formData)
+        .then((res) => {
+            console.log("res, res", res)
             setSelectPatientList(res.patient)
         })
         .catch((error) => console.log(error));
@@ -72,9 +90,11 @@ const PatientDetails = (props) => {
                 </div>
                 <div className={classes.treatmentChange_field}>
                     <div className={classes.name}>Patient Treatment Status Change</div>
-                    <butttn className={classes.treatmentChange} onClick={handleTreatmentChange}>Hold</butttn>
+                    <div className={classes.holdBtn_field}>
+                        <button className={classes.treatmentChange} onClick={handleHoldTreatment}>Hold</button>
+                        <button className={classes.treatmentChange} onClick={handleHoldCancelTreatment}>Hold Cancel</button>
+                    </div>
                 </div>
-              
             </div>
             <div className={classes.patientTreatment}>
                 <div className={classes.treatmentName}>Patient Treatment Status</div>

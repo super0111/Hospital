@@ -90,6 +90,7 @@ const HeaderNav= () => {
           notifyInfo,
           test_id,
         }
+        console.log("++++Notify inbfo", info)
         setNotify(info)
         setIsShow(true)
     });
@@ -256,8 +257,8 @@ const HeaderNav= () => {
             <div className={classes.notify_body}>
               {/* <div className={classes.modal_text}>Test ID : {notify.test_id}</div> */}
               {/* <div className={classes.modal_text}>Date : {notify.date}</div> */}
-              <div className={classes.modal_note}>New Test is Added</div>
-              <div className={classes.modal_text}>Test Name : {notify.testName}</div>
+              <div className={classes.modal_note}>Hello, {notify.notifyInfo.patientSelectValue}. New Test is Added</div>
+              <div className={classes.modal_text}>Test Name : {notify.notifyInfo.testName}</div>
             </div>
             <div className={classes.modal_footer}>
               <button className={classes.modal_confirm} onClick={notifyConfirm}>Confirm</button>

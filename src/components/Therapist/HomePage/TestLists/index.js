@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import classes from "./TestLists.module.css"
 import { FcAlphabeticalSortingAz, FcAlphabeticalSortingZa, FcDownload, FcUpload } from "react-icons/fc";
-import { BiArrowFromTop, BiArrowToTop } from "react-icons/bi";
+import { BiArrowFromBottom, BiArrowToBottom } from "react-icons/bi";
+import Moment from 'moment';
 
 const TestLists = (props) => {
     const { patientsLists, searchResults, testLists, setTestList, handlePatientClick, isActive } = props;
@@ -104,37 +105,58 @@ const TestLists = (props) => {
             <div className={classes.right}>
                 <div className={classes.right_title}>Patient Test Lists</div>
                 <div className={classes.header}>
-                    <div className={classes.header_title}>Id</div>
-                    <div 
-                        className={classes.header_title}
-                        onClick={handleDateSort}
-                    >
-                        Date {dateSort === true ? <BiArrowFromTop color='white' size={22} /> : <BiArrowToTop color='white' size={22} />}
+                    <div className={classes.statusItem_title_id}>Test ID</div>
+                    <div className={classes.statusItem_title}>Test Name</div>
+                    <div className={classes.statusItem_title} onClick={handleDateSort}>
+                        Test Date{dateSort === true? <BiArrowFromBottom size={18} /> : <BiArrowToBottom size={18} />}
                     </div>
-                    <div 
-                        className={classes.header_title}
-                        onClick={handleDecSort}
-                    >
-                        Description {decSort === true ? <BiArrowFromTop color='white' size={22} /> : <BiArrowToTop color='white' size={22} />}
-                    </div>
-                    <div 
-                        className={classes.header_title} 
-                        onClick={handleStatusSort}
-                    >
-                        Status{statusSort === true ? <BiArrowFromTop color='white' size={22} /> : <BiArrowToTop color='white' size={22} />}
+                    <div className={classes.statusItem_title}>Food Allergic</div>
+                    <div className={classes.statusItem_title}>Food Name</div>
+                    <div className={classes.statusItem_title}>Amount Number</div>
+                    <div className={classes.statusItem_title}>Eat Time</div>
+                    <div className={classes.statusItem_title}>Food Instructions</div>
+                    <div className={classes.statusItem_title} onClick={handleStatusSort}>
+                        Status{statusSort === true ? <BiArrowFromBottom size={18} color="white" /> : <BiArrowToBottom size={18} />} 
                     </div>
                 </div>
                 { testLists.length !=0 ? testLists.map((test, i) => {
                     return(
-                        <div key={i} className={classes.item}>
-                            <div className={classes.item_value}>{i+1}</div>
-                            <div className={classes.item_value}>{test.date}</div>
-                            <div className={classes.item_value}>{test.testName}</div>
-                            <div className={classes.item_value}>
-                                { 
-                                    // test.canceled === true ?
-                                    // <div ref={ref} className={classes.canceledText}>Canceled</div> 
-                                    // : 
+                        <div key={i} className={classes.status_item}>
+                            <div className={classes.text_id}>
+                                {i+1}
+                            </div>
+                            <div className={classes.text}>
+                                {test.testName}
+                            </div>
+                            <div className={classes.text}>
+                                {Moment(test.date).format('MM-DD HH:mm')}
+                            </div>
+                            <div className={classes.text_allergies}>
+                                { test.patientAllergies ? test.patientAllergies : "No" }
+                            </div>
+                            <div className={classes.formDataField}>
+                                {JSON.parse(test.formString).map((formData, i) => (
+                                    <div key={i} className={classes.formData}>
+                                        <div className={classes.text}>
+                                            {formData.food}
+                                        </div>
+                                        <div className={classes.formData_text}>
+                                            {formData.unitsAmountValue}
+                                            {formData.whightAmountValue} {" "}
+                                            {formData.unitsAmountValue === "" ? formData.whightAmountUnits : ""}
+                                        </div>
+                                        <div className={classes.formData_text}>
+                                            {formData.eatTimeValue} {" "}
+                                            {formData.eatTimeUnits}
+                                        </div>
+                                        <div className={classes.formData_text}>
+                                            {formData.addInstructions}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className={classes.status_field}>
+                                {
                                     test.confirmed === true 
                                     ? 
                                     <div className={classes.planedText}>Planed</div> 

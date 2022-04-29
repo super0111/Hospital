@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import jwt_decode from "jwt-decode";
+import { useHistory } from 'react-router-dom';
 import useInput from "../../../hooks/use-input";
 import PictureUpload from "./PictureUpload";
 import classes from "./RegisterPatient.module.css"
@@ -12,6 +14,20 @@ import Switch from "react-switch";
 const isNotEmpty = (value) => value.trim() !== "";
 
 const RegisterPatient = () => {
+    let history = useHistory();
+    const [ currentUserId, setCurrnetUserId ] = useState("")
+
+    useEffect(() => {
+        const userString = localStorage.getItem('token');
+        if(userString) {
+            const current_user = jwt_decode(userString);
+            console.log("current_user", current_user)
+            if(current_user.user) {
+              setCurrnetUserId(current_user.user.id)
+            }
+          }
+      }, []);
+
     const [image, setImage] = useState({ preview: '', data: '' })
 
     const [genderValue, setGender] = useState("man")
@@ -100,6 +116,7 @@ const RegisterPatient = () => {
     const submitHandler = (event) => {
         event.preventDefault();
         let formData = {
+            currentUserId: currentUserId,
             fullname: fullNameValue,
             id: idValue,
             email: emailValue,
@@ -122,23 +139,24 @@ const RegisterPatient = () => {
             registerPatient(formData)
             .then((res) => {
                 if(res.message === "success") {
+                    resetFullName();
+                    resetId();
+                    resetEmail();
+                    resetPhoneNumber();
+                    resetBirthday();
+                    resetHeight();
+                    resetWeight();
+                    resetInformation();
+                    resetSummary();
+                    image.preview = ""
                     toast.info("Register Patient Successfull!")
+                    history.push("/")
                 }
                 else 
                     toast.error(res.RegisterPatient)   
             })
         })
         .catch((error) => console.log(error));
-        resetFullName();
-        resetId();
-        resetEmail();
-        resetPhoneNumber();
-        resetBirthday();
-        resetHeight();
-        resetWeight();
-        resetInformation();
-        resetSummary();
-        image.preview = ""
     };
 
     const fullNameClasses = fullNameHasError ? "form-control invalid" : "form-control";

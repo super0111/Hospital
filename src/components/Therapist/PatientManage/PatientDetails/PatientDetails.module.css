@@ -104,7 +104,8 @@
     border-radius: 3px;
 }
 .treatmentChange {
-    width: 60px;
+    width: 80px;
+    margin: 3px 0;
     border: 1px solid rgb(228, 63, 21);
     border-radius: 3px;
     outline: none;
@@ -117,4 +118,8 @@
 .treatmentChange:hover {
     background-color: rgb(228, 63, 21);
     color: white;
+}
+.holdBtn_field {
+    display: flex;
+    flex-direction: column;
 }

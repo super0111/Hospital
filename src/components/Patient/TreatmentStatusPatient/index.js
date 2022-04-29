@@ -4,7 +4,7 @@ import config from "../../../config";
 import jwt_decode from "jwt-decode";
 import { io } from "socket.io-client";
 import { FcDownload, FcUpload } from "react-icons/fc";
-
+import Moment from 'moment';
 
 const TreatmentStatusPatient = () => {
 
@@ -113,10 +113,12 @@ const TreatmentStatusPatient = () => {
                 <div className={classes.title}> My treatment status</div>
                 <div className={classes.statusItem_title_field}>
                     <div className={classes.statusItem_title}>Test ID</div>
+                    <div className={classes.statusItem_title}>Test Name</div>
                     <div className={classes.statusItem_title} onClick={handleDateSort}>
                         Test Date{dateSort === true? <FcUpload size={18} /> : <FcDownload size={18} />}
                     </div>
                     <div className={classes.statusItem_title}>Food Allergic</div>
+                    <div className={classes.statusItem_title}>Food Name</div>
                     <div className={classes.statusItem_title}>Amount Number</div>
                     <div className={classes.statusItem_title}>Eat Time</div>
                     <div className={classes.statusItem_title}>Food Instructions</div>
@@ -134,23 +136,24 @@ const TreatmentStatusPatient = () => {
                                 {i+1}
                             </div>
                             <div className={classes.text}>
-                                {test?.date}
+                                {test.testName}
                             </div>
                             <div className={classes.text}>
-                                {test?.allergies}
+                                {Moment(test.date).format('YYYY-MM-DD HH:mm')}
+                            </div>
+                            <div className={classes.text}>
+                                { test.patientAllergies ? test.patientAllergies : "No" }
                             </div>
                             <div className={classes.formDataField}>
                                 {JSON.parse(test?.formString).map((formData, i) => (
                                     <div key={i} className={classes.formData}>
-                                        {/* <div className={classes.text}>
-                                            {formData.foodName}
-                                        </div> */}
-                                        <div className={classes.formData_number}>
-                                            {i+1}th
+                                        <div className={classes.text}>
+                                            {formData.food}
                                         </div>
                                         <div className={classes.formData_text}>
+                                            {formData.unitsAmountValue}
                                             {formData.whightAmountValue} {" "}
-                                            {formData.whightAmountUnits}
+                                            {formData.unitsAmountValue === "" ? formData.whightAmountUnits : ""}
                                         </div>
                                         <div className={classes.formData_text}>
                                             {formData.eatTimeValue} {" "}
@@ -164,9 +167,6 @@ const TreatmentStatusPatient = () => {
                             </div>
                             <div className={classes.text}>
                                 { 
-                                    // test.canceled === true ?
-                                    // <div ref={ref} className={classes.canceledText}>Canceled</div> 
-                                    // : 
                                     confirmed === true ?
                                     <div className={classes.planedText}>Planed</div> :
                                     test.confirmed === true 

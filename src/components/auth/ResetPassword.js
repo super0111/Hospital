@@ -51,6 +51,7 @@ const ResetPassword = () => {
         event.preventDefault();
         if(password !== confirmPassword) {
             toast.error("Password is not match")
+            return
         }
         const formData = {
           password: password,
@@ -60,7 +61,7 @@ const ResetPassword = () => {
           .then((res) => {
               console.log(res.status)
               if(res.status === "success") {
-                history.push("/patientHome");
+                history.push("/treatmentStatus_patient");
               }
               else toast.error(res.err.message)
           })

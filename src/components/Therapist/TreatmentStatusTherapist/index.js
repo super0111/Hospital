@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
+import jwt_decode from "jwt-decode";
 import { useHistory } from "react-router-dom";
 import classes from "./TreatmentStatusTherapist.module.css"
 import config from "../../../config";
@@ -9,6 +10,7 @@ import { testDelete } from "./../../../apis/addTests"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FcAlphabeticalSortingAz, FcAlphabeticalSortingZa, FcDownload, FcUpload } from "react-icons/fc";
+import Moment from 'moment';
 
 const TreatmentStatusTherapist = () => {
     let history = useHistory();
@@ -20,13 +22,25 @@ const TreatmentStatusTherapist = () => {
     const [ dateSort, setDateSort ] = useState(false)
     const [ statusSort, setStatusSort ] = useState(false)
     const [ searchResults, setSearchResults ] = useState([])
+    const [ currentUserId, setCurrnetUserId ] = useState("")
+
+    useEffect(() => {
+        const userString = localStorage.getItem('token');
+        if(userString) {
+            const current_user = jwt_decode(userString);
+            if(current_user.user) {
+              setCurrnetUserId(current_user.user.id)
+            }
+          }
+      }, []);
 
     useEffect(async () => {
         const fetchPosts = async () => {
             const res = await fetch(`${config.server_url}api/posts/getPatients`);
             const patients = await res.json();
-            setPatientLists(patients);
-            setSearchResults(patients);
+            const current_patients = patients.filter(item => item.currentUserId === currentUserId)
+            setPatientLists(current_patients);
+            setSearchResults(current_patients);
         };
         const fetchTestPosts = async () => {
             const res = await fetch(`${config.server_url}api/posts/getTests`);
@@ -35,7 +49,7 @@ const TreatmentStatusTherapist = () => {
         };
         await fetchTestPosts();
         await fetchPosts();   
-    }, []);
+    }, [currentUserId]);
 
     const socketRef = useRef();
     useEffect(() => {
@@ -46,6 +60,7 @@ const TreatmentStatusTherapist = () => {
         if(patientsLists && patientsLists.length > 0) {
             handlePatientClick(patientsLists[0]['fullname']);
         }
+      setIsActive(0)
     }, [patientsLists]);
     
     const handlePatientClick = (patient, i) => {
@@ -162,6 +177,7 @@ const TreatmentStatusTherapist = () => {
                             Test Date{dateSort === true? <FcUpload size={18} /> : <FcDownload size={18} />}
                         </div>
                         <div className={classes.statusItem_title}>Food Allergic</div>
+                        <div className={classes.statusItem_title}>Food Name</div>
                         <div className={classes.statusItem_title}>Amount Number</div>
                         <div className={classes.statusItem_title}>Eat Time</div>
                         <div className={classes.statusItem_title}>Food Instructions</div>
@@ -176,23 +192,21 @@ const TreatmentStatusTherapist = () => {
                                     {i+1}
                                 </div>
                                 <div className={classes.text}>
-                                    {test.date}
+                                    {Moment(test.date).format('YYYY-MM-DD HH:mm')}
                                 </div>
                                 <div className={classes.text}>
-                                    {test.allergies}
+                                    { test.patientAllergies === "" ? "No" : test.patientAllergies }
                                 </div>
                                 <div className={classes.formDataField}>
                                     {JSON.parse(test.formString).map((formData, i) => (
                                         <div key={i} className={classes.formData}>
-                                            {/* <div className={classes.text}>
-                                                {formData.foodName}
-                                            </div> */}
-                                            <div className={classes.formData_number}>
-                                                {i+1}th
+                                            <div className={classes.text}>
+                                                {formData.food}
                                             </div>
                                             <div className={classes.formData_text}>
+                                                {formData.unitsAmountValue}
                                                 {formData.whightAmountValue} {" "}
-                                                {formData.whightAmountUnits}
+                                                {formData.unitsAmountValue === "" ? formData.whightAmountUnits : ""}
                                             </div>
                                             <div className={classes.formData_text}>
                                                 {formData.eatTimeValue} {" "}
@@ -206,9 +220,6 @@ const TreatmentStatusTherapist = () => {
                                 </div>
                                 <div className={classes.text}>
                                     { 
-                                        // test.canceled === true ?
-                                        // <div ref={ref} className={classes.canceledText}>Canceled</div> 
-                                        // : 
                                         test.confirmed === true 
                                         ? 
                                         <div className={classes.planedText}>Planed</div> 

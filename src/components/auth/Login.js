@@ -61,7 +61,7 @@ const Login = (props) => {
           if(res.isFirst === 1) {
             history.push("/resetPassword");
           }
-          else history.push("/patientHomePage");
+          else history.push("/treatmentStatus_patient");
         }
         else { toast.error(res.errors?.msg) }
       })

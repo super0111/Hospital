@@ -25,7 +25,7 @@ const PatientHomePage = () => {
           setCurrent_PatientName(current_userName);
         }
       }
-    }, []);
+    }, [testLists]);
 
     useEffect(async () => {
         const fetchTestPosts = async () => {
@@ -34,7 +34,7 @@ const PatientHomePage = () => {
             setTestsLists(tests);
         };
         await fetchTestPosts();
-    }, []);
+    }, [testLists]);
 
     useEffect( () => {
         const myTests = testLists.filter((item) => item.patient_name === current_PatientName )

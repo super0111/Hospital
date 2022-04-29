@@ -60,11 +60,12 @@ const [state, setState] = useState({ message: "" })
         const fetchPatientss = async () => {
             const res = await fetch(`${config.server_url}api/posts/getPatients`);
             const patients = await res.json();
-            setPatientLists(patients);
+            const current_patients = patients.filter(item => item.currentUserId === currentUserId)
+            setPatientLists(current_patients);
         };
         await fetchMessages(); 
         await fetchPatientss();  
-    }, [])
+    }, [currentUserId])
 
 
     useEffect(() => {

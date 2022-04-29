@@ -1,6 +1,7 @@
-import * as React from 'react';
 import classes from "./addTest.module.css"
-import { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef } from "react"
+import { useHistory } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 import config from "../../../config";
 import { io } from "socket.io-client";
 import TextField from '@mui/material/TextField';
@@ -14,6 +15,7 @@ import {addTests} from "../../../apis/addTests"
 import { FcCalendar, FcPortraitMode, FcDocument, FcFlowChart, FcAcceptDatabase, FcBusinessContact, FcAddImage, FcDeleteDatabase } from "react-icons/fc";
 
 const AddTest = () => {
+    let history = useHistory();
     const [ patientsLists, setPatientLists ] = useState([])
     const [ patientTests, setTests ] = useState([])
     const [ testName, setTestName ] = useState("")
@@ -28,6 +30,7 @@ const AddTest = () => {
     const [ allergiesValue, setAllergiesValue ] = useState("false")
     const [ allergies, setAllergies ] = useState("")
     const [ amountTypeCheck, setAmountTypeCheck ] = useState({checked:false})
+    const [ currentUserId, setCurrnetUserId ] = useState("")
     const socketRef = useRef();
 
     const [forms, setForms] = useState([{
@@ -63,14 +66,25 @@ const AddTest = () => {
         handleSetForms(index, e.target.name, e.target.value);
     }
 
+    useEffect(() => {
+        const userString = localStorage.getItem('token');
+        if(userString) {
+            const current_user = jwt_decode(userString);
+            if(current_user.user) {
+                setCurrnetUserId(current_user.user.id)
+            }
+        }
+    }, []);
+      
     useEffect( () => {
         const fetchPosts = async () => {
             const res = await fetch(`${config.server_url}api/posts/getPatients`);
             const patients = await res.json();
-            setPatientLists(patients);
+            const current_patients = patients.filter(item => item.currentUserId === currentUserId)
+            setPatientLists(current_patients);
         };
         fetchPosts();
-    }, []);
+    }, [currentUserId]);
 
     useEffect( () => {
         const fetchPosts = async () => {
@@ -79,7 +93,7 @@ const AddTest = () => {
             setTests(tests);
         };
         fetchPosts();
-    }, []);
+    }, [patientTests]);
 
     const handleDateChange = (newValue) => {
       setValue(newValue);
@@ -107,9 +121,13 @@ const AddTest = () => {
 
     const handleTestSelectChange = (e) => {
         setTestSelectValue(e.target.value);
-        if(useTests) {
-            const tests = useTests.find((item) =>( item.testName == usedTestSelect ));
-            const testFormDatas =JSON.parse(tests.formString)
+        if(patientTests.length === 0 && e.target.value === "use") {
+            toast.error("No added tests")
+            return
+        }
+        if(patientTests.length != 0) {
+            const tests = patientTests?.find((item) =>( item?.testName == usedTestSelect ));
+            const testFormDatas =JSON.parse(tests?.formString)
             setAllergies(tests?.allergies)
             testFormDatas.map((testFormData)=> (
                 setForms([{
@@ -143,7 +161,7 @@ const AddTest = () => {
         if(useTests && useTests.length > 0) {
             const test_name = useTests[0].testName;
             setUsedTestSelect(test_name)
-            const tests = useTests.find((item) =>( item.testName === test_name ));
+            const tests = patientTests.find((item) =>( item.testName === test_name ));
             setAllergies(tests?.allergies)
             if(testSelectValue != "new") {
                 const testFormDatas =JSON.parse(tests.formString)
@@ -175,11 +193,10 @@ const AddTest = () => {
             eatTimeUnits: "", 
             addInstructions: "",
         }])
-        if(useTests) {
-            const tests = useTests.find((item) =>( item.testName === e.target.value ));
+        if(patientTests.length != 0) {
+            const tests = patientTests.find((item) =>( item.testName === e.target.value ));
             setAllergies(tests?.allergies)
             const testFormDatas =JSON.parse(tests.formString)
-            console.log("testFormDatas", testFormDatas)
             if(testSelectValue != "new") {
                 setForms(testFormDatas.map((testFormData)=> (
                     {
@@ -235,6 +252,7 @@ const AddTest = () => {
             patientAllergies: patientAllergies,
             formString : formString,
         }
+        console.log("forororororo", formData)
         const notifyInfo = {
             patientSelectValue,
             testName,
@@ -246,6 +264,7 @@ const AddTest = () => {
             setTestId(testId+1)
             if(res.message === "success") {
                 toast.info("Test Add Successfull!")
+                history.push("/")
             }
             else {
                 toast.error(res.AddTest)
@@ -266,10 +285,6 @@ const AddTest = () => {
 
     const handleAddMore = () => {
         handleAddMoreForm();
-    }
-
-    const hanldeCancel = () => {
-        // setAddmore(addMore-1)
     }
 
     return (
@@ -336,8 +351,8 @@ const AddTest = () => {
                             <div className={classes.useTestSelect_field}>
                                 <div className={classes.useTestSelect_name}>Select Used Test :</div>
                                 <select onChange={handleUsedTestSelectChange} className={classes.useTestSelect}>
-                                    {useTests.map((useTest, i) => (
-                                        <option value={useTest.testName} key={i}>{useTest.testName}</option>
+                                    {patientTests.map((item, i) => (
+                                        <option value={item.testName} key={i}>{item.testName}</option>
                                     ))}
                                 </select>
                             </div> : ""
@@ -352,7 +367,7 @@ const AddTest = () => {
                                 <div className={classes.testSelect_text}>Patient Allergic</div>
                             </div>
                             <div className={classes.allergic_text}>
-                                {patientAllergies}
+                                {patientAllergies === "" ? "No" : patientAllergies}
                                 {/* <Switch onChange={handleAllergiesSwitchChange} checked={allergiesCheckValue.checked} /> */}
                                 {/* { allergiesCheckValue.checked === true ? 
                                     <div className={classes.allergies_textField}>
@@ -471,10 +486,6 @@ const AddTest = () => {
                                         <FcAddImage size={20} /> 
                                         <span style={{marginLeft:"5px", marginTop: "2px"}}>Add More</span>
                                     </div>
-                                    {/* <div className={classes.addMore} onClick={hanldeCancel}>
-                                        <FcDeleteDatabase size={20} />
-                                        <span style={{marginLeft: "5px", marginTop: "2px"}}>Cancel</span>
-                                    </div> */}
                                 </div>
                             </div>
                             
@@ -487,8 +498,8 @@ const AddTest = () => {
                                 <FcAcceptDatabase size={30} />
                                 <div className={classes.testSelect_text}>Patient Allergic</div>
                             </div>
-                            <div className={classes.allergic_text}>
-                                {patientAllergies}
+                            <div className={classes.allergic_text}>s
+                                {patientAllergies === "" ? "No" : patientAllergies}
                             </div>
                         </div>
                         <div className={classes.item_field}>
@@ -593,10 +604,6 @@ const AddTest = () => {
                                     <div className={classes.addMore} onClick={handleAddMore}>
                                         <FcAddImage size={20} /> 
                                         <span style={{marginLeft:"5px", marginTop: "2px"}}>Add More</span>
-                                    </div>
-                                    <div className={classes.addMore} onClick={hanldeCancel}>
-                                        <FcDeleteDatabase size={20} />
-                                        <span style={{marginLeft: "5px", marginTop: "2px"}}>Cancel</span>
                                     </div>
                                 </div>
                             </div>

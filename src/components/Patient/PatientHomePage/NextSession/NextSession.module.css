@@ -72,3 +72,11 @@
     color: rgb(20, 117, 208);
     border: 1px solid rgb(20, 117, 208);;
 }
+.foodName {
+    font-size: 23px;
+    color: rgb(17, 109, 190);
+}
+.foodName_con {
+    font-size: 17px;
+    color: rgb(90, 95, 99);
+}

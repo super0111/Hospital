@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import classes from "./TestLists.module.css"
 import { FcAlphabeticalSortingAz, FcAlphabeticalSortingZa, FcDownload, FcUpload } from "react-icons/fc";
 import Moment from 'moment';
+
 const TestLists = (props) => {
     const selectPatientTests = props.selectPatientTests;
     const [ testLists, setTestList ] = useState([])
@@ -79,15 +80,15 @@ const TestLists = (props) => {
                                             { test.patientAllergies ? test.patientAllergies : "No" }
                                         </div>
                                         <div className={classes.formDataField}>
-                                            {console.log("test.formString", test)}
                                             {JSON.parse(test.formString).map((formData, i) => (
                                                 <div key={i} className={classes.formData}>
                                                     <div className={classes.text}>
                                                         {formData.food}
                                                     </div>
                                                     <div className={classes.formData_text}>
+                                                        {formData.unitsAmountValue}
                                                         {formData.whightAmountValue} {" "}
-                                                        {formData.whightAmountUnits}
+                                                        {formData.unitsAmountValue === "" ? formData.whightAmountUnits : ""}
                                                     </div>
                                                     <div className={classes.formData_text}>
                                                         {formData.eatTimeValue} {" "}

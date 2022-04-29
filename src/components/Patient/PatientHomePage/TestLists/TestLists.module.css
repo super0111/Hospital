@@ -64,6 +64,24 @@
     text-align: center;
     margin: 20px 0;
 }
+.statusItem_title_field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgb(141, 193, 228);
+    margin-bottom: 10px;
+}
+.statusItem_title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 12%;
+    font-size: 17px;
+    color: white;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+}
 .planedText {
     width: 50%;
     color: white;
@@ -81,4 +99,80 @@
     background-color: #395dd4;
     padding: 10px 5px;
     border-radius: 30px;
+}
+.status_item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+.text {
+    width: 12%;
+    font-size: 16px;
+    color: #555;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+}
+.text_id {
+    width: 8%;
+    font-size: 16px;
+    color: #555;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+}
+.text_allergies {
+    width: 12%;
+    overflow-x: auto;
+    font-size: 16px;
+    color: #555;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+}
+.status_field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12%;
+}
+.formData_text {
+    width: 43%;
+    overflow-x: auto;
+    font-size: 16px;
+    color: #555;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+}
+.formData_text::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.formData_text::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+
+.formData_text::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+.formDataField {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+}
+.formData {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dotted rgb(62, 136, 209);
 }
