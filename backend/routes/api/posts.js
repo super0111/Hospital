@@ -12,7 +12,7 @@ router.post('/registerPatient',
             return res.status(400).json({ errors: errors.array() });
         }
         const { 
-            therapist_id,
+            currentUserId,
             fullname, 
             id, 
             email,
@@ -41,7 +41,7 @@ router.post('/registerPatient',
             const date = new Date();
             const password = id;
             const patient = new Patient({
-                therapist_id,
+                currentUserId,
                 fullname,
                 id,
                 email,
@@ -147,18 +147,13 @@ router.post('/addTests',
                 const id = test._id;
                 Test.find()
                 .then(async (tests) =>{
-                    
-                    console.log(patient_name);
                     await Patient.findOne({fullname: patient_name})
                     .then(async (p) => {
-                        console.log('a patient found ', p);
                         p.treatmentStatus="in progress";
                         await p.save();
                         res.json({message: "success", data: tests, id: id})
                     })
-                    
                 })
-                // test => res.json({message: "success", test})
             })
             .catch(err => {
                 res.status(400).json({AddTest: err.message})

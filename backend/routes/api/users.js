@@ -145,7 +145,6 @@ router.post( '/login',
       }
 
       if( user ? user.isDoctor == 1 : "") {
-        console.log("1231")
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
@@ -153,7 +152,6 @@ router.post( '/login',
             .status(400)
             .json({ errors: { msg: 'Invalid Password' } });
         }
-        console.log("sdfsdf")
         const payload = {
           user: {
             id: user._id,
