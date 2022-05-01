@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Notify = require('../../models/notifications');
+const Notifications = require('../../models/ConfirmNotifications');
+const ConfirmNotifications = require('../../models/ConfirmNotifications');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http, {
@@ -11,6 +13,58 @@ var io = require('socket.io')(http, {
     transports : ['websocket']
   }
 });
+
+router.post('/saveNotify',
+    async (req, res) => {
+        const { notifyInfo, test_id } = req.body;
+        const patientName = notifyInfo.patientSelectValue;
+        const testName = notifyInfo.testName;
+        try {
+            const date = new Date();
+            const notifications = new Notifications({
+                test_id,
+                patientName,
+                testName,
+                date
+            })
+             await notifications.save()
+            .then(notify => res.json({message: "success", notify}))
+            .catch(err => {
+                res.status(400).json({RegisterPatient: err.message})
+            });
+        }
+        catch  (err) {
+            console.error(err);
+            res.status(500).send("Server 500 error");
+        }
+    }
+)
+
+router.delete('/deleteConfirmNotify/:id',
+    (req, res) => {
+        Notifications.findById(req.params.id)
+        .then(notify => {
+            notify.delete()
+            .then( () => {
+                Notifications.find()
+                .then( notify =>res.json({success: true, data: notify}))
+            } )
+        })
+        .catch(err => {
+            res.status(400).json({Notify: err.message})
+        })
+    }
+)
+
+router.get('/getConfirmNotifications',
+    async (req, res) => {
+        ConfirmNotifications.find().sort({ date: 1 })
+        .then(confirmNotify => res.json(confirmNotify))
+        .catch(err => {console.log(err)
+            res.status(404).json({err: "ConfirmNotifications no found"})
+        });
+    }
+)
 
 router.get('/',
     async (req, res) => {
