@@ -52,7 +52,8 @@ const ResetPassword = () => {
         if(password !== confirmPassword) {
             toast.error("Password is not match")
             return
-        }
+        } 
+       
         const formData = {
           password: password,
           id: currentUser,

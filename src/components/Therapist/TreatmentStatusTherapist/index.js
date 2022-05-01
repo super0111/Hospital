@@ -188,7 +188,7 @@ const TreatmentStatusTherapist = () => {
                     { testLists.length !=0 ? testLists.map((test, i) => {
                         return(
                             <div key={i} className={classes.status_item}>
-                                <div className={classes.text}>
+                                <div className={classes.text_id}>
                                     {i+1}
                                 </div>
                                 <div className={classes.text}>
@@ -200,12 +200,12 @@ const TreatmentStatusTherapist = () => {
                                 <div className={classes.formDataField}>
                                     {JSON.parse(test.formString).map((formData, i) => (
                                         <div key={i} className={classes.formData}>
-                                            <div className={classes.text}>
+                                            <div className={classes.formData_text}>
                                                 {formData.food}
                                             </div>
                                             <div className={classes.formData_text}>
                                                 {formData.unitsAmountValue}
-                                                {formData.whightAmountValue} {" "}
+                                                {formData.whightAmountValue} {" "} { formData.unitsAmountValue != "" ? "count" : "" }
                                                 {formData.unitsAmountValue === "" ? formData.whightAmountUnits : ""}
                                             </div>
                                             <div className={classes.formData_text}>

@@ -16,6 +16,7 @@ const HomePage = () => {
     const [ notify, setNotify ] = useState([])
     const [ notifications, setNotifications ] = useState([])
     const [ currentUserId, setCurrnetUserId ] = useState("")
+    const [ statusUpdate, setStatusUpdate ] = useState(false)
 
     useEffect(() => {
       const userString = localStorage.getItem('token');
@@ -62,6 +63,12 @@ const HomePage = () => {
   }, [socketRef]);
 
   useEffect(() => {
+    socketRef.current.on('therapistConfirm', (therapistConfirm) => {
+        setStatusUpdate(true)
+    });
+  }, [])
+
+  useEffect(() => {
     socketRef.current.on('notifications', (notifis) => {
       setNotify(notifis)
     });
@@ -80,6 +87,7 @@ const HomePage = () => {
     <div className={classes.home}>
         <Updates notifications={notifications} setNotifications={setNotifications} />
         <TestLists
+          statusUpdate={statusUpdate}
           patientsLists={patientsLists} 
           searchResults={searchResults} 
           testLists={testLists} 

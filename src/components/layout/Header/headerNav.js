@@ -13,6 +13,7 @@ import { io } from "socket.io-client";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BiX } from "react-icons/bi";
+import { notifyConfirmSave } from "./../../../apis/notify"
 import "./styles.css"
 
 const sections1 = [
@@ -90,7 +91,7 @@ const HeaderNav= () => {
           notifyInfo,
           test_id,
         }
-        console.log("++++Notify inbfo", info)
+        notifyConfirmSave(info)
         setNotify(info)
         setIsShow(true)
     });
@@ -117,7 +118,7 @@ const HeaderNav= () => {
   }, [notify]);
   
   const notifyConfirm = () => {
-    setPatientConfirm(true)
+    setPatientConfirm(true) 
     const testId = notify.test_id;
     const confirmNotify = `${current_PatientName} has been confirmed new test`
     socketRef.current.emit("patientConfirm", {patientConfirm, currentPatientId, current_PatientName, testId});
@@ -255,8 +256,6 @@ const HeaderNav= () => {
               <div className={classes.closeBtn} onClick={ () =>setIsShow(!isShow)}><BiX color='white' size={25} /></div>
             </div>
             <div className={classes.notify_body}>
-              {/* <div className={classes.modal_text}>Test ID : {notify.test_id}</div> */}
-              {/* <div className={classes.modal_text}>Date : {notify.date}</div> */}
               <div className={classes.modal_note}>Hello, {notify.notifyInfo.patientSelectValue}. New Test is Added</div>
               <div className={classes.modal_text}>Test Name : {notify.notifyInfo.testName}</div>
             </div>
@@ -267,8 +266,7 @@ const HeaderNav= () => {
           </div>
           : ""
         }
-        {
-          byTherapistShow === true && current_userName ?
+        { (byTherapistShow === true && current_userName) ?
             <div className={classes.notificationModal2}>
               <div className={classes.patientUserName}><span className={classes.patientName}>{notifyTherapist}</span> Patient has been confirmed</div>
               <div className={classes.modal2_footer}>

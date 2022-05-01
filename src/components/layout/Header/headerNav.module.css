@@ -355,6 +355,7 @@
     font-size: 22px;
     font-weight: 500;
     color:rgb(98, 157, 251);
+    z-index: 100;
 }
 .patientName {
     font-size: 24px;

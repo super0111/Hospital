@@ -6,6 +6,8 @@ import jwt_decode from "jwt-decode";
 import Updates from "./Updates"
 import NextSession from "./NextSession"
 import TestLists from "./TestLists"
+import ConfirmNotify from "./ConfirmNotify"
+import ConfirmNotifyModal from "./../../ConfirmNotifyModal"
 
 const PatientHomePage = () => {
     const socketRef = useRef();
@@ -15,6 +17,10 @@ const PatientHomePage = () => {
     const [ notifications, setNotifications ] = useState([])
     const [ patientNotifications, setPatientNotifications ] = useState([])
     const [ confirmed, setConfirmed ] = useState(false)
+    const [ confirmNotfications, setConfirmNotifications ] = useState([])
+    const [ modalIsShow, setModalIsShow ] = useState(false)
+    const [ confirmData, setConfirmData ] = useState()
+    const [ isShow, setIsShow ] = useState(false)
 
     useEffect(() => {
       const userString = localStorage.getItem('token');
@@ -26,6 +32,16 @@ const PatientHomePage = () => {
         }
       }
     }, [testLists]);
+
+    useEffect(async () => {
+        const fetchTestPosts = async () => {
+            const res = await fetch(`${config.server_url}api/notifications/getConfirmNotifications`);
+            const confirmNotificationss = await res.json();
+            const notifications = confirmNotificationss.filter((item) => item.patientName === current_PatientName )
+            setConfirmNotifications(notifications);
+        };
+        await fetchTestPosts();
+    }, [confirmNotfications]);
 
     useEffect(async () => {
         const fetchTestPosts = async () => {
@@ -68,20 +84,28 @@ const PatientHomePage = () => {
     useEffect(() => {
       socketRef.current.on('addTest', (tests) => {
           setTestsLists(tests)
-    });
-  }, [socketRef]);
+      });
+    }, [socketRef]);
 
-  useEffect(() => {
-    socketRef.current.on('therapistConfirm', (therapistConfirm) => {
-        setConfirmed(true)
-    });
-  }, [socketRef])
+    useEffect(() => {
+      socketRef.current.on('therapistConfirm', (therapistConfirm) => {
+          setConfirmed(true)
+      });
+    }, [socketRef])
 
   return (
     <div className={classes.home}>
       <div className={classes.flexRow}>
-        <Updates notifications={patientNotifications} setNotifications={setNotifications} />
+        <Updates notifications={patientNotifications} 
+        setNotifications={setNotifications} />
+        <ConfirmNotify 
+          setConfirmData={setConfirmData}
+          setIsShow={setIsShow} 
+          confirmNotfications={confirmNotfications} 
+          setConfirmNotifications={setConfirmNotifications} 
+        />
         <NextSession testList={testList} />
+        { isShow === true ? <ConfirmNotifyModal setIsShow={setIsShow} isShow={isShow} confirmData={confirmData} /> : "" }
       </div>
       <TestLists testList={testList} setTestList={setTestList} confirmed={confirmed} />
     </div>

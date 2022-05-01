@@ -5,7 +5,7 @@ import { BiArrowFromBottom, BiArrowToBottom } from "react-icons/bi";
 import Moment from 'moment';
 
 const TestLists = (props) => {
-    const { patientsLists, searchResults, testLists, setTestList, handlePatientClick, isActive } = props;
+    const { patientsLists, searchResults, testLists, setTestList, handlePatientClick, isActive, statusUpdate } = props;
 
     const [ sortIcon, setSortIcon ] = useState(false)
     const [ dateSort, setDateSort ] = useState(false)
@@ -137,12 +137,12 @@ const TestLists = (props) => {
                             <div className={classes.formDataField}>
                                 {JSON.parse(test.formString).map((formData, i) => (
                                     <div key={i} className={classes.formData}>
-                                        <div className={classes.text}>
+                                        <div className={classes.formData_text}>
                                             {formData.food}
                                         </div>
                                         <div className={classes.formData_text}>
                                             {formData.unitsAmountValue}
-                                            {formData.whightAmountValue} {" "}
+                                            {formData.whightAmountValue} {" "} { formData.unitsAmountValue != "" ? "count" : "" }
                                             {formData.unitsAmountValue === "" ? formData.whightAmountUnits : ""}
                                         </div>
                                         <div className={classes.formData_text}>
@@ -156,7 +156,9 @@ const TestLists = (props) => {
                                 ))}
                             </div>
                             <div className={classes.status_field}>
-                                {
+                                {   statusUpdate === true ?
+                                    <div className={classes.planedText}>Planed</div> 
+                                    :
                                     test.confirmed === true 
                                     ? 
                                     <div className={classes.planedText}>Planed</div> 

@@ -98,9 +98,16 @@ const Register = () => {
   let passwordMatch='';
   const submitHandler = (event) => {
     event.preventDefault();
+    console.log("passwrpdddd", passwordValue, passwordValue.length)
+            
+    if (passwordValue.length < 6) {
+        toast.error("Please enter a password with 6 or more characters")
+        return
+    }
     if (passwordValue !== password2Value) {
       passwordMatch = <div className="">Password is not match</div>
       toast.error(passwordMatch)
+      return
     } else {
       const formData = {
         fullname: fullNameValue,
@@ -115,6 +122,7 @@ const Register = () => {
       };
       registerUser(formData)
         .then((res) => {
+          console.log("res", res)
           if(res.token) {
             toast.info("Success Register")
           }

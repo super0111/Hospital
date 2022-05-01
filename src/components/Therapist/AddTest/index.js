@@ -252,7 +252,6 @@ const AddTest = () => {
             patientAllergies: patientAllergies,
             formString : formString,
         }
-        console.log("forororororo", formData)
         const notifyInfo = {
             patientSelectValue,
             testName,
@@ -409,7 +408,7 @@ const AddTest = () => {
                                             <div className={classes.amount_type}>
                                                 <span className={classes.amount_type_name}>Whight</span>
                                                 <Switch onChange={handleAmountTypeChange} checked={amountTypeCheck.checked} />
-                                                <span className={classes.amount_type_name}>Unites</span>
+                                                <span className={classes.amount_type_name}>Amount</span>
                                             </div>
                                         </div>
                                         { amountTypeCheck.checked === false ?
@@ -498,7 +497,7 @@ const AddTest = () => {
                                 <FcAcceptDatabase size={30} />
                                 <div className={classes.testSelect_text}>Patient Allergic</div>
                             </div>
-                            <div className={classes.allergic_text}>s
+                            <div className={classes.allergic_text}>
                                 {patientAllergies === "" ? "No" : patientAllergies}
                             </div>
                         </div>

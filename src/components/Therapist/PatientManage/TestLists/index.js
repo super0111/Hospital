@@ -87,7 +87,7 @@ const TestLists = (props) => {
                                                     </div>
                                                     <div className={classes.formData_text}>
                                                         {formData.unitsAmountValue}
-                                                        {formData.whightAmountValue} {" "}
+                                                        {formData.whightAmountValue} {" "} { formData.unitsAmountValue != "" ? "count" : "" }
                                                         {formData.unitsAmountValue === "" ? formData.whightAmountUnits : ""}
                                                     </div>
                                                     <div className={classes.formData_text}>

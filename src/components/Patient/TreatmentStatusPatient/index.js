@@ -132,7 +132,7 @@ const TreatmentStatusPatient = () => {
                 { testLists.length !=0 ? testLists.map((test, i) => {
                     return(
                         <div key={i} className={classes.status_item}>
-                            <div className={classes.text}>
+                            <div className={classes.text_id}>
                                 {i+1}
                             </div>
                             <div className={classes.text}>
@@ -141,18 +141,18 @@ const TreatmentStatusPatient = () => {
                             <div className={classes.text}>
                                 {Moment(test.date).format('YYYY-MM-DD HH:mm')}
                             </div>
-                            <div className={classes.text}>
+                            <div className={classes.food_allergies}>
                                 { test.patientAllergies ? test.patientAllergies : "No" }
                             </div>
                             <div className={classes.formDataField}>
                                 {JSON.parse(test?.formString).map((formData, i) => (
                                     <div key={i} className={classes.formData}>
-                                        <div className={classes.text}>
+                                        <div className={classes.formData_text}>
                                             {formData.food}
                                         </div>
                                         <div className={classes.formData_text}>
                                             {formData.unitsAmountValue}
-                                            {formData.whightAmountValue} {" "}
+                                            {formData.whightAmountValue} {" "} { formData.unitsAmountValue != "" ? "count" : "" }
                                             {formData.unitsAmountValue === "" ? formData.whightAmountUnits : ""}
                                         </div>
                                         <div className={classes.formData_text}>
@@ -167,12 +167,13 @@ const TreatmentStatusPatient = () => {
                             </div>
                             <div className={classes.text}>
                                 { 
-                                    confirmed === true ?
-                                    <div className={classes.planedText}>Planed</div> :
+                                (confirmed === true && i === i) ?
+                                <div className={classes.planedText}>Planed</div> :
                                     test.confirmed === true 
                                     ? 
                                     <div className={classes.planedText}>Planed</div> 
                                     : 
+                                    
                                     <div className={classes.newText}>New</div>
                                 }
                             </div>
