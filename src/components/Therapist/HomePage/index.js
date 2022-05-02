@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import jwt_decode from "jwt-decode";
 import config from "../../../config"
 import classes from "./HomePage.module.css"
 import Updates from "./Updates"
 import TestLists from "./TestLists"
 import { io } from "socket.io-client";
+import { Context } from '../../AppContext';
 
 const HomePage = () => {
     const socketRef = useRef();
@@ -16,7 +17,7 @@ const HomePage = () => {
     const [ notify, setNotify ] = useState([])
     const [ notifications, setNotifications ] = useState([])
     const [ currentUserId, setCurrnetUserId ] = useState("")
-    const [ statusUpdate, setStatusUpdate ] = useState(false)
+    const { statusUpdate } = useContext(Context);
 
     useEffect(() => {
       const userString = localStorage.getItem('token');
@@ -63,14 +64,8 @@ const HomePage = () => {
   }, [socketRef]);
 
   useEffect(() => {
-    socketRef.current.on('therapistConfirm', (therapistConfirm) => {
-        setStatusUpdate(true)
-    });
-  }, [])
-
-  useEffect(() => {
     socketRef.current.on('notifications', (notifis) => {
-      setNotify(notifis)
+      setNotifications(notifis)
     });
   }, []);
 

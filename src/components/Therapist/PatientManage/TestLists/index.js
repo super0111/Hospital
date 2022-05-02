@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import classes from "./TestLists.module.css"
 import { FcAlphabeticalSortingAz, FcAlphabeticalSortingZa, FcDownload, FcUpload } from "react-icons/fc";
 import Moment from 'moment';
+import {Context} from "../../../AppContext";
 
 const TestLists = (props) => {
     const selectPatientTests = props.selectPatientTests;
@@ -11,6 +12,9 @@ const TestLists = (props) => {
     const [ dateSort, setDateSort ] = useState(false)
     const [ statusSort, setStatusSort ] = useState(false)
     const [ searchResults, setSearchResults ] = useState([])
+    const { statusUpdate } = useContext(Context);
+
+    console.log("statusUpdate", statusUpdate)
 
     const handleDateSort = () => {
         setDateSort(!dateSort)
@@ -102,6 +106,9 @@ const TestLists = (props) => {
                                         </div>
                                         <div className={classes.text}>
                                             {
+                                                (statusUpdate === true && i === selectPatientTests.length-1 ) ? 
+                                                <div className={classes.planedText}>Planed</div> 
+                                                :
                                                 test.confirmed === true 
                                                 ? 
                                                 <div className={classes.planedText}>Planed</div> 

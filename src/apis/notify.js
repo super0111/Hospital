@@ -1,6 +1,23 @@
 import config from '../config'
 
+const allNotifySave = (formData) => {
+    console.log('notify save');
+    return fetch(`${config.server_url}api/notifications/saveAllNotify`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...formData, // Use your own property name / key
+      }),
+    })
+    .then((res) =>{
+      return res.json();
+    });
+  }
+
 const notifyConfirmSave = (formData) => {
+    console.log('notify save');
     return fetch(`${config.server_url}api/notifications/saveNotify`, {
       method: "POST",
       headers: {
@@ -39,4 +56,4 @@ const notifyDelete = (i) => {
     });
   }
 
-export { notifyDelete, confirmNotifyDelete, notifyConfirmSave }
+export { notifyDelete, confirmNotifyDelete, notifyConfirmSave, allNotifySave }

@@ -12,6 +12,7 @@ import Switch from "react-switch";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {addTests} from "../../../apis/addTests"
+import {notifyConfirmSave} from "../../../apis/notify"
 import { FcCalendar, FcPortraitMode, FcDocument, FcFlowChart, FcAcceptDatabase, FcBusinessContact, FcAddImage, FcDeleteDatabase } from "react-icons/fc";
 
 const AddTest = () => {
@@ -258,6 +259,13 @@ const AddTest = () => {
         }
         addTests(formData)
         .then((res) => {
+            console.log("addtest res", res)
+            const test_id = res.id;
+            const formData = {
+                notifyInfo,
+                test_id
+            }
+            notifyConfirmSave(formData)
             socketRef.current.emit("addTest", res.data, notifyInfo, res.id)
             socketRef.current.emit("notifications", addNotify, patientSelectValue)
             setTestId(testId+1)

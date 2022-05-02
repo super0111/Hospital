@@ -180,16 +180,16 @@
 .planedText {
     width: 50%;
     color: white;
-    font-size: 16px;
+    font-size: 14px;
     text-align: center;
     background-color: #14cea2;
-    padding: 10px 5px;
+    padding: 10px 0px;
     border-radius: 30px;
 }
 .newText {
     text-align: center;
     color: white;
-    font-size: 16px;
+    font-size: 14px;
     width: 50%;
     background-color: #395dd4;
     padding: 10px 5px;

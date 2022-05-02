@@ -3,9 +3,9 @@ import { useState, createContext } from 'react';
 const Context = createContext();
 
 const AppProvider = ({children}) => {
-    const [token, setToken] = useState('');
+    const [statusUpdate, setStatusUpdate] = useState(false);
     return (
-        <Context.Provider value={{token, setToken}}>
+        <Context.Provider value={{statusUpdate, setStatusUpdate}}>
             {children}
         </Context.Provider>
     );

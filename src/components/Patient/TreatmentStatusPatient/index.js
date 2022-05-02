@@ -7,7 +7,7 @@ import { FcDownload, FcUpload } from "react-icons/fc";
 import Moment from 'moment';
 
 const TreatmentStatusPatient = () => {
-
+    const socketRef = useRef();
     const [ dataTestsLists, setTestsLists ] = useState([])
     const [ testLists, setTestList ] = useState([])
     const [current_PatientName, setCurrent_PatientName] = useState("")
@@ -41,7 +41,6 @@ const TreatmentStatusPatient = () => {
         setTestList(myTests)
     }, [current_PatientName, dataTestsLists] )
 
-    const socketRef = useRef();
     useEffect(() => {
         socketRef.current = io(config.server_url, { transports : ['websocket'] });
     }, [socketRef]);
@@ -63,13 +62,13 @@ const TreatmentStatusPatient = () => {
         socketRef.current.on('editTest', (tests) => {
             setTestsLists(tests);
       });
-    }, [socketRef]);   
+    }, [socketRef]);
 
     useEffect(() => {
         socketRef.current.on('therapistConfirm', (therapistConfirm) => {
-            const testId = therapistConfirm.test_id
-            setConfirmedId(testId)
-            setConfirmed(true)
+            const testId = therapistConfirm.test_id;
+            setConfirmedId(testId);
+            setConfirmed(true);
         });
       }, [socketRef])
 
@@ -123,7 +122,7 @@ const TreatmentStatusPatient = () => {
                     <div className={classes.statusItem_title}>Eat Time</div>
                     <div className={classes.statusItem_title}>Food Instructions</div>
                     <div 
-                        className={classes.statusItem_title} 
+                        className={classes.statusItem_title}
                         onClick={handleStatusSort}
                     >
                         Status{statusSort === true ? <FcUpload size={18} /> : <FcDownload size={18} />} 
@@ -167,13 +166,12 @@ const TreatmentStatusPatient = () => {
                             </div>
                             <div className={classes.text}>
                                 { 
-                                (confirmed === true && i === i) ?
+                                (confirmed === true && i === testLists.length-1 ) ?
                                 <div className={classes.planedText}>Planed</div> :
                                     test.confirmed === true 
                                     ? 
                                     <div className={classes.planedText}>Planed</div> 
                                     : 
-                                    
                                     <div className={classes.newText}>New</div>
                                 }
                             </div>

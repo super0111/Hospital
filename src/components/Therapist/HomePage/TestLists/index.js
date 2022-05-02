@@ -6,7 +6,6 @@ import Moment from 'moment';
 
 const TestLists = (props) => {
     const { patientsLists, searchResults, testLists, setTestList, handlePatientClick, isActive, statusUpdate } = props;
-
     const [ sortIcon, setSortIcon ] = useState(false)
     const [ dateSort, setDateSort ] = useState(false)
     const [ statusSort, setStatusSort ] = useState(false)
@@ -156,7 +155,7 @@ const TestLists = (props) => {
                                 ))}
                             </div>
                             <div className={classes.status_field}>
-                                {   statusUpdate === true ?
+                                {   (statusUpdate === true && i === testLists.length-1 ) ?
                                     <div className={classes.planedText}>Planed</div> 
                                     :
                                     test.confirmed === true 

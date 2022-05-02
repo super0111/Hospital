@@ -24,12 +24,10 @@ const PatientDetails = (props) => {
 
     const handleHoldCancelTreatment = () => {
         const id = selectPatientList._id;
-        console.log(selectPatientList, selectPatientTests);
         let treatmentStatus = "New"
         if(selectPatientTests && selectPatientTests.length > 0) {
             treatmentStatus = "In progress";
         }
-        
         const formData = {
             id,
             treatmentStatus,

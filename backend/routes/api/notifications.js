@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Notify = require('../../models/notifications');
 const Notifications = require('../../models/ConfirmNotifications');
-const ConfirmNotifications = require('../../models/ConfirmNotifications');
+// const ConfirmNotifications = require('../../models/ConfirmNotifications');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http, {
@@ -13,6 +13,23 @@ var io = require('socket.io')(http, {
     transports : ['websocket']
   }
 });
+
+router.post('/saveAllNotify',
+    async(req, res) => {
+        const { content, patient_name } = req.body;
+        const date = new Date()
+        const notifications = new Notify({
+            patient_name,
+            content,
+            date,
+        })
+        notifications.save()
+        .then(() => {
+            Notify.find()
+            .then( notityList => io.emit('notifications', notityList))
+        })
+    }
+)
 
 router.post('/saveNotify',
     async (req, res) => {
@@ -27,6 +44,7 @@ router.post('/saveNotify',
                 testName,
                 date
             })
+
              await notifications.save()
             .then(notify => res.json({message: "success", notify}))
             .catch(err => {
@@ -38,6 +56,7 @@ router.post('/saveNotify',
             res.status(500).send("Server 500 error");
         }
     }
+
 )
 
 router.delete('/deleteConfirmNotify/:id',
@@ -58,10 +77,10 @@ router.delete('/deleteConfirmNotify/:id',
 
 router.get('/getConfirmNotifications',
     async (req, res) => {
-        ConfirmNotifications.find().sort({ date: 1 })
+        Notifications.find().sort({ date: 1 })
         .then(confirmNotify => res.json(confirmNotify))
         .catch(err => {console.log(err)
-            res.status(404).json({err: "ConfirmNotifications no found"})
+            res.status(404).json({err: "Notifications no found"})
         });
     }
 )

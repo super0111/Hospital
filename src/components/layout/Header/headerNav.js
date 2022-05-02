@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef }  from 'react';
+import React, { useState, useEffect, useRef, useContext }  from 'react';
 import NavMenuDraw from './navMenuDraw';
 import Link from '@material-ui/core/Link';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,12 +9,13 @@ import config from '../../../config';
 import { useHistory } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import {confirmTest, cancelTest} from "./../../../apis/addTests";
+import {allNotifySave} from "../../../apis/notify";
 import { io } from "socket.io-client";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BiX } from "react-icons/bi";
-import { notifyConfirmSave } from "./../../../apis/notify"
 import "./styles.css"
+import {Context} from "../../AppContext"
 
 const sections1 = [
     { title: 'Login', url: '/login'},
@@ -41,6 +42,7 @@ const HeaderNav= () => {
   const [ byTherapistShow, setByTherapistShow ] = useState(false)
   const [ notifyTherapist, setNotifyTherapist ] = useState('')
   const [ patientConfirm, setPatientConfirm ] = useState(false)
+  const { statusUpdate, setStatusUpdate } = useContext(Context);
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -73,7 +75,7 @@ const HeaderNav= () => {
       }
     }, 100 )
   }, [currentUser]);
- 
+
   const logout = () => {
     setCurrentUserId("")
     setCurrentPatientId("")
@@ -82,7 +84,7 @@ const HeaderNav= () => {
   }
 
   useEffect(() => {
-      socketRef.current = io(config.server_url, { transports : ['websocket'] });
+      socketRef.current = window.socket = io(config.server_url, { transports : ['websocket'] });
   }, [socketRef]);
 
   useEffect(() => {
@@ -91,11 +93,10 @@ const HeaderNav= () => {
           notifyInfo,
           test_id,
         }
-        notifyConfirmSave(info)
-        setNotify(info)
-        setIsShow(true)
-    });
-  }, [isShow]);
+          setNotify(info)
+          setIsShow(true)
+      });
+  }, [ socketRef ]);
 
   useEffect(() => {
       socketRef.current.on('deleteTest', (tests) => {
@@ -121,6 +122,11 @@ const HeaderNav= () => {
     setPatientConfirm(true) 
     const testId = notify.test_id;
     const confirmNotify = `${current_PatientName} has been confirmed new test`
+    const formData = {
+      content: confirmNotify,
+      patient_name: current_PatientName,
+    }
+    allNotifySave(formData)
     socketRef.current.emit("patientConfirm", {patientConfirm, currentPatientId, current_PatientName, testId});
     socketRef.current.emit("notifications", confirmNotify, current_PatientName)
     setIsShow(!isShow)
@@ -130,6 +136,11 @@ const HeaderNav= () => {
     setIsShow(false)
     const testId = notify._id;
     const cancelNotify = `${current_PatientName} has been canceled new test`
+    const formData = {
+      content: cancelNotify,
+      patient_name: current_PatientName,
+    }
+    allNotifySave(formData)
     socketRef.current.emit("patientCancel", {currentPatientId, current_PatientName, testId});
     socketRef.current.emit("notifications", cancelNotify, current_PatientName)
   }
@@ -147,9 +158,7 @@ const HeaderNav= () => {
       }
       confirmTest(formData)
       .then((res) => {
-        const patientConfirmNotify = `${patient_name} has been confirmed new test`
         socketRef.current.emit("therapistConfirm", {patient_name, test_id});
-        socketRef.current.emit("notifications", patientConfirmNotify, patient_name)
         if(res.message === "success") {
             toast.info("Therapist confirmed successfully")
         }
@@ -172,8 +181,6 @@ const HeaderNav= () => {
       }
       cancelTest(formData)
       .then((res) => {
-        const patientCancelNotify = `${patient_name} has been canceled new test`
-        socketRef.current.emit("notifications", patientCancelNotify, patient_name)
       })
       .catch((error) => console.log(error));
     });
@@ -181,8 +188,9 @@ const HeaderNav= () => {
 
   useEffect(() => {
     socketRef.current.on('therapistConfirm', (therapistConfirm) => {
-        setByTherapistShow(true)
-        setNotifyTherapist(therapistConfirm.patient_name)
+      setStatusUpdate(true)
+      setByTherapistShow(true)
+      setNotifyTherapist(therapistConfirm.patient_name)
     });
   }, [])
 
@@ -270,7 +278,7 @@ const HeaderNav= () => {
             <div className={classes.notificationModal2}>
               <div className={classes.patientUserName}><span className={classes.patientName}>{notifyTherapist}</span> Patient has been confirmed</div>
               <div className={classes.modal2_footer}>
-                <div className={classes.modal2_confirm_btn} onClick={() => setByTherapistShow(false)}>Confirm</div>
+                <div className={classes.modal2_confirm_btn} onClick={() => setByTherapistShow(false)}>OK</div>
                 <div className={classes.modal2_cancel_btn} onClick={() => setByTherapistShow(false)}>Cancel</div>
               </div>
             </div>

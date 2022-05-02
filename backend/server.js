@@ -45,7 +45,7 @@ const PORT = process.env.PORT || 5000;
 
 io.on('connection', function(socket) {
   socket.on("addTest", (notifis, notifyInfo, id) => {
-    io.emit('addTest', notifis, notifyInfo, id);  
+    io.emit('addTest', notifis, notifyInfo, id);
   });
   socket.on("editTest", (test) => {
     io.emit('editTest', test);

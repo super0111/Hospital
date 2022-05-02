@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useContext } from "react"
 import jwt_decode from "jwt-decode";
 import { useHistory } from "react-router-dom";
 import classes from "./TreatmentStatusTherapist.module.css"
@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FcAlphabeticalSortingAz, FcAlphabeticalSortingZa, FcDownload, FcUpload } from "react-icons/fc";
 import Moment from 'moment';
+import {Context} from "../../AppContext"
 
 const TreatmentStatusTherapist = () => {
     let history = useHistory();
@@ -23,16 +24,17 @@ const TreatmentStatusTherapist = () => {
     const [ statusSort, setStatusSort ] = useState(false)
     const [ searchResults, setSearchResults ] = useState([])
     const [ currentUserId, setCurrnetUserId ] = useState("")
+    const { statusUpdate } = useContext(Context)
 
     useEffect(() => {
         const userString = localStorage.getItem('token');
         if(userString) {
             const current_user = jwt_decode(userString);
             if(current_user.user) {
-              setCurrnetUserId(current_user.user.id)
+                setCurrnetUserId(current_user.user.id)
             }
-          }
-      }, []);
+        }
+    }, []);
 
     useEffect(async () => {
         const fetchPosts = async () => {
@@ -173,6 +175,7 @@ const TreatmentStatusTherapist = () => {
                     <div className={classes.status_title}>Patients Status</div>
                     <div className={classes.statusItem_title_field}>
                         <div className={classes.statusItem_title}>Test ID</div>
+                        <div className={classes.statusItem_title}>Test Name</div>
                         <div className={classes.statusItem_title} onClick={handleDateSort}>
                             Test Date{dateSort === true? <FcUpload size={18} /> : <FcDownload size={18} />}
                         </div>
@@ -190,6 +193,9 @@ const TreatmentStatusTherapist = () => {
                             <div key={i} className={classes.status_item}>
                                 <div className={classes.text_id}>
                                     {i+1}
+                                </div>
+                                <div className={classes.text_id}>
+                                    {test.testName}
                                 </div>
                                 <div className={classes.text}>
                                     {Moment(test.date).format('YYYY-MM-DD HH:mm')}
@@ -220,6 +226,9 @@ const TreatmentStatusTherapist = () => {
                                 </div>
                                 <div className={classes.text}>
                                     { 
+                                        (statusUpdate === true && i === testLists.length-1 ) ?
+                                        <div className={classes.planedText}>Planed</div> 
+                                        :
                                         test.confirmed === true 
                                         ? 
                                         <div className={classes.planedText}>Planed</div> 
