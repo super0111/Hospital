@@ -179,10 +179,10 @@ const HeaderNav= () => {
         id :  id,
         canceled: isCancel,
       }
-      cancelTest(formData)
-      .then((res) => {
-      })
-      .catch((error) => console.log(error));
+      // cancelTest(formData)
+      // .then((res) => {
+      // })
+      // .catch((error) => console.log(error));
     });
   }, []);
 

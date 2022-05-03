@@ -96,16 +96,18 @@ const PatientHomePage = () => {
   return (
     <div className={classes.home}>
       <div className={classes.flexRow}>
-        <Updates 
-          notifications={patientNotifications} 
-          setNotifications={setNotifications} 
-        />
-        <ConfirmNotify 
-          setConfirmData={setConfirmData}
-          setIsShow={setIsShow} 
-          confirmNotfications={confirmNotfications} 
-          setConfirmNotifications={setConfirmNotifications} 
-        />
+        <div className={classes.notify_field}>
+          <Updates 
+            notifications={patientNotifications} 
+            setNotifications={setNotifications} 
+          />
+          <ConfirmNotify 
+            setConfirmData={setConfirmData}
+            setIsShow={setIsShow} 
+            confirmNotfications={confirmNotfications} 
+            setConfirmNotifications={setConfirmNotifications} 
+          />
+        </div>
         <NextSession testList={testList} />
         { isShow === true ? <ConfirmNotifyModal setIsShow={setIsShow} isShow={isShow} confirmData={confirmData} /> : "" }
       </div>

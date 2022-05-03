@@ -1,5 +1,5 @@
 const config = {
-    server_url: 'http://localhost:5000/'
+    server_url: 'http://10.10.10.249:5000/'
 }
 
 export default config;

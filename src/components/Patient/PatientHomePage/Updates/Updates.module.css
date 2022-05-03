@@ -1,7 +1,7 @@
 .updates {
     display: flex;
     flex-direction: column;
-    width: 30%;
+    width: 48%;
     border: 2px solid rgb(75, 133, 219);
     border-radius: 5px;
     margin: 10px;

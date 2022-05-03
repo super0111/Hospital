@@ -111,7 +111,7 @@ const PatientManage = () => {
                             )   
                         }) :
                         <div className={classes.emptyNote}>No Patients</div>
-                }
+                    }
                 </div>
                 <div className={classes.patientBody}>
                     <PatientDetails selectPatientTests={selectPatientTests} selectPatientList={selectPatientList} setSelectPatientList={setSelectPatientList} />

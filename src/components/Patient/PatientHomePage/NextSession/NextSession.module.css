@@ -1,7 +1,7 @@
 .nextSession {
     display: flex;
     flex-direction: column;
-    width: 60%;
+    width: 50%;
     border: 2px solid rgb(75, 133, 219);
     border-radius: 5px;
     padding: 20px;
@@ -79,4 +79,15 @@
 .foodName_con {
     font-size: 17px;
     color: rgb(90, 95, 99);
+}
+
+@media screen and (max-width: 920px) {
+    .nextSession {
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        width: 98%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
 }

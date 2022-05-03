@@ -108,7 +108,6 @@ const TreatmentStatusPatient = () => {
 
     return (
         <div className={classes.treatmentStatusPatient}>
-            <div className={classes.patientStatus}>
                 <div className={classes.title}> My treatment status</div>
                 <div className={classes.statusItem_title_field}>
                     <div className={classes.statusItem_title}>Test ID</div>
@@ -180,7 +179,6 @@ const TreatmentStatusPatient = () => {
                 }) : 
                 <div className={classes.noTests}>No Your Tests...</div> 
                 }
-            </div>
         </div>
     )
 }

@@ -118,58 +118,60 @@ const TestLists = (props) => {
                         Status{statusSort === true ? <BiArrowFromBottom size={18} color="white" /> : <BiArrowToBottom size={18} />} 
                     </div>
                 </div>
-                { testLists.length !=0 ? testLists.map((test, i) => {
-                    return(
-                        <div key={i} className={classes.status_item}>
-                            <div className={classes.text_id}>
-                                {i+1}
-                            </div>
-                            <div className={classes.text}>
-                                {test.testName}
-                            </div>
-                            <div className={classes.text}>
-                                {Moment(test.date).format('MM-DD HH:mm')}
-                            </div>
-                            <div className={classes.text_allergies}>
-                                { test.patientAllergies ? test.patientAllergies : "No" }
-                            </div>
-                            <div className={classes.formDataField}>
-                                {JSON.parse(test.formString).map((formData, i) => (
-                                    <div key={i} className={classes.formData}>
-                                        <div className={classes.formData_text}>
-                                            {formData.food}
+                <div className={classes.testLists_body}>
+                    { testLists.length !=0 ? testLists.map((test, i) => {
+                        return(
+                            <div key={i} className={classes.status_item}>
+                                <div className={classes.text_id}>
+                                    {i+1}
+                                </div>
+                                <div className={classes.text}>
+                                    {test.testName}
+                                </div>
+                                <div className={classes.text}>
+                                    {Moment(test.date).format('MM-DD HH:mm')}
+                                </div>
+                                <div className={classes.text_allergies}>
+                                    { test.patientAllergies ? test.patientAllergies : "No" }
+                                </div>
+                                <div className={classes.formDataField}>
+                                    {JSON.parse(test.formString).map((formData, i) => (
+                                        <div key={i} className={classes.formData}>
+                                            <div className={classes.formData_text}>
+                                                {formData.food}
+                                            </div>
+                                            <div className={classes.formData_text}>
+                                                {formData.unitsAmountValue}
+                                                {formData.whightAmountValue} {" "} { formData.unitsAmountValue != "" ? "count" : "" }
+                                                {formData.unitsAmountValue === "" ? formData.whightAmountUnits : ""}
+                                            </div>
+                                            <div className={classes.formData_text}>
+                                                {formData.eatTimeValue} {" "}
+                                                {formData.eatTimeUnits}
+                                            </div>
+                                            <div className={classes.formData_text}>
+                                                {formData.addInstructions}
+                                            </div>
                                         </div>
-                                        <div className={classes.formData_text}>
-                                            {formData.unitsAmountValue}
-                                            {formData.whightAmountValue} {" "} { formData.unitsAmountValue != "" ? "count" : "" }
-                                            {formData.unitsAmountValue === "" ? formData.whightAmountUnits : ""}
-                                        </div>
-                                        <div className={classes.formData_text}>
-                                            {formData.eatTimeValue} {" "}
-                                            {formData.eatTimeUnits}
-                                        </div>
-                                        <div className={classes.formData_text}>
-                                            {formData.addInstructions}
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
+                                <div className={classes.status_field}>
+                                    {   (statusUpdate === true && i === testLists.length-1 ) ?
+                                        <div className={classes.planedText}>Planed</div> 
+                                        :
+                                        test.confirmed === true 
+                                        ? 
+                                        <div className={classes.planedText}>Planed</div> 
+                                        : 
+                                        <div className={classes.newText}>New</div>
+                                    }
+                                </div>
                             </div>
-                            <div className={classes.status_field}>
-                                {   (statusUpdate === true && i === testLists.length-1 ) ?
-                                    <div className={classes.planedText}>Planed</div> 
-                                    :
-                                    test.confirmed === true 
-                                    ? 
-                                    <div className={classes.planedText}>Planed</div> 
-                                    : 
-                                    <div className={classes.newText}>New</div>
-                                }
-                            </div>
-                        </div>
-                        )
-                    }) : 
-                    <div className={classes.noTests}>No Your Tests...</div> 
-                }
+                            )
+                        }) : 
+                        <div className={classes.noTests}>No Your Tests...</div> 
+                    }
+                </div>
             </div>
         </div>
     )

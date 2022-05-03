@@ -194,7 +194,7 @@ const TreatmentStatusTherapist = () => {
                                 <div className={classes.text_id}>
                                     {i+1}
                                 </div>
-                                <div className={classes.text_id}>
+                                <div className={classes.text}>
                                     {test.testName}
                                 </div>
                                 <div className={classes.text}>

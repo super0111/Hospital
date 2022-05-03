@@ -22,7 +22,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 22%;
+  width: 150px;
 }
 .select {
   width: 38%;
@@ -178,7 +178,7 @@
     padding-left: 10px;
 }
 .foodInstruction_field {
-  width: 38%;
+  width: 290px;
   display: flex;
   flex-direction: column;
 }

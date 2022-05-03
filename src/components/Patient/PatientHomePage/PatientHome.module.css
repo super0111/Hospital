@@ -10,3 +10,18 @@
     justify-content: space-between;
     width: 100%;
 }
+.notify_field {
+    display: flex;
+    justify-content: space-between;
+}
+
+@media screen and (max-width: 920px) {
+    .flexRow {
+        display: flex;
+        flex-direction: column;
+    }
+    .notify_field {
+        margin: auto;
+        width: 100%;
+    }
+}
