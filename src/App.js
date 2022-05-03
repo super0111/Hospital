@@ -11,7 +11,6 @@ import AddTest from "./components/Therapist/AddTest"
 import EditTest from "./components/Therapist/EditTest"
 import TreatmentStatusTherapist from "./components/Therapist/TreatmentStatusTherapist"
 import PatientMessage from "./components/Patient/PatientMessage"
-
 import ResetPassword from "./components/auth/ResetPassword";
 import ProfileEdit from "./components/Patient/ProfileEdit";
 import ProfileView from "./components/Patient/ProfileView";

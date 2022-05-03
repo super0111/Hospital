@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef, useContext } from "react"
 import jwt_decode from "jwt-decode";
 import { useHistory } from "react-router-dom";
-import classes from "./TreatmentStatusTherapist.module.css"
-import config from "../../../config";
 import { io } from "socket.io-client";
 import { BiEditAlt } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
-import { testDelete } from "./../../../apis/addTests"
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { FcAlphabeticalSortingAz, FcAlphabeticalSortingZa, FcDownload, FcUpload } from "react-icons/fc";
 import Moment from 'moment';
+import classes from "./TreatmentStatusTherapist.module.css"
+import config from "../../../config";
+import { testDelete } from "./../../../apis/addTests"
 import {Context} from "../../AppContext"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TreatmentStatusTherapist = () => {
     let history = useHistory();

@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    // background: '#bcd2d6;',
     opacity: "0.8!important",
     backgroundColor: "#7eaaf8!important"
 
@@ -124,7 +123,6 @@ const NavMenuDraw = () => {
       </IconButton>
       <Drawer
         className={classes.drawer}
-        // style={{ opacity: "0.6!important", backgroundColor: "#7eaaf8!important", }}
         variant="persistent"
         anchor="left"
         open={open}
