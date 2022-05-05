@@ -16,7 +16,7 @@ const editProfile = (formData, history) => {
   } );
 };
 
-const fileUploadEdit = async (file) => {
+const fileUploadEdit = async (file) => {                                                                        
   let formData = new FormData()
   formData.append('file', file)
   const res = await axios.post(`${config.server_url}api/file`, formData, {

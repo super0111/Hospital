@@ -50,7 +50,6 @@ const Login = (props) => {
           toast.info("Success Therapist Register")
           setAuthToken(res.token);
           localStorage.setItem("isDoctor", res.doctor);
-          setToken(res.token);
           history.push("/");
         }
         if(res.token && res.doctor===1)

@@ -32,7 +32,7 @@ function App() {
           <PrivateRoutes path="/profileEdit" exact component={ProfileEdit} />
           <PrivateRoutes path="/profileView" exact component={ProfileView} />
           <Route path="/register" component={Registration} />
-          <Route path="/login" exact component={Login} />
+          <Route path="/login" component={Login} />
           <PrivateRoutes path="/registerPatient" exact component={RegisterPatient} />
           <PrivateRoutes path="/addTest" exact component={AddTest} />
           <PrivateRoutes path="/editTest" exact component={EditTest} />
