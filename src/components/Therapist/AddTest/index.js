@@ -227,9 +227,9 @@ const AddTest = () => {
         }
     }
 
-    const handleAllergiesSwitchChange = (checked) => {
-        setAllergiesCheck({ checked });
-    }
+    // const handleAllergiesSwitchChange = (checked) => {
+    //     setAllergiesCheck({ checked });
+    // }
     const handleAllergiesChange = (e) => {
         setAllergiesValue(e.target.value)
     }
