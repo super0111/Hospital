@@ -27,9 +27,9 @@ const AddTest = () => {
     const [ patientAllergies, setPatientAllergies ] = useState("")
     const [ testSelectValue, setTestSelectValue ] = useState("new")
     const [ usedTestSelect, setUsedTestSelect ] = useState("")
-    const [ allergiesCheckValue, setAllergiesCheck ] = useState({checked:false})
-    const [ allergiesValue, setAllergiesValue ] = useState("false")
-    const [ allergies, setAllergies ] = useState("")
+    // const [ allergiesCheckValue, setAllergiesCheck ] = useState({checked:false})
+    // const [ allergiesValue, setAllergiesValue ] = useState("false")
+    // const [ allergies, setAllergies ] = useState("")
     const [ amountTypeCheck, setAmountTypeCheck ] = useState({checked:false})
     const [ currentUserId, setCurrnetUserId ] = useState("")
     const socketRef = useRef();
@@ -143,7 +143,7 @@ const AddTest = () => {
             ))
         }
         if(e.target.value === "new") {
-            setAllergies("")
+            // setAllergies("")
             setForms([{
                 food: '', 
                 whightAmountValue: '',
