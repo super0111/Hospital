@@ -230,9 +230,9 @@ const AddTest = () => {
     // const handleAllergiesSwitchChange = (checked) => {
     //     setAllergiesCheck({ checked });
     // }
-    const handleAllergiesChange = (e) => {
-        setAllergiesValue(e.target.value)
-    }
+    // const handleAllergiesChange = (e) => {
+    //     setAllergiesValue(e.target.value)
+    // }
     const handleAmountTypeChange = (checked) => {
         setAmountTypeCheck({ checked });
     }
