@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Notify = require('../../models/notifications');
 const Notifications = require('../../models/ConfirmNotifications');
-// const ConfirmNotifications = require('../../models/ConfirmNotifications');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http, {
