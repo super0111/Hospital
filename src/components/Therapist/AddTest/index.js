@@ -29,7 +29,7 @@ const AddTest = () => {
     const [ usedTestSelect, setUsedTestSelect ] = useState("")
     // const [ allergiesCheckValue, setAllergiesCheck ] = useState({checked:false})
     // const [ allergiesValue, setAllergiesValue ] = useState("false")
-    // const [ allergies, setAllergies ] = useState("")
+    const [ allergies, setAllergies ] = useState("")
     const [ amountTypeCheck, setAmountTypeCheck ] = useState({checked:false})
     const [ currentUserId, setCurrnetUserId ] = useState("")
     const socketRef = useRef();
